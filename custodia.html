@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Código QR con Javascript</title>
+    
+    <link rel="stylesheet" href="estilos.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="izquierda">
+            <h1>Custodia </h1>
+            <form action="" id="formulario" class="formulario">
+                <input type="text" id="link" placeholder="Escribe el texto o URL" />
+                <button class="btn1" id="id_btn">Generar QR</button>
+            </form>
+            <div id="contenedorQR" class="contenedorQR"></div>
+            <button class="btn1">Imprimir</button>
+        </div>
+        <div class="derecha">
+            <h1>Casilleros</h1>
+            <div id="coordenada" class="formulario input">Coord</div>
+            <div id="matriz"></div>
+            
+        </div>
+    </div>
+
+    <script>
+        const matrizContainer = document.getElementById('matriz');
+        const coordenadaDiv = document.getElementById('coordenada');
+        const linkInput = document.getElementById('link');
+    
+        const matrizSize = 6;
+    
+        // Función para convertir número a letra (A=0, B=1, ..., Z=25)
+        function getLetterFromNumber(num) {
+            return String.fromCharCode(65 + num);
+        }
+    
+        // Crear la matriz de botones
+        for (let i = 0; i < matrizSize; i++) {
+            for (let j = 0; j < matrizSize; j++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                const letraColumna = getLetterFromNumber(j);
+                btn.textContent = `${i},${letraColumna}`;
+                btn.addEventListener('click', () => toggleButton(btn, i, letraColumna));
+                matrizContainer.appendChild(btn);
+            }
+            matrizContainer.appendChild(document.createElement('br'));
+        }
+    
+        // Función para cambiar el estado del botón
+        function toggleButton(btn, fila, columna) {
+            btn.classList.toggle('active');
+            const estado = btn.classList.contains('active') ? 'Ocupado (azul)' : 'Vacío (verde)';
+            coordenadaDiv.textContent = `Coordenada: ${fila},${columna}, Estado: ${estado}`;
+            
+            // Si el botón está activo, actualiza el input con las coordenadas
+            if (btn.classList.contains('active')) {
+                linkInput.value = `${fila},${columna}`;
+            } else {
+                linkInput.value = ''; // Si el botón está inactivo, borra el valor del input
+            }
+        }
+    </script>
+</body>
+</html>

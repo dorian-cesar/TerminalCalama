@@ -1,0 +1,76 @@
+* {
+	border-bottom: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: #f2f2f2;
+
+}
+
+.centrar {
+    text-align: center;
+   margin-top: 80px;
+    font-family: 'Open Sans', sans-serif;
+    
+   
+}
+
+h1 {
+    color:rgb(34, 34, 150);
+}
+
+#contador {
+    width: 300px;
+    height: 70px;
+    margin: auto;
+   
+    border-radius: 5px;
+    line-height: 70px;
+    font-size: 30px;
+    font-weight: bold;
+   
+    background-color: white;
+
+}
+.btn {
+    width: 300px;
+    height: 70px;
+    margin-top: 20px;
+    background: rgb(16, 163, 85);
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+    box-shadow: none;
+    margin-bottom: 20px;
+   
+
+    cursor: pointer;
+    
+}
+.btn:hover {
+    
+    background-color: #3e14b2;;
+}
+
+#contenedorQR {
+
+    position: relative;
+    margin: auto;
+    margin-top: 25px;
+    width: 256px;
+    height: 256px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    padding: 5px;
+    
+
+
+}
+
+hr {
+    width: 300px;
+}
+
+
+
