@@ -19,7 +19,7 @@
                 <button class="btn1" id="id_btn">Generar QR</button>
             </form>
             <div id="contenedorQR" class="contenedorQR"></div>
-            <button class="btn1">Imprimir</button>
+            <button class="btn1" onclick="imprimirDiv()">Imprimir</button>
         </div>
         <div class="derecha">
             <h1>Casilleros</h1>
@@ -67,6 +67,36 @@
                 linkInput.value = ''; // Si el botón está inactivo, borra el valor del input
             }
         }
+        function imprimirDiv() {
+    // Crear una ventana emergente temporal
+    const ventanaImpresion = window.open('', '_blank');
+    
+    // Obtener el contenido del div que quieres imprimir
+    const contenidoDiv = document.getElementById('contenedorQR').innerHTML;
+
+    //const contadorDiv = document.getElementById('contador').innerHTML;
+
+       // Escribir el contenido en la ventana emergente
+    ventanaImpresion.document.write('<html><head><title>Imprimir Div</title></head><body>');
+    ventanaImpresion.document.write('<h1>QR Custodia</h1>');
+   
+    ventanaImpresion.document.write(contenidoDiv);
+
+
+    
+    ventanaImpresion.document.write('</body></html>');
+
+    ventanaImpresion.document.close(); // Cerrar la escritura en la ventana emergente
+
+    setTimeout(imprimir, 50);
+
+    function imprimir(){
+    ventanaImpresion.print();
+    
+}
+
+}
+
     </script>
 </body>
 </html>

@@ -19,3 +19,5 @@ formulario.addEventListener('submit', (e) => {
 	console.log('Fecha actual:', fechaActual);
 	console.log('Hora actual:', horaActual);
 });
+
+
