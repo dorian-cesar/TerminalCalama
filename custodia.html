@@ -15,7 +15,8 @@
         <div class="izquierda">
             <h1>Custodia </h1>
             <form action="" id="formulario" class="formulario">
-                <input type="text" id="link" placeholder="Escribe el texto o URL" />
+                <input type="text" id="link" placeholder="ubicacion" />
+                <input type="text" id="link2" placeholder="Rut" />
                 <button class="btn1" id="id_btn">Generar QR</button>
             </form>
             <div id="contenedorQR" class="contenedorQR"></div>
@@ -25,8 +26,20 @@
             <h1>Casilleros</h1>
             <div id="coordenada" class="formulario input">Coord</div>
             <div id="matriz"></div>
-            
+            <label class="label">Seleccione el tamaño del bulto </label>
+            <select name="talla" > 
+            <option value="Small" class="selectClass">Small</option>
+            <option value="Medium" class="selectClass">Medium</option>
+            <option value="Large" class="selectClass">Large</option>
+            </select>
+            <button class="btn1" style="margin-top: 20px;" >Grabar</button>
+           
+
         </div>
+       
+
+       
+        
     </div>
 
     <script>
@@ -34,7 +47,7 @@
         const coordenadaDiv = document.getElementById('coordenada');
         const linkInput = document.getElementById('link');
     
-        const matrizSize = 6;
+        const matrizSize = 7;
     
         // Función para convertir número a letra (A=0, B=1, ..., Z=25)
         function getLetterFromNumber(num) {

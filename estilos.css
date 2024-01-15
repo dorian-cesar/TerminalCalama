@@ -21,7 +21,6 @@ body {
 .izquierda {
 	
 	width: 30%;
-	
 	float: left;
 	margin-top: 30px;
 }
@@ -30,9 +29,7 @@ body {
 	width: 65%;
 	height: 650px;
 	margin-top: 30px;
-	float: right;
-	
-	
+	float: right;	
 
 }
 
@@ -68,7 +65,7 @@ body {
 }
 
 .btn1:hover {
-	background: #3e14b2;
+	background: #1424b2;
 }
 
 .contenedorQR {
@@ -118,4 +115,6 @@ h1 {
 	line-height: 70px;
 	
 }
+
+
 
