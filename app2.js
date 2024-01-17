@@ -6,22 +6,28 @@ QR.makeCode('wit');
 
 leerDatosServer();
 
-const fechaHoraActual = new Date();
-const fechaActual = fechaHoraActual.toISOString().split('T')[0];
-const horaActual = fechaHoraActual.toLocaleTimeString();
+//const fechaHoraActual = new Date();
+//const fechaActual = fechaHoraActual.toISOString().split('T')[0];
+//const horaActual = fechaHoraActual.toLocaleTimeString();
 
 var numero=0
   // URL del endpoint en tu servidor PHP
-  const url = 'http://localhost/terminal/ba%C3%B1os/codigo/server.php';
+  const url = 'http://localhost/TerminalCalama/server.php';
 
 
 function escribirQR (){
+    // Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
+    const fechaHoraAct = new Date();
+
+    const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
+    const fechaStr = fechaHoraAct.toISOString().split('T')[0];
+
     const numeroT=generarTokenAlfanumerico(6);
    // var numeroT='XXX'+numero++ ;
     const datos = {
         Codigo: numeroT,
-        hora: horaActual,
-        fecha: fechaActual,
+        hora: horaStr,
+        fecha: fechaStr,
         
       };
     callApi(datos);
@@ -52,7 +58,7 @@ function escribirTexto(){
     body: JSON.stringify(datos)
   })
     .then(response => {
-      // Verificar la respuesta del servidor
+      // Verificar la respuesta del servidor 
       if (!response.ok) {
         throw new Error('Error en la solicitud');
       }
@@ -65,10 +71,7 @@ function escribirTexto(){
     .catch(error => {
       // Capturar y manejar errores
       console.error('Error al enviar la solicitud:', error);
-    });
-
-    
-
+    });  
   }
 
   
@@ -88,7 +91,7 @@ function escribirTexto(){
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = 'http://localhost/terminal/ba%C3%B1os/codigo/leerDatos.php';
+    const endpointURL = 'http://localhost/TerminalCalama/leerDatos.php';
     
     fetch(endpointURL)
         .then(response => response.json())

@@ -1,11 +1,10 @@
 <?php 
 include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
-
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
- $sql = "SELECT id, Codigo, Fecha, Hora FROM ingresos order by id desc limit 20";
-$result = $conn->query($sql);
+$stmt = "SELECT id, posicion, rut, hora, fecha, tamano, tipo FROM custodias ORDER BY id desc limit 10";
+$result = $conn->query($stmt);
 
 // Verificar si hay resultados
 if ($result->num_rows > 0) {

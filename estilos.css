@@ -56,7 +56,7 @@ body {
 	background: rgb(16, 163, 85);
 	color: #fff;
 	cursor: pointer;
-	padding: 20px;
+	padding: 18px;
 	font-size: 20px;
 	border-radius: 5px;
 	font-family: 'Open Sans', sans-serif;
@@ -80,12 +80,19 @@ h1 {
 	margin-bottom: 20px;
 }
 
+.tamtxt {
+    color:rgb(34, 34, 150);
+	text-align: center;
+	font-size: large;
+}
+
 .btn {
-	width: 70px;
-	height: 50px;
+	width: 65px;
+	height: 40px;
 	margin: 2px;
 	border: 1px solid #ccc;
-	background-color: rgb(0, 255, 149);
+	border-radius: 5px;
+	background-color: rgb(16, 163, 85);
 	color: white;
 	font-size: 14px;
 	cursor: pointer;
@@ -118,3 +125,40 @@ h1 {
 
 
 
+table, td, th, tr {
+    border: 1px solid rgb(243, 242, 242);
+    height: 25px;
+    font-size: 14px;
+    background-color: white;
+}
+table {
+    border-collapse: collapse;
+    border-radius: 20px;
+    margin: auto;
+    margin-top: 20px;
+    width: 90%;
+    text-align: center;
+      
+}
+
+select {
+	appearance: none;
+	-webkit-appearance: none;
+	font-size: 1.15rem;
+	padding: 5px 10px 5px 10px;
+	background-color: rgb(16, 163, 85);
+	border: 1px solid #ccc;
+	border-radius: 0.25rem;
+	text-align: center;
+	color: #ffffff;
+	cursor: pointer;
+  }
+
+  .active {
+	  background-color: rgb(35, 73, 240);
+  }
+
+  .disabled {
+	  background-color: grey;
+	  cursor: not-allowed;
+  }

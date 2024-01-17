@@ -1,4 +1,5 @@
 <?php
+include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
@@ -26,28 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fecha = $data["fecha"];
        // $valor = $data["valor"];
 
-        // Crear conexión a la base de datos (reemplaza con tus credenciales)
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "restroom";
+        // Prepared Statement
+        $stmt = $conn->prepare("INSERT INTO ingresos (Codigo, hora, fecha) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $codigo,$hora,$fecha);
 
-        // Crear conexión
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        // Verificar la conexión
-        if ($conn->connect_error) {
-            die("Error de conexión: " . $conn->connect_error);
-        }
-
-        // Preparar la consulta SQL para insertar datos en la tabla
-        $sql = "INSERT INTO ingresos (Codigo, hora, fecha) VALUES ('$codigo', '$hora', '$fecha')";
-
-        // Ejecutar la consulta SQL
-        if ($conn->query($sql) === TRUE) {
-            echo "Datos insertados correctamente en la base de datos";
+        if($stmt->execute()){
+            echo "Datos insertados correctamente";
         } else {
-            echo "Error al insertar datos: " . $conn->error;
+            echo "Error al insertar datos: " + $conn->error;
         }
 
         // Cerrar la conexión a la base de datos

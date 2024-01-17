@@ -15,7 +15,7 @@
         <div class="izquierda">
             <h1>Custodia </h1>
             <form action="" id="formulario" class="formulario">
-                <input type="text" id="link" placeholder="ubicacion" />
+                <input type="text" id="link" placeholder="ubicacion" disabled/>
                 <input type="text" id="link2" placeholder="Rut" />
                 <button class="btn1" id="id_btn">Generar QR</button>
             </form>
@@ -24,16 +24,37 @@
         </div>
         <div class="derecha">
             <h1>Casilleros</h1>
-            <div id="coordenada" class="formulario input">Coord</div>
+            <div style="width:100%;text-align: center;margin:auto;">
+                <label class="label tamtxt">Seleccione el tamaño del bulto </label>
+                <select name="talla" id="talla"> 
+                <option value="Small" class="selectClass">Small</option>
+                <option value="Medium" class="selectClass">Medium</option>
+                <option value="Large" class="selectClass">Large</option>
+                </select>
+            </div>
             <div id="matriz"></div>
-            <label class="label">Seleccione el tamaño del bulto </label>
-            <select name="talla" > 
-            <option value="Small" class="selectClass">Small</option>
-            <option value="Medium" class="selectClass">Medium</option>
-            <option value="Large" class="selectClass">Large</option>
-            </select>
-            <button class="btn1" style="margin-top: 20px;" >Grabar</button>
-           
+                <div class="centrar">
+                <div class="contenedorTabla" style="text-align:center">
+                    <h3>Historial</h3>
+                    <hr>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Casillero</th>
+                                <th>RUT</th>
+                                <th>Hora</th>
+                                <th>Fecha</th>
+                                <th>Tamaño</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-body">
+                            <!-- Filas de la tabla se insertarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
        
@@ -44,11 +65,11 @@
 
     <script>
         const matrizContainer = document.getElementById('matriz');
-        const coordenadaDiv = document.getElementById('coordenada');
+        //const coordenadaDiv = document.getElementById('coordenada');
         const linkInput = document.getElementById('link');
     
         const matrizSize = 7;
-    
+
         // Función para convertir número a letra (A=0, B=1, ..., Z=25)
         function getLetterFromNumber(num) {
             return String.fromCharCode(65 + num);
@@ -60,24 +81,66 @@
                 const btn = document.createElement('button');
                 btn.className = 'btn';
                 const letraColumna = getLetterFromNumber(j);
+                btn.id = 'lockerbtn'+i+letraColumna;
                 btn.textContent = `${i},${letraColumna}`;
                 btn.addEventListener('click', () => toggleButton(btn, i, letraColumna));
                 matrizContainer.appendChild(btn);
             }
             matrizContainer.appendChild(document.createElement('br'));
         }
+
+        cargarEstado();
+
+        function cargarEstado(){
+            const estadoGuardado = localStorage.getItem('estadoBotones');
+
+            if (estadoGuardado) {
+                const estadoBotones = JSON.parse(estadoGuardado);
+
+                estadoBotones.forEach(estado => {
+                    const [fila, columna] = estado.coordenada.split(',');
+                    const indice = 0;
+                    const btn = document.querySelectorAll('#lockerbtn'+fila+columna)[indice];
+
+                    if (estado.activo) {
+                        btn.classList.add('disabled');
+                        btn.classList.remove('active');
+                        //btn.disabled = true;
+                    } 
+                });
+            }
+        }
     
         // Función para cambiar el estado del botón
         function toggleButton(btn, fila, columna) {
-            btn.classList.toggle('active');
-            const estado = btn.classList.contains('active') ? 'Ocupado (azul)' : 'Vacío (verde)';
-            coordenadaDiv.textContent = `Coordenada: ${fila},${columna}, Estado: ${estado}`;
-            
-            // Si el botón está activo, actualiza el input con las coordenadas
-            if (btn.classList.contains('active')) {
-                linkInput.value = `${fila},${columna}`;
-            } else {
-                linkInput.value = ''; // Si el botón está inactivo, borra el valor del input
+            // Limpiar todos los otros botones al seleccionar uno nuevo
+            btns = document.querySelectorAll('.btn');
+
+            btns.forEach(bt => {
+                if(bt.classList.contains('active')){
+                    bt.classList.remove('active');
+                }
+            })
+
+            // Si el botón se encuentra desactivado, preguntar por reactivación
+            if(btn.classList.contains('disabled')){
+                const confirmar = window.confirm('¿Quieres liberar el estado del casillero?');
+                if(confirmar){
+                    btn.classList.remove('disabled');
+                    guardarEstado();
+                    //btn.disabled = false;
+                }
+            }else { //De lo contrario, manejar activación con normalidad
+                btn.classList.toggle('active');
+                const estado = btn.classList.contains('active') ? 'Ocupado (azul)' : 'Vacío (verde)';
+                // coordenadaDiv.textContent = `${fila},${columna}, Estado: ${estado}`;
+
+                // Si el botón está activo, actualiza el input con las coordenadas
+                if (btn.classList.contains('active')) {
+                    linkInput.value = `${fila},${columna}`;
+                } else {
+                    linkInput.value = ''; // Si el botón está inactivo, borra el valor del input
+                }
             }
         }
         function imprimirDiv() {
