@@ -23,7 +23,8 @@ formulario.addEventListener('submit', (e) => {
 			alert("Debe ingresar RUT sin puntos y con guión.");
 			return;
 		}
-
+		
+		
 		contador++;
 		// Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
 		const fechaHoraAct = new Date();
@@ -35,22 +36,31 @@ formulario.addEventListener('submit', (e) => {
 
 		// Obtener tamaño
 		const tamStr = document.getElementById('talla').value;
+		const tamtxt =document.getElementById('talla').value;
+		//validar tamaño 
+		if (tamtxt==0){
+			alert("Debe Seleccionar el tamaño");
 
-		const datos = {
+		}else {
+			const datos = {
 			hora: horaStr,
 			fecha: fechaStr,
 			posicion: posStr,
 			rut: rutStr,
 			tamano: tamStr,
 			tipo: "Entrada",
-		}
-		callApi(datos);
-		leerDatosServer();
-		QR.makeCode(formulario.link.value+'/'+rutStr+'/'+fechaStr+'/'+horaStr);
+			}
+			callApi(datos);
+			leerDatosServer();
+			QR.makeCode(formulario.link.value+'/'+rutStr+'/'+fechaStr+'/'+horaStr);
 
-		formulario.link.value = "";
-		// Guardar estado de los botones
-		guardarEstado();
+			formulario.link.value = "";
+			// Guardar estado de los botones
+			guardarEstado();
+
+		}
+
+		
 	} else {
 		alert("Debe ingresar RUT y seleccionar Casillero.")
 	}

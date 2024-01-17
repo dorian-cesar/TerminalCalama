@@ -147,13 +147,21 @@ select {
 	font-size: 1.15rem;
 	padding: 5px 10px 5px 10px;
 	background-color: rgb(16, 163, 85);
-	border: 1px solid #ccc;
+	border: 1px solid white;
 	border-radius: 0.25rem;
 	text-align: center;
 	color: #ffffff;
 	cursor: pointer;
   }
 
+.select-items{
+	position: absolute;
+	background-color: rgb(16, 163, 85);
+	top: 100%;
+	left: 0%;
+	right:0%;
+	z-index: 99;
+}
   .active {
 	  background-color: rgb(35, 73, 240);
   }
