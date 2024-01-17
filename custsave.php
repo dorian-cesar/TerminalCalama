@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $tipo = $data["tipo"];
 
         // SQL Seguro
-        $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, tamano, tipo) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, talla, tipo) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $pos,$rut,$hora,$fecha,$tamano,$tipo);
 
         if ($stmt->execute()){

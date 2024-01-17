@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquie
 
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
- $sql = "SELECT id, Codigo, Fecha, Hora FROM ingresos order by id desc limit 20";
+ $sql = "SELECT idrestroom, Codigo, date, time FROM restroom order by idrestroom desc limit 20";
 $result = $conn->query($sql);
 
 // Verificar si hay resultados

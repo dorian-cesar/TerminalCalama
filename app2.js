@@ -99,10 +99,10 @@ function escribirTexto(){
             // Construir filas de la tabla
             const filasHTML = data.map(item => `
                 <tr>
-                    <td>${item.id}</td>
+                    <td>${item.idrestroom}</td>
                     <td>${item.Codigo}</td>
-                    <td>${item.Fecha}</td>
-                    <td>${item.Hora}</td>
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
                 </tr>
             `).join('');
 

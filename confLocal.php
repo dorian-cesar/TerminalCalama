@@ -1,5 +1,5 @@
 <?php
-// Nota: Poner Datos de Amazon
+//To-Do: Transformar a objeto
 $server = "localhost";
 $user = "root";
 $pass = "";

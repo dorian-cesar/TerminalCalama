@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
        // $valor = $data["valor"];
 
         // Prepared Statement
-        $stmt = $conn->prepare("INSERT INTO ingresos (Codigo, hora, fecha) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO restroom (Codigo, time, date) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $codigo,$hora,$fecha);
 
         if($stmt->execute()){

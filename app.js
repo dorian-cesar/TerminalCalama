@@ -73,7 +73,7 @@ function guardarEstado(){
 		if(btn.classList.contains('active')){
 			btn.classList.add('disabled');
 			btn.classList.remove('active');
-			btn.disabled = true;
+			//btn.disabled = true;
 		}
 	});
 
@@ -108,12 +108,12 @@ function leerDatosServer() {
 	.then(data => {
 		const filasHTML = data.map(item => `
 			<tr>
-				<td>${item.id}</td>
+				<td>${item.idcustodia}</td>
 				<td>${item.posicion}</td>
 				<td>${item.rut}</td>
 				<td>${item.hora}</td>
 				<td>${item.fecha}</td>
-				<td>${item.tamano}</td>
+				<td>${item.talla}</td>
 				<td>${item.tipo}</td>
 			</tr>
 		`).join('');
