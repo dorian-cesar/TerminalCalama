@@ -1,10 +1,9 @@
 const contenedorQR = document.getElementById('contenedorQR');
 const formulario = document.getElementById('formulario');
 
-let contador = 0;
-
 const urlSave = 'http://localhost/TerminalCalama/custsave.php';
 const urlLoad = 'http://localhost/TerminalCalama/custload.php';
+const urlStore = 'http://localhost/TerminalCalama/custstore.php';
 
 leerDatosServer();
 
@@ -16,16 +15,12 @@ formulario.addEventListener('submit', (e) => {
 
 	//Solo generar el QR si ambos valores existen
 	if(formulario.link.value && formulario.link2.value){
-
 		// Validar formato de RUT XXXXXXXX-X
 		const rutStr = formulario.link2.value;
 		if(!/^[0-9]+-[0-9kK]{1}$/.test(rutStr)) {
 			alert("Debe ingresar RUT sin puntos y con guión.");
 			return;
 		}
-		
-		
-		contador++;
 		// Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
 		const fechaHoraAct = new Date();
 	
@@ -41,7 +36,7 @@ formulario.addEventListener('submit', (e) => {
 		if (tamtxt==0){
 			alert("Debe Seleccionar el tamaño");
 
-		}else {
+		} else {
 			const datos = {
 			hora: horaStr,
 			fecha: fechaStr,
@@ -50,36 +45,29 @@ formulario.addEventListener('submit', (e) => {
 			tamano: tamStr,
 			tipo: "Entrada",
 			}
-			callApi(datos);
+			callApi(datos, urlSave);
 			leerDatosServer();
 			QR.makeCode(formulario.link.value+'/'+rutStr+'/'+fechaStr+'/'+horaStr);
 
 			formulario.link.value = "";
 			// Guardar estado de los botones
 			guardarEstado();
-
 		}
-
-		
 	} else {
 		alert("Debe ingresar RUT y seleccionar Casillero.")
 	}
 });
 
 function guardarEstado(){
-	const estado = [];
+	estadoStr = "";
 	const botones = document.querySelectorAll('.btn');
 
 	botones.forEach(btn => {
 		act = false;
 		if(btn.classList.contains('active')||btn.classList.contains('disabled')){
 			act = true;
+			estadoStr += btn.textContent + "|";
 		}
-		estado.push({
-			coordenada: btn.textContent,
-			activo: act
-		});
-
 		if(btn.classList.contains('active')){
 			btn.classList.add('disabled');
 			btn.classList.remove('active');
@@ -87,11 +75,23 @@ function guardarEstado(){
 		}
 	});
 
-	localStorage.setItem('estadoBotones', JSON.stringify(estado));
+	const fechaHoraAct = new Date();
+	
+	const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
+	const fechaStr = fechaHoraAct.toISOString().split('T')[0];
+
+	const datos = {
+	estado: estadoStr,
+	hora: horaStr,
+	fecha: fechaStr,
+	}
+
+	callApi(datos, urlStore);
+	localStorage.setItem('estadoBotones', JSON.stringify(estadoStr));
 }
 
-function callApi (datos){ // Insertar los datos mediante llamada PHP usando JSON
-	fetch(urlSave, {
+function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando JSON
+	fetch(url, {
 		method: 'POST',
 		mode: 'cors',
 		headers: {

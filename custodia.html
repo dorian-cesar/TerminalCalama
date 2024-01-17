@@ -93,23 +93,30 @@
         cargarEstado();
 
         function cargarEstado(){
-            const estadoGuardado = localStorage.getItem('estadoBotones');
+            // Traemos los datos desde la BDD
+            fetch('http://localhost/TerminalCalama/custreload.php')
+            .then(response => response.json())
+            .then(data => {
+                // Creamos un array con cada botón a desactivar
+                const estados = data.map(item => item.estado)[0].split("|");
+                console.log(estados);
+                
+                // Por cada botón, excepto si tiene length 0 (vacio)
+                estados.forEach(estado => {
+                    if(estado.length!==0){
+                        const [fila, columna] = estado.split(',');
+                        // Buscamos el botón correspondiente
+                        const btn = document.querySelectorAll('#lockerbtn'+fila+columna)[0];
 
-            if (estadoGuardado) {
-                const estadoBotones = JSON.parse(estadoGuardado);
-
-                estadoBotones.forEach(estado => {
-                    const [fila, columna] = estado.coordenada.split(',');
-                    const indice = 0;
-                    const btn = document.querySelectorAll('#lockerbtn'+fila+columna)[indice];
-
-                    if (estado.activo) {
+                        // Cambiamos sus clases
                         btn.classList.add('disabled');
                         btn.classList.remove('active');
-                        //btn.disabled = true;
-                    } 
+                    }
                 });
-            }
+            })
+            .catch(error => {
+                console.error('Error al obtener datos: ', error);
+            });
         }
     
         // Función para cambiar el estado del botón
