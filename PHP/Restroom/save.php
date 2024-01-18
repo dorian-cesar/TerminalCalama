@@ -1,5 +1,4 @@
 <?php
-include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
@@ -10,6 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     header("HTTP/1.1 200 OK");
     exit;
 }
+
+include("../conf.php");
 
 // Verificar si se recibió una solicitud POST con datos en formato JSON
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -25,11 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $codigo = $data["Codigo"];
         $hora = $data["hora"];
         $fecha = $data["fecha"];
+        $tipo = $data["tipo"];
        // $valor = $data["valor"];
 
         // Prepared Statement
-        $stmt = $conn->prepare("INSERT INTO restroom (Codigo, time, date) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $codigo,$hora,$fecha);
+        $stmt = $conn->prepare("INSERT INTO restroom (Codigo, time, date, tipo) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $codigo,$hora,$fecha,$tipo);
 
         if($stmt->execute()){
             echo "Datos insertados correctamente";

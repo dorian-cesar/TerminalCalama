@@ -1,5 +1,4 @@
 <?php
-include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
@@ -9,6 +8,12 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     header('Access-Control-Max-Age: 86400'); // Cache preflight request for 1 day
     header("HTTP/1.1 200 OK");
     exit;
+}
+
+include("../conf.php");
+
+if($conn->connect_error){
+    die("Error de conexion: " . $conn->connect_error);
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -23,6 +28,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $hora = $data["hora"];
 
         // SQL Seguro
+        //$stmt = $conn->prepare("INSERT INTO custodiaestado (estado, hora, fecha) VALUES (?,?,?)");
         $stmt = $conn->prepare("UPDATE custodiaestado SET estado = ?, hora = ?, fecha = ? WHERE idestado = 1");
         $stmt->bind_param("sss", $estado, $hora, $fecha);
 

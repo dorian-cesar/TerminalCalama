@@ -1,11 +1,19 @@
 <?php 
-include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
-
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
- $sql = "SELECT idrestroom, Codigo, date, time FROM restroom order by idrestroom desc limit 20";
-$result = $conn->query($sql);
+if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
+    // El navegador está realizando una solicitud de pre-vuelo OPTIONS
+    header('Access-Control-Allow-Headers: Content-Type');
+    header('Access-Control-Max-Age: 86400'); // Cache preflight request for 1 day
+    header("HTTP/1.1 200 OK");
+    exit;
+}
+
+include("../conf.php");
+
+$stmt = "SELECT idcustodia, posicion, rut, hora, fecha, talla, tipo FROM custodias ORDER BY idcustodia desc limit 10";
+$result = $conn->query($stmt);
 
 // Verificar si hay resultados
 if ($result->num_rows > 0) {

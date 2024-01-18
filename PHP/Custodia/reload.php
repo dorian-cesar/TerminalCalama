@@ -1,13 +1,15 @@
 <?php 
-include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
-$stmt = "SELECT idcustodia, posicion, rut, hora, fecha, talla, tipo FROM custodias ORDER BY idcustodia desc limit 10";
+include("../conf.php");
+
+$stmt = "SELECT estado FROM custodiaestado";
 $result = $conn->query($stmt);
 
 // Verificar si hay resultados
 if ($result->num_rows > 0) {
+    //$datos = json_decode($result->fetch_assoc());
     // Crear un array para almacenar los resultados
     $datos = array();
 
@@ -26,7 +28,4 @@ if ($result->num_rows > 0) {
 
 // Cerrar la conexión a la base de datos
 $conn->close();
-
-
-
 ?>

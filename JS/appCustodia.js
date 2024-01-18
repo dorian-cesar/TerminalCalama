@@ -1,9 +1,13 @@
 const contenedorQR = document.getElementById('contenedorQR');
 const formulario = document.getElementById('formulario');
 
-const urlSave = 'http://localhost/TerminalCalama/custsave.php';
-const urlLoad = 'http://localhost/TerminalCalama/custload.php';
-const urlStore = 'http://localhost/TerminalCalama/custstore.php';
+//const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/custsave.php';
+//const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/custload.php';
+//const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/custstore.php';
+
+const urlSave = 'http://localhost/TerminalCalama/PHP/Custodia/save.php';
+const urlLoad = 'http://localhost/TerminalCalama/PHP/Custodia/load.php';
+const urlStore = 'http://localhost/TerminalCalama/PHP/Custodia/store.php';
 
 leerDatosServer();
 
@@ -93,12 +97,14 @@ function enviarReactivacion(boton){
 
 function guardarEstado(){
 	estadoStr = "";
+	estadoObj = [];
 	const botones = document.querySelectorAll('.btn');
 
 	botones.forEach(btn => {
 		act = false;
 		if(btn.classList.contains('active')||btn.classList.contains('disabled')){
 			act = true;
+			estadoObj.push(btn.textContent);
 			estadoStr += btn.textContent + "|";
 		}
 		if(btn.classList.contains('active')){
@@ -114,7 +120,7 @@ function guardarEstado(){
 	const fechaStr = fechaHoraAct.toISOString().split('T')[0];
 
 	const datos = {
-	estado: estadoStr,
+	estado: JSON.stringify(estadoObj),
 	hora: horaStr,
 	fecha: fechaStr,
 	}

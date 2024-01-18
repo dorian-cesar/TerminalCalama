@@ -12,7 +12,7 @@ leerDatosServer();
 
 var numero=0
   // URL del endpoint en tu servidor PHP
-  const url = 'http://localhost/TerminalCalama/server.php';
+  const url = 'https://localhost/TerminalCalama/PHP/Restroom/save.php';
 
 
 function escribirQR (){
@@ -22,19 +22,23 @@ function escribirQR (){
     const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
     const fechaStr = fechaHoraAct.toISOString().split('T')[0];
 
+    const tipoStr = "Baño";
+
     const numeroT=generarTokenAlfanumerico(6);
    // var numeroT='XXX'+numero++ ;
     const datos = {
         Codigo: numeroT,
         hora: horaStr,
         fecha: fechaStr,
-        
+        tipo: tipoStr
       };
     callApi(datos);
     QR.makeCode(numeroT);
     contenedorContador.innerHTML=numeroT;
-   
-    leerDatosServer();
+    // Esperamos 3 segundos para recargar la tabla historica
+    setTimeout(() => {
+      leerDatosServer()
+    }, 3000);
     //imprimirDiv()
     
 };
@@ -44,11 +48,7 @@ function escribirTexto(){
     contenedorContador.innerHTML="texto";
 };
 
-
- 
-  function callApi (datos){
-
-    
+function callApi (datos){
   fetch(url, {
     method: 'POST',
     mode: 'cors',
@@ -91,7 +91,7 @@ function escribirTexto(){
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = 'http://localhost/TerminalCalama/leerDatos.php';
+    const endpointURL = 'https://localhost/TerminalCalama/PHP/Restroom/load.php';
     
     fetch(endpointURL)
         .then(response => response.json())
@@ -101,6 +101,7 @@ function escribirTexto(){
                 <tr>
                     <td>${item.idrestroom}</td>
                     <td>${item.Codigo}</td>
+                    <td>${item.tipo}</td>
                     <td>${item.date}</td>
                     <td>${item.time}</td>
                 </tr>

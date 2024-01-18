@@ -1,5 +1,4 @@
 <?php
-include_once("./conf.php");
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
@@ -10,6 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     header("HTTP/1.1 200 OK");
     exit;
 }
+
+include("../conf.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $json_data = file_get_contents("php://input");
@@ -38,6 +39,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $conn->close();
     } else {
         http_response_code(400);
+        echo $data;
         echo "Error al decodificar JSON";
     }
 } else {

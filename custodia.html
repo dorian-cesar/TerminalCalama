@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Código QR con Javascript</title>
+    <title>Custodia de Equipaje</title>
     
-    <link rel="stylesheet" href="estilos.css" />
+    <link rel="stylesheet" href="Styles/estilos.css" />
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script defer src="app.js"></script>
+    <script defer src="JS/appCustodia.js"></script>
 </head>
 <body>
     <div class="contenedor">
@@ -21,6 +21,8 @@
             </form>
             <div id="contenedorQR" class="contenedorQR"></div>
             <button class="btn1" onclick="imprimirDiv()">Imprimir</button>
+            <br/><br/>
+            <button class="btn1" onclick="">Escanear</button>
         </div>
         <div class="derecha">
             <h1>Casilleros</h1>
@@ -33,7 +35,7 @@
                 <option value="Large" class="select-items selectClass">Large</option>
                 </select>
             </div>
-            <div id="matriz"></div>
+            <div id="matriz" style="white-space:nowrap;overflow: auto;max-height: 300px; border:1px solid white; border-radius: 10px; margin-bottom:5px; background-color: white;"></div>
                 <div class="centrar"> 
                 <div class="contenedorTabla" style="text-align:center">
                     <h3>Historial</h3>
@@ -64,7 +66,9 @@
         //const coordenadaDiv = document.getElementById('coordenada');
         const linkInput = document.getElementById('link');
     
-        const matrizSize = 7;
+        //const matrizSize = 7;
+        const matrizX = 8;
+        const matrizY = 12;
 
         // Función para convertir número a letra (A=0, B=1, ..., Z=25)
         function getLetterFromNumber(num) {
@@ -72,16 +76,18 @@
         }
     
         // Crear la matriz de botones
-        for (let i = 0; i < matrizSize; i++) {
-            for (let j = 0; j < matrizSize; j++) {
+        for (let i = 0; i < matrizY; i++) {
+            for (let j = 0; j < matrizX; j++) {
                 const btn = document.createElement('button');
                 btn.className = 'btn';
                 const letraColumna = getLetterFromNumber(j);
+                // Asignamos un ID dinamico para la carga de estado
                 btn.id = 'lockerbtn'+i+letraColumna;
                 btn.textContent = `${i},${letraColumna}`;
                 btn.addEventListener('click', () => toggleButton(btn, i, letraColumna));
                 matrizContainer.appendChild(btn);
             }
+            // Agregamos un <br/> para separar las filas
             matrizContainer.appendChild(document.createElement('br'));
         }
 
@@ -89,19 +95,19 @@
 
         function cargarEstado(){
             // Traemos los datos desde la BDD
-            fetch('http://localhost/TerminalCalama/custreload.php')
+            fetch('https://localhost/TerminalCalama/PHP/Custodia/reload.php')
             .then(response => response.json())
             .then(data => {
-                // Creamos un array con cada botón a desactivar
-                const estados = data.map(item => item.estado)[0].split("|");
-                console.log(estados);
-                
+                // Creamos un array con todos los datos traidos del JSON
+                const est = JSON.parse(data.map(item => item.estado)[0]);
+
+                // Limpiamos el casillero seleccionado para evitar errores de usuario
+                document.getElementById('formulario').link.value = '';
                 // Por cada botón, excepto si tiene length 0 (vacio)
-                estados.forEach(estado => {
+                est.forEach(estado => {
                     if(estado.length!==0){
-                        const [fila, columna] = estado.split(',');
                         // Buscamos el botón correspondiente
-                        const btn = document.querySelectorAll('#lockerbtn'+fila+columna)[0];
+                        const btn = document.querySelectorAll('#lockerbtn'+estado.replace(",",""))[0];
 
                         // Cambiamos sus clases
                         btn.classList.add('disabled');
@@ -136,7 +142,7 @@
                 }
             }else { //De lo contrario, manejar activación con normalidad
                 btn.classList.toggle('active');
-                const estado = btn.classList.contains('active') ? 'Ocupado (azul)' : 'Vacío (verde)';
+                //const estado = btn.classList.contains('active') ? 'Ocupado (azul)' : 'Vacío (verde)';
                 // coordenadaDiv.textContent = `${fila},${columna}, Estado: ${estado}`;
 
                 // Si el botón está activo, actualiza el input con las coordenadas
