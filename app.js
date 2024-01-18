@@ -46,10 +46,18 @@ formulario.addEventListener('submit', (e) => {
 			tipo: "Entrada",
 			}
 			callApi(datos, urlSave);
-			leerDatosServer();
-			QR.makeCode(formulario.link.value+'/'+rutStr+'/'+fechaStr+'/'+horaStr);
 
+			// Esperamos 3 segundos para recargar la tabla historica
+			setTimeout(() => {
+				leerDatosServer()
+			}, 3000);
+
+			// Formato QR: Casillero/Rut/Talla/AAAA-MM-DD/HH-MM-SS
+			QR.makeCode(formulario.link.value+'/'+rutStr+'/'+tamStr+'/'+fechaStr+'/'+horaStr);
+
+			// Limpiar el contenedor de casillero para evitar doble entrada
 			formulario.link.value = "";
+
 			// Guardar estado de los botones
 			guardarEstado();
 		}
@@ -57,6 +65,31 @@ formulario.addEventListener('submit', (e) => {
 		alert("Debe ingresar RUT y seleccionar Casillero.")
 	}
 });
+
+function enviarReactivacion(boton){
+	// Esta función deberá ser modificada para traer datos desde el lector de QR
+	// La siguiente implementación es solo para efectos demostrativos
+	// Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
+	const fechaHoraAct = new Date();
+	
+	const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
+	const fechaStr = fechaHoraAct.toISOString().split('T')[0];
+
+	const posStr = boton.textContent;
+
+	const datos = {
+	hora: horaStr, // Traer desde la pistola
+	fecha: fechaStr, // Traer desde la pistola
+	posicion: posStr, // Traer desde la pistola
+	rut: "-", // Traer desde la pistola
+	tamano: "-", // Traer desde la pistola
+	tipo: "Salida",
+	}
+	callApi(datos, urlSave);
+	setTimeout(() => {
+		leerDatosServer()
+	}, 3000);
+}
 
 function guardarEstado(){
 	estadoStr = "";
@@ -90,6 +123,7 @@ function guardarEstado(){
 	localStorage.setItem('estadoBotones', JSON.stringify(estadoStr));
 }
 
+// Datos: Datos a insertar, Url: PHP a utilizar
 function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando JSON
 	fetch(url, {
 		method: 'POST',
