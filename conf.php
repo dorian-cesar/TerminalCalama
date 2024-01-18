@@ -1,6 +1,5 @@
 <?php
 //To-Do: Transformar a objeto
-//Nota: No subir a git
 $server = "localhost";
 $user = "root";
 $pass = "";
