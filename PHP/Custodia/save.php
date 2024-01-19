@@ -19,19 +19,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if ($data !== null){
         // Obtener datos desde JSON
-        $pos = $data["posicion"];
+        $casilla = $data["casilla"];
         $rut = $data["rut"];
         $hora = $data["hora"];
         $fecha = $data["fecha"];
-        $tamano = $data["tamano"];
+        $bulto = $data["bulto"];
         $tipo = $data["tipo"];
 
         // SQL Seguro
         $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, talla, tipo) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $pos,$rut,$hora,$fecha,$tamano,$tipo);
+        
+        if($tipo=="Salida"){
+            $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, horasal, fechasal, talla, tipo) VALUES (?, ?, ?, ?, ?, ?)");
+        }
+        
+        $stmt->bind_param("ssssss", $casilla,$rut,$hora,$fecha,$bulto,$tipo);
 
         if ($stmt->execute()){
-            echo "Datos insertados correctamente";
+            $id = $conn->insert_id;
+            header('Content-Type: application/json');
+            echo json_encode($id);
         } else {
             echo "Error al insertar datos: " + $conn->error;
         }

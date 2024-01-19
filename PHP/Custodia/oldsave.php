@@ -12,10 +12,6 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
 
 include("../conf.php");
 
-if($conn->connect_error){
-    die("Error de conexion: " . $conn->connect_error);
-}
-
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $json_data = file_get_contents("php://input");
 
@@ -23,17 +19,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if ($data !== null){
         // Obtener datos desde JSON
-        $estado = $data["estado"];
-        $fecha = $data["fecha"];
+        $pos = $data["posicion"];
+        $rut = $data["rut"];
         $hora = $data["hora"];
+        $fecha = $data["fecha"];
+        $tamano = $data["tamano"];
+        $tipo = $data["tipo"];
 
         // SQL Seguro
-        //$stmt = $conn->prepare("INSERT INTO custodiaestado (estado, hora, fecha) VALUES (?,?,?)");
-        $stmt = $conn->prepare("UPDATE custodiaestado SET estado = ?, hora = ?, fecha = ? WHERE idestado = 1");
-        $stmt->bind_param("sss", $estado, $hora, $fecha);
+        $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, talla, tipo) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $pos,$rut,$hora,$fecha,$tamano,$tipo);
 
         if ($stmt->execute()){
-            $id = 1;
+            $id = $conn->insert_id;
             header('Content-Type: application/json');
             echo json_encode($id);
         } else {
@@ -43,6 +41,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $conn->close();
     } else {
         http_response_code(400);
+        echo $data;
         echo "Error al decodificar JSON";
     }
 } else {

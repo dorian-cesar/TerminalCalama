@@ -1,6 +1,6 @@
 const contenedorQR = document.getElementById('contenedorQR');
-const contenedorContador = document.getElementById('contador');
-contenedorContador.innerHTML="Contador";
+const contenedorContador = document.getElementById('keycont');
+contenedorContador.textContent="Contador";
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
 
@@ -34,7 +34,7 @@ function escribirQR (){
       };
     callApi(datos);
     QR.makeCode(numeroT);
-    contenedorContador.innerHTML=numeroT;
+    contenedorContador.textContent=numeroT;
     // Esperamos 3 segundos para recargar la tabla historica
     setTimeout(() => {
       leerDatosServer()
@@ -76,7 +76,7 @@ function callApi (datos){
 
   
     function generarTokenAlfanumerico(longitud) {
-        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const caracteres = 'uMyG5Ro7eVdqtXKsC4nbg1acfzWx9iYQS3DLh2E6lOwmNHkZITjpPF8BArU0vJ';
         let tokenn = '';
     
         for (let i = 0; i < longitud; i++) {

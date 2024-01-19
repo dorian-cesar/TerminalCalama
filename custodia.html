@@ -1,188 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Custodia de Equipaje</title>
-    
-    <link rel="stylesheet" href="Styles/estilos.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custodia</title>
+    <link rel="stylesheet" href="Styles/style.css" />
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script defer src="JS/appCustodia.js"></script>
+    <script defer src="JS/appCust.js"></script>
 </head>
 <body>
     <div class="contenedor">
+        <h1>Custodia</h1>
         <div class="izquierda">
-            <h1>Custodia </h1>
-            <form action="" id="formulario" class="formulario">
-                <input type="text" id="link" placeholder="Casillero" disabled/>
-                <input type="text" id="link2" placeholder="XXXXXXXX-X" />
-                <button class="btn1" id="id_btn">Generar QR</button>
+            <form id="formulario" class="formulario">
+                <input type="text" id="casillero" placeholder="Casillero" disabled/>
+                <input type="text" id="rut" placeholder="XXXXXXXX-X"/>
+                <button class="btn" id="generar">Generar QR</button>
             </form>
-            <div id="contenedorQR" class="contenedorQR"></div>
-            <button class="btn1" onclick="imprimirDiv()">Imprimir</button>
-            <br/><br/>
-            <button class="btn1" onclick="">Escanear</button>
+            <div class="contenedorQR" id="contQR"></div>
+            <button class="btn" onclick="printQR">Imprimir</button>
+            <a href="boleta.html"><button class="btn" >Escanear</button></a>
         </div>
         <div class="derecha">
-            <h1>Casilleros</h1>
-            <div style="width:100%;text-align: center;margin:auto;">
-                <label class="label tamtxt">Seleccione el tamaño del bulto </label>
-                <select name="talla" id="talla"> 
-                <option value=0 class="select-items selectClass">Seleccione</option>
-                <option value="Small" class="select-items selectClass">Small</option>
-                <option value="Medium" class="select-items selectClass">Medium</option>
-                <option value="Large" class="select-items selectClass">Large</option>
-                </select>
-            </div>
-            <div id="matriz" style="white-space:nowrap;overflow: auto;max-height: 300px; border:1px solid white; border-radius: 10px; margin-bottom:5px; background-color: white;"></div>
-                <div class="centrar"> 
-                <div class="contenedorTabla" style="text-align:center">
-                    <h3>Historial</h3>
-                    <hr>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Casillero</th>
-                                <th>RUT</th>
-                                <th>Hora</th>
-                                <th>Fecha</th>
-                                <th>Tamaño</th>
-                                <th>Tipo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-body">
-                            <!-- Filas de la tabla se insertarán aquí -->
-                        </tbody>
-                    </table>
+            <div class="contbulto">
+                <div class="bultotxt">
+                    <b><label class="bulto">Seleccione el Tamaño</label></b>
+                    <select name="bulto" id="bulto"> 
+                        <option value=0 class="select-items selectClass">Seleccione</option>
+                        <option value="Small" class="select-items selectClass">Small</option>
+                        <option value="Medium" class="select-items selectClass">Medium</option>
+                        <option value="Large" class="select-items selectClass">Large</option>
+                    </select>
                 </div>
+            </div>
+            <div id="matriz" class="contlocker"></div>
+            <div class="conttabla">
+                <table class="thist">
+                    <thead class="thist">
+                        <tr class="thist">
+                            <th class="thist">ID</th>
+                            <th class="thist">Lckr</th>
+                            <th class="thist">RUT</th>
+                            <th class="thist">Entrada</th>
+                            <th class="thist">Salida</th>
+                            <th class="thist">Tamaño</th>
+                            <th class="thist">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="thist" id="tabla-body">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
-    <script>
-        const matrizContainer = document.getElementById('matriz');
-        //const coordenadaDiv = document.getElementById('coordenada');
-        const linkInput = document.getElementById('link');
-    
-        //const matrizSize = 7;
-        const matrizX = 8;
-        const matrizY = 12;
-
-        // Función para convertir número a letra (A=0, B=1, ..., Z=25)
-        function getLetterFromNumber(num) {
-            return String.fromCharCode(65 + num);
-        }
-    
-        // Crear la matriz de botones
-        for (let i = 0; i < matrizY; i++) {
-            for (let j = 0; j < matrizX; j++) {
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                const letraColumna = getLetterFromNumber(j);
-                // Asignamos un ID dinamico para la carga de estado
-                btn.id = 'lockerbtn'+i+letraColumna;
-                btn.textContent = `${i},${letraColumna}`;
-                btn.addEventListener('click', () => toggleButton(btn, i, letraColumna));
-                matrizContainer.appendChild(btn);
-            }
-            // Agregamos un <br/> para separar las filas
-            matrizContainer.appendChild(document.createElement('br'));
-        }
-
-        cargarEstado();
-
-        function cargarEstado(){
-            // Traemos los datos desde la BDD
-            fetch('https://localhost/TerminalCalama/PHP/Custodia/reload.php')
-            .then(response => response.json())
-            .then(data => {
-                // Creamos un array con todos los datos traidos del JSON
-                const est = JSON.parse(data.map(item => item.estado)[0]);
-
-                // Limpiamos el casillero seleccionado para evitar errores de usuario
-                document.getElementById('formulario').link.value = '';
-                // Por cada botón, excepto si tiene length 0 (vacio)
-                est.forEach(estado => {
-                    if(estado.length!==0){
-                        // Buscamos el botón correspondiente
-                        const btn = document.querySelectorAll('#lockerbtn'+estado.replace(",",""))[0];
-
-                        // Cambiamos sus clases
-                        btn.classList.add('disabled');
-                        btn.classList.remove('active');
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error al obtener datos: ', error);
-            });
-        }
-    
-        // Función para cambiar el estado del botón
-        function toggleButton(btn, fila, columna) {
-            // Limpiar todos los otros botones al seleccionar uno nuevo
-            btns = document.querySelectorAll('.btn');
-
-            btns.forEach(bt => {
-                if(bt.classList.contains('active')){
-                    bt.classList.remove('active');
-                }
-            })
-
-            // Si el botón se encuentra desactivado, preguntar por reactivación
-            if(btn.classList.contains('disabled')){
-                const confirmar = window.confirm('¿Quieres liberar el estado del casillero?');
-                if(confirmar){
-                    enviarReactivacion(btn);
-                    btn.classList.remove('disabled');
-                    guardarEstado();
-                    //btn.disabled = false;
-                }
-            }else { //De lo contrario, manejar activación con normalidad
-                btn.classList.toggle('active');
-                //const estado = btn.classList.contains('active') ? 'Ocupado (azul)' : 'Vacío (verde)';
-                // coordenadaDiv.textContent = `${fila},${columna}, Estado: ${estado}`;
-
-                // Si el botón está activo, actualiza el input con las coordenadas
-                if (btn.classList.contains('active')) {
-                    linkInput.value = `${fila},${columna}`;
-                } else {
-                    linkInput.value = ''; // Si el botón está inactivo, borra el valor del input
-                }
-            }
-        }
-        function imprimirDiv() {
-    // Crear una ventana emergente temporal
-    const ventanaImpresion = window.open('', '_blank');
-    
-    // Obtener el contenido del div que quieres imprimir
-    const contenidoDiv = document.getElementById('contenedorQR').innerHTML;
-
-    //const contadorDiv = document.getElementById('contador').innerHTML;
-
-       // Escribir el contenido en la ventana emergente
-    ventanaImpresion.document.write('<html><head><title>Imprimir Div</title></head><body>');
-    ventanaImpresion.document.write('<h1>QR Custodia</h1>');
-   
-    ventanaImpresion.document.write(contenidoDiv);
-
-
-    
-    ventanaImpresion.document.write('</body></html>');
-
-    ventanaImpresion.document.close(); // Cerrar la escritura en la ventana emergente
-
-    setTimeout(imprimir, 50);
-
-    function imprimir(){
-    ventanaImpresion.print();
-    
-}
-
-}
-
-    </script>
 </body>
 </html>

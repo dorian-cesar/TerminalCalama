@@ -49,18 +49,19 @@ formulario.addEventListener('submit', (e) => {
 			tamano: tamStr,
 			tipo: "Entrada",
 			}
-			callApi(datos, urlSave);
 
-			// Esperamos 3 segundos para recargar la tabla historica
-			setTimeout(() => {
-				leerDatosServer()
-			}, 3000);
+			// Funcion asincronica, esperará hasta que se complete la llamada API
+			// para generar QR y actualizar el historial
+			callApi(datos, urlSave).then(result => {
+				// Formato QR: ID/Casillero/Rut/Talla/AAAA-MM-DD/HH-MM-SS
+				QR.makeCode(result+'/'+formulario.link.value+'/'+rutStr+'/'+tamStr+'/'+fechaStr+'/'+horaStr);
+				// Actualizar historial
+				leerDatosServer();
+				// Limpiar el contenedor de casillero para evitar doble entrada
+				formulario.link.value = "";
+			});
 
-			// Formato QR: Casillero/Rut/Talla/AAAA-MM-DD/HH-MM-SS
-			QR.makeCode(formulario.link.value+'/'+rutStr+'/'+tamStr+'/'+fechaStr+'/'+horaStr);
-
-			// Limpiar el contenedor de casillero para evitar doble entrada
-			formulario.link.value = "";
+			
 
 			// Guardar estado de los botones
 			guardarEstado();
@@ -130,8 +131,8 @@ function guardarEstado(){
 }
 
 // Datos: Datos a insertar, Url: PHP a utilizar
-function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando JSON
-	fetch(url, {
+async function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando JSON
+	let id = await fetch(url, {
 		method: 'POST',
 		mode: 'cors',
 		headers: {
@@ -139,17 +140,15 @@ function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando
 		},
 		body: JSON.stringify(datos)
 	})
-	.then(response => {
-		if(!response.ok){
-			throw new Error('Error en la solicitud');
-		}
-	})
+	.then(response => response.json())
 	.then(result => {
 		console.log('Respuesta del servidor: ', result);
+		return result;
 	})
 	.catch(error => {
 		console.error('Error al enviar la solicitud: ', error);
 	})
+	return id;
 }
 
 function leerDatosServer() {
