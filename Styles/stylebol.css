@@ -40,15 +40,23 @@ body{
     padding: 15px;
     font-size: 20px;
     border: 1px solid aliceblue;
-    border-radius: 8px;
     margin: auto;
     text-align: center;
     width: 90%;
     margin-bottom: 10px;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .btn:hover {
     background-color: blue;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }
 
 .casilla {
@@ -62,11 +70,20 @@ body{
     margin: auto;
     text-align: center;
     margin: 1px;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .casilla:hover {
     background-color: yellow;
     color: black;
+    border: 1px solid rgb(95, 64, 7);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }
 
 input {
@@ -81,6 +98,10 @@ input {
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 	font-weight: bolder;
 	background-color: white;
+    border: 1px solid rgb(63, 63, 63);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }
 
 input:hover {
@@ -106,6 +127,14 @@ input:hover {
     background-color: white;
     padding: 20px;
     margin-bottom: 20px;
+    border-radius: 25px;
+}
+
+.conttipo {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 50px;
     border-radius: 25px;
 }
 
@@ -149,11 +178,20 @@ select {
     text-align: center;
     color: #ffffff;
     cursor: pointer;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 select:hover {
     background-color: yellow;
     color: black;
+    border: 1px solid rgb(95, 64, 7);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }
 
 .select-items {
@@ -167,11 +205,19 @@ select:hover {
 
 .active {
     background-color: blue;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }
 
 .disabled {
     background-color: grey;
     cursor: not-allowed;
+    border: 1px solid rgb(63, 63, 63);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }
 
 .contticket {
@@ -193,4 +239,47 @@ select:hover {
     margin-right: 15px;
     font-family: "Lucida Console", Courier, monospace;
     text-align: left;
+}
+
+ul {
+    list-style: none;
+}
+li {
+    display: inline-block;
+}
+input[type="radio"] {
+    visibility:hidden;
+}
+label.radiolbl {
+    cursor: pointer;
+    background-color: rgb(16, 163, 85);
+    color: aliceblue;
+    padding: 15px;
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 1.1rem;
+    border: 1px solid aliceblue;
+    border-radius: 8px;
+    margin: auto;
+    text-align: center;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+label.radiolbl:hover {
+    background-color: yellow;
+    color:black;
+    border: 1px solid rgb(95, 64, 7);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+}
+input[type="radio"]:checked + label.radiolbl {
+    background-color: blue;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
 }

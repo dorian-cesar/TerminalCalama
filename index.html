@@ -14,20 +14,24 @@
         <div class="izquierda">
             <form id="formulario" class="formulario">
                 <input type="text" id="keycont" disabled/>
-                <button class="btn" id="generar" onclick="escribirQR()">Generar QR</button>
+                <button class="btn" id="generar">Generar QR</button>
             </form>
             <div class="contenedorQR" id="contenedorQR"></div>
-            <button class="btn" onclick="imprimirDiv()">Imprimir</button>
+            <button class="btn" onclick="printQR()">Imprimir</button>
         </div>
         <div class="derecha">
-            <div class="contbulto">
+            <div class="conttipo">
                 <div class="bultotxt">
-                    <b><label class="bulto">Seleccione el Servicio</label></b>
-                    <select name="bulto" id="bulto"> 
-                        <option value=0 class="select-items selectClass">Seleccione</option>
-                        <option value="Toilet" class="select-items selectClass">Baño</option>
-                        <option value="Shower" class="select-items selectClass">Ducha</option>
-                    </select>
+                    <ul>
+                        <li>
+                            <input type='radio' value='Toilet' name='tipo' id='radio1' checked/>
+                            <label class="radiolbl" type='radio' for='radio1'>Toilet</label>
+                        </li>
+                        <li>
+                            <input type='radio' value='Ducha' name='tipo'  id='radio2'/>
+                            <label class="radiolbl" type='radio' for='radio2'>Ducha</label>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="conttabla" style="height:80%">

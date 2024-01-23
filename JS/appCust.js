@@ -90,7 +90,7 @@ formulario.addEventListener('submit', (e) => {
             casilla: casillaStr,
             rut: rutStr,
             bulto: bultoStr,
-            tipo: 'Entrada',
+            tipo: 'Ingresado',
         }
 
         // Llamamos a la API para guardar un registro de entrada
@@ -98,7 +98,10 @@ formulario.addEventListener('submit', (e) => {
         // Lo siguiente solo se ejecutará cuando la API entregue una respuesta
         .then(result => {
             // Generamos un QR con los datos de ingreso
-            QR.makeCode(btoa(result+'/'+casillaStr+'/'+rutStr+'/'+bultoStr+'/'+fechaStr+'/'+horaStr));
+            const qrConv = btoa(result+'/'+casillaStr+'/'+rutStr+'/'+bultoStr+'/'+fechaStr+'/'+horaStr);
+            console.log(qrConv);
+            navigator.clipboard.writeText(qrConv);
+            QR.makeCode(qrConv);
             actualizarTabla();
             // Limpiamos la entrada de casilla para evitar doble envio
             formulario.casillero.value = '';
@@ -143,17 +146,21 @@ function actualizarTabla() {
     fetch(urlLoad)
     .then(response => response.json())
     .then(data => {
-		const filasHTML = data.map(item => `
+		const filasHTML = data.map(item =>
+            `
 			<tr>
 				<td>${item.idcustodia}</td>
 				<td>${item.posicion}</td>
 				<td>${item.rut}</td>
 				<td>${item.fecha} ${item.hora}</td>
-				<td>${item.fechasal} ${item.horasal}</td>
+				<td>${item.fechasal != '0000-00-00' ? item.fechasal : ''} ${item.horasal != '00:00:00' ? item.horasal : ''}</td>
 				<td>${item.talla}</td>
 				<td>${item.tipo}</td>
+				<td>${item.valor > 0 ? item.valor : ''}</td>
 			</tr>
 		`).join('');
+
+        //console.log(JSON.stringify(data));
 
 		document.getElementById('tabla-body').innerHTML = filasHTML;
     })
@@ -176,17 +183,7 @@ function toggleButton(btn) {
     })
 
     // Si la casilla está deshabilitada, preguntamos si la queremos rehabilitar
-    if(btn.classList.contains('disabled')){
-        const confirmar = window.confirm('¿Liberar la casilla?');
-
-        if(confirmar){
-            // Si aceptamos, reactivamos el boton y habilitamos la casilla
-            reactivarBoton(btn);
-            btn.classList.remove('disabled');
-            // Guardamos el estado de los botones
-            guardarEstado();
-        }
-    } else {
+    if(!btn.classList.contains('disabled')){
         // De lo contrario, seleccionamos una casilla como activa
         btn.classList.toggle('active');
 
@@ -195,6 +192,8 @@ function toggleButton(btn) {
         } else {
             formulario.casillero.value = '';
         }
+    } else {
+        formulario.casillero.value = '';
     }
 }
 
@@ -276,7 +275,7 @@ function reactivarBoton(btn){
 	casilla: posStr, // Traer desde la pistola
 	rut: "-", // Traer desde la pistola
 	bulto: "-", // Traer desde la pistola
-	tipo: "Salida",
+	tipo: "Entregado",
 	}
 
     callAPI(datos, urlSave)
@@ -284,4 +283,24 @@ function reactivarBoton(btn){
         actualizarTabla();
         guardarEstado();
     });
+}
+
+function printQR() {
+    const ventanaImpr = window.open('', '_blank');
+
+    // Obtenemos la fecha actual
+    const dateAct = new Date();
+    // Separamos hora y fecha en constantes unicas
+    const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+    const fechaStr = dateAct.toISOString().split('T')[0];
+
+    ventanaImpr.document.write('<html><head><title>Imprimir QR</title></head><body style="text-align:center; width: min-content;">');
+    ventanaImpr.document.write('<h1>Ticket de Recepción</h1>');
+    ventanaImpr.document.write(`<h3>${fechaStr} ${horaStr}</h3>`);
+    ventanaImpr.document.write(contQR.innerHTML);
+    ventanaImpr.document.write('</body></html>');
+
+    ventanaImpr.document.close();
+
+    ventanaImpr.print();
 }

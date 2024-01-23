@@ -1,6 +1,7 @@
 const contenedorQR = document.getElementById('contenedorQR');
-const contenedorContador = document.getElementById('keycont');
-contenedorContador.textContent="Contador";
+const contenedorContador = document.getElementById("keycont");
+contenedorContador.value = "Contador";
+const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
 
@@ -15,14 +16,19 @@ var numero=0
   const url = 'https://localhost/TerminalCalama/PHP/Restroom/save.php';
 
 
-function escribirQR (){
+  genQR.addEventListener('click', (e) => {
+    e.preventDefault();
+    genQR.disabled = true;
+    genQR.classList.add('disabled');
     // Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
     const fechaHoraAct = new Date();
 
     const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
     const fechaStr = fechaHoraAct.toISOString().split('T')[0];
 
-    const tipoStr = "Baño";
+    const tipoStr = document.querySelector('input[name="tipo"]:checked').value;
+
+    //console.log(tipoStr);
 
     const numeroT=generarTokenAlfanumerico(6);
    // var numeroT='XXX'+numero++ ;
@@ -32,24 +38,24 @@ function escribirQR (){
         fecha: fechaStr,
         tipo: tipoStr
       };
-    callApi(datos);
-    QR.makeCode(numeroT);
-    contenedorContador.textContent=numeroT;
-    // Esperamos 3 segundos para recargar la tabla historica
-    setTimeout(() => {
-      leerDatosServer()
-    }, 3000);
-    //imprimirDiv()
     
-};
+    callApi(datos)
+    .then(res => {
+      QR.makeCode(numeroT);
+      contenedorContador.value = numeroT;
+      leerDatosServer();
+      genQR.disabled = false;
+      genQR.classList.remove('disabled');
+    });
+    
+});
 
 function escribirTexto(){
-
     contenedorContador.innerHTML="texto";
 };
 
-function callApi (datos){
-  fetch(url, {
+async function callApi (datos){
+  let ret = await fetch(url, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -72,6 +78,7 @@ function callApi (datos){
       // Capturar y manejar errores
       console.error('Error al enviar la solicitud:', error);
     });  
+    return ret;
   }
 
   
@@ -83,7 +90,7 @@ function callApi (datos){
             const indice = Math.floor(Math.random() * caracteres.length);
             tokenn += caracteres.charAt(indice);
         }
-        console.log(tokenn);
+        //console.log(tokenn);
         return tokenn;
     }
     
@@ -115,39 +122,32 @@ function callApi (datos){
         });
    }
 
-        function imprimirDiv() {
-    // Crear una ventana emergente temporal
-    const ventanaImpresion = window.open('', '_blank');
-    
-    // Obtener el contenido del div que quieres imprimir
-    const contenidoDiv = document.getElementById('contenedorQR').innerHTML;
-
-    const contadorDiv = document.getElementById('contador').innerHTML;
-
-       // Escribir el contenido en la ventana emergente
-    ventanaImpresion.document.write('<html><head><title>Imprimir Div</title></head><body>');
-    ventanaImpresion.document.write('<h1>QR Baños</h1>');
+   function printQR() {
+       const ventanaImpr = window.open('', '_blank');
    
-    ventanaImpresion.document.write(contenidoDiv);
+       // Obtenemos la fecha actual
+       const dateAct = new Date();
+       // Separamos hora y fecha en constantes unicas
+       const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+       const fechaStr = dateAct.toISOString().split('T')[0];
 
-
-    
-    ventanaImpresion.document.write('</body></html>');
-
-    ventanaImpresion.document.close(); // Cerrar la escritura en la ventana emergente
-
-    setTimeout(imprimir, 50);
-
-    function imprimir(){
-    ventanaImpresion.print();
-    
-}
-
-}
-
-    
-  
-    
+       // Importante: Eventualmente la funcion de imprimir se
+       // disparará al momento de generar el QR, para motivos de
+       // demostración, obtenemos el valor actual del radio,
+       // pero este puede ser distinto al valor del ticket
+       // si el operador lo cambia
+       const tipoStr = document.querySelector('input[name="tipo"]:checked').value;
+   
+       ventanaImpr.document.write('<html><head><title>Imprimir QR</title></head><body style="text-align:center; width: min-content;">');
+       ventanaImpr.document.write(`<h1>Ticket de ${tipoStr}</h1>`);
+       ventanaImpr.document.write(`<h3>${fechaStr} ${horaStr}</h3>`);
+       ventanaImpr.document.write(contenedorQR.innerHTML);
+       ventanaImpr.document.write('</body></html>');
+   
+       ventanaImpr.document.close();
+   
+       ventanaImpr.print();
+   }
   
   
 

@@ -6,7 +6,9 @@
     <title>Custodia</title>
     <link rel="stylesheet" href="Styles/style.css" />
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script defer src="JS/appCust.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 </head>
 <body>
     <div class="contenedor">
@@ -18,7 +20,7 @@
                 <button class="btn" id="generar">Generar QR</button>
             </form>
             <div class="contenedorQR" id="contQR"></div>
-            <button class="btn" onclick="printQR">Imprimir</button>
+            <button class="btn" onclick="printQR()">Imprimir</button>
             <a href="boleta.html"><button class="btn" >Escanear</button></a>
         </div>
         <div class="derecha">
@@ -44,7 +46,8 @@
                             <th class="thist">Entrada</th>
                             <th class="thist">Salida</th>
                             <th class="thist">Tamaño</th>
-                            <th class="thist">Estado</th>
+                            <th class="thist">Tipo</th>
+                            <th class="thist">Valor</th>
                         </tr>
                     </thead>
                     <tbody class="thist" id="tabla-body">
@@ -54,4 +57,5 @@
         </div>
     </div>
 </body>
+<script defer src="JS/appCust.js"></script>
 </html>

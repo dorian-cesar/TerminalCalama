@@ -47,7 +47,7 @@ formulario.addEventListener('submit', (e) => {
 			posicion: posStr,
 			rut: rutStr,
 			tamano: tamStr,
-			tipo: "Entrada",
+			tipo: "Ingresado",
 			}
 
 			// Funcion asincronica, esperará hasta que se complete la llamada API
@@ -88,7 +88,7 @@ function enviarReactivacion(boton){
 	posicion: posStr, // Traer desde la pistola
 	rut: "-", // Traer desde la pistola
 	tamano: "-", // Traer desde la pistola
-	tipo: "Salida",
+	tipo: "Entregado",
 	}
 	callApi(datos, urlSave);
 	setTimeout(() => {

@@ -27,10 +27,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $tipo = $data["tipo"];
 
         // SQL Seguro
-        $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, talla, tipo) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, talla, tipo, horasal, fechasal, valor) VALUES (?, ?, ?, ?, ?, ?, '-', '-', 0)");
         
-        if($tipo=="Salida"){
-            $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, horasal, fechasal, talla, tipo) VALUES (?, ?, ?, ?, ?, ?)");
+        if($tipo=="Entregado"){
+            $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, horasal, fechasal, talla, tipo, valor) VALUES (?, ?, ?, ?, ?, ?, 0)");
         }
         
         $stmt->bind_param("ssssss", $casilla,$rut,$hora,$fecha,$bulto,$tipo);

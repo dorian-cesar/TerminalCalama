@@ -19,29 +19,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if ($data !== null){
         // Obtener datos desde JSON
-        $id = $data;
+        $id = $data["id"];
+        $estado = $data["estado"];
+        $hora = $data["hora"];
+        $fecha = $data["fecha"];
+        $value = $data["valor"];
 
-        // SQL Seguro
-        $stmt = $conn->prepare("SELECT posicion, rut, hora, fecha, talla, tipo FROM custodias WHERE idcustodia = ?");
-        $stmt->bind_param("i", $id);
+        $stmt = $conn->prepare("UPDATE custodias SET tipo = ?, horasal = ?, fechasal = ?, valor = ? WHERE idcustodia = ?");
+        $stmt->bind_param("sssii", $estado,$hora,$fecha,$value,$id);
 
         if ($stmt->execute()){
-            $result = $stmt->get_result();
-            $registro = $result->fetch_assoc();
-
-            if(strcmp($registro['tipo'],'Entregado')==0){
-                echo "Error: este ticket ya ha sido escaneado anteriormente";
-                return;
-            }
             header('Content-Type: application/json');
-            echo json_encode($registro);
+            echo json_encode("Registro actualizado correctamente");
         } else {
-            echo "Error al obtener datos: " + $conn->error;
+            echo "Error al actualizar datos: " + $conn->error;
         }
 
         $conn->close();
     } else {
         http_response_code(400);
+        echo $data;
         echo "Error al decodificar JSON";
     }
 } else {

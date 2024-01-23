@@ -5,7 +5,7 @@ header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes PO
 
 include("../conf.php");
 
- $sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroom order by idrestroom desc limit 20";
+ $sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroom order by idrestroom desc limit 28";
 $result = $conn->query($sql);
 
 // Verificar si hay resultados
