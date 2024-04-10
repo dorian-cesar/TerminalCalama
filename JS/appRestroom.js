@@ -13,7 +13,7 @@ leerDatosServer();
 
 var numero=0
   // URL del endpoint en tu servidor PHP
-  const url = 'https://localhost/TerminalCalama/PHP/Restroom/save.php';
+  const url = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Restroom/save.php';
 
 
   genQR.addEventListener('click', (e) => {
@@ -98,7 +98,7 @@ async function callApi (datos){
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = 'https://localhost/TerminalCalama/PHP/Restroom/load.php';
+    const endpointURL = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Restroom/load.php';
     
     fetch(endpointURL)
         .then(response => response.json())

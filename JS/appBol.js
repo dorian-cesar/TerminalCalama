@@ -1,11 +1,11 @@
 const formulario = document.getElementById('formulario');
 
-const urlLoad = 'http://localhost/TerminalCalama/PHP/Boleta/load.php';
-const urlUpdate = 'http://localhost/TerminalCalama/PHP/Boleta/save.php';
+const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Boleta/load.php';
+const urlUpdate = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Boleta/save.php';
 
 // Estado botones
-const urlStore = 'http://localhost/TerminalCalama/PHP/Custodia/store.php';
-const urlState = 'http://localhost/TerminalCalama/PHP/Custodia/reload.php';
+const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
+const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
 
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();

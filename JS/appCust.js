@@ -41,10 +41,15 @@ function getLetterFromNumber(num) {
 }
 
 // Punteros a APIs PHP
-const urlSave = 'http://localhost/TerminalCalama/PHP/Custodia/save.php';
-const urlLoad = 'http://localhost/TerminalCalama/PHP/Custodia/load.php';
-const urlStore = 'http://localhost/TerminalCalama/PHP/Custodia/store.php';
-const urlState = 'http://localhost/TerminalCalama/PHP/Custodia/reload.php';
+//const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
+//const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
+//const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
+//const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
+
+const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
+const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
+const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
+const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
 
 actualizarTabla();
 cargarEstado();

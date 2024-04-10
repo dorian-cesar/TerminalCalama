@@ -1,13 +1,13 @@
 const contenedorQR = document.getElementById('contenedorQR');
 const formulario = document.getElementById('formulario');
 
-//const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/custsave.php';
-//const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/custload.php';
-//const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/custstore.php';
+const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/custsave.php';
+const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/custload.php';
+const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/custstore.php';
 
-const urlSave = 'http://localhost/TerminalCalama/PHP/Custodia/save.php';
-const urlLoad = 'http://localhost/TerminalCalama/PHP/Custodia/load.php';
-const urlStore = 'http://localhost/TerminalCalama/PHP/Custodia/store.php';
+//const urlSave = 'http://localhost/TerminalCalama/PHP/Custodia/save.php';
+//const urlLoad = 'http://localhost/TerminalCalama/PHP/Custodia/load.php';
+//const urlStore = 'http://localhost/TerminalCalama/PHP/Custodia/store.php';
 
 leerDatosServer();
 
