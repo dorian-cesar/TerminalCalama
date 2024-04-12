@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     exit;
 }
 
-include("../conf.php");
+include(dirname(__DIR__)."/conf.php"); 
 
 // Verificar si se recibió una solicitud POST con datos en formato JSON
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

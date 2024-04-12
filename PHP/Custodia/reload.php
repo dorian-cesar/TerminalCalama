@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
-include("../conf.php");
+include(dirname(__DIR__)."/conf.php"); 
 
 $stmt = "SELECT estado FROM custodiaestado";
 $result = $conn->query($stmt);

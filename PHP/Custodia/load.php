@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     exit;
 }
 
-include("../conf.php");
+include(dirname(__DIR__)."/conf.php"); 
 
 $stmt = "SELECT idcustodia, posicion, rut, hora, fecha, talla, tipo, valor, horasal, fechasal FROM custodias ORDER BY idcustodia desc limit 12";
 $result = $conn->query($stmt);

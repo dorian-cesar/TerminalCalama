@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     exit;
 }
 
-include("../conf.php");
+include(dirname(__DIR__)."/conf.php"); 
 
 if($conn->connect_error){
     die("Error de conexion: " . $conn->connect_error);

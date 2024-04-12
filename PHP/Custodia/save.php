@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     exit;
 }
 
-include("../conf.php");
+include(dirname(__DIR__)."/conf.php"); 
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $json_data = file_get_contents("php://input");
