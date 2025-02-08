@@ -4,7 +4,8 @@ contenedorContador.value = "Contador";
 const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
-urlBase='http://localhost';
+//urlBase='http://localhost';
+urlBase='https://andenes.terminal-calama.com'
 //urlbase='https://masgps-bi.wit.la'
 
 leerDatosServer();
