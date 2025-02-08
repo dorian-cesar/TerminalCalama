@@ -3,7 +3,10 @@ header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquie
 
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
+
+
 include(dirname(__DIR__)."/conf.php"); 
+
 
  $sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroom order by idrestroom desc limit 28";
 $result = $conn->query($sql);

@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QRcode</title>
-    <link rel="stylesheet" href="qrstyle.css">
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script defer src="app2.js"></script>
-   
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de QR en HTML</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 </head>
 <body>
-    <div class="centrar">
-    <h1>Restroom' Terminal</h1>
-    <div id="contador"></div>
-  
-    <button onclick="escribirQR()" class="btn">Generar Ticket </button>
-      
-    <div id="contenedorQR"></div>
-    <button class="btn">Imprimir</button>
-    </div>
-    
 
+<h1>Generador de QR en HTML</h1>
 
+<div id="qrCode"></div>
+
+<script>
+// Función para generar el código QR
+function generarQR(texto) {
+    var qr = new QRCode(document.getElementById("qrCode"), {
+        text: texto,
+        width: 200,
+        height: 200
+    });
+}
+
+// Llamada a la función para generar el código QR
+window.onload = function() {
+    generarQR("https://ejemplo.com"); // Puedes cambiar "https://ejemplo.com" por la URL que desees codificar en el QR
+};
+</script>
 
 </body>
 </html>

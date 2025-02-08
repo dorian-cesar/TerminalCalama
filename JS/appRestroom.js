@@ -4,6 +4,8 @@ contenedorContador.value = "Contador";
 const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
+urlBase='http://localhost';
+//urlbase='https://masgps-bi.wit.la'
 
 leerDatosServer();
 
@@ -13,7 +15,7 @@ leerDatosServer();
 
 var numero=0
   // URL del endpoint en tu servidor PHP
-  const url = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Restroom/save.php';
+  const url = urlBase+'/TerminalCalama/PHP/Restroom/save.php';
 
 
   genQR.addEventListener('click', (e) => {
@@ -30,7 +32,7 @@ var numero=0
 
     //console.log(tipoStr);
 
-    const numeroT=generarTokenAlfanumerico(6);
+    const numeroT=generarTokenNumerico();
    // var numeroT='XXX'+numero++ ;
     const datos = {
         Codigo: numeroT,
@@ -46,6 +48,10 @@ var numero=0
       leerDatosServer();
       genQR.disabled = false;
       genQR.classList.remove('disabled');
+      addUser(numeroT);
+      let name=numeroT.substring(0,6);
+      console.log(name);
+      addUserAccessLevel(name);
     });
     
 });
@@ -82,23 +88,20 @@ async function callApi (datos){
   }
 
   
-    function generarTokenAlfanumerico(longitud) {
-        const caracteres = 'uMyG5Ro7eVdqtXKsC4nbg1acfzWx9iYQS3DLh2E6lOwmNHkZITjpPF8BArU0vJ';
-        let tokenn = '';
-    
-        for (let i = 0; i < longitud; i++) {
-            const indice = Math.floor(Math.random() * caracteres.length);
-            tokenn += caracteres.charAt(indice);
-        }
-        //console.log(tokenn);
-        return tokenn;
+  function generarTokenNumerico() {
+    let token = (Math.floor(Math.random() * 9) + 1).toString(); // Primer dígito entre 1 y 9 (convertido a string)
+    for (let i = 1; i < 20; i++) {
+        token += Math.floor(Math.random() * 10); // Agregar dígitos entre 0 y 9
     }
+    return token;
+}
+
     
     // Ejemplo de uso para un token de 6 caracteres
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Restroom/load.php';
+    const endpointURL = urlBase +'/TerminalCalama/PHP/Restroom/load.php';
     
     fetch(endpointURL)
         .then(response => response.json())
@@ -123,31 +126,101 @@ async function callApi (datos){
    }
 
    function printQR() {
-       const ventanaImpr = window.open('', '_blank');
-   
-       // Obtenemos la fecha actual
-       const dateAct = new Date();
-       // Separamos hora y fecha en constantes unicas
-       const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
-       const fechaStr = dateAct.toISOString().split('T')[0];
+    const ventanaImpr = window.open('', '_blank');
 
-       // Importante: Eventualmente la funcion de imprimir se
-       // disparará al momento de generar el QR, para motivos de
-       // demostración, obtenemos el valor actual del radio,
-       // pero este puede ser distinto al valor del ticket
-       // si el operador lo cambia
-       const tipoStr = document.querySelector('input[name="tipo"]:checked').value;
-   
-       ventanaImpr.document.write('<html><head><title>Imprimir QR</title></head><body style="text-align:center; width: min-content;">');
-       ventanaImpr.document.write(`<h1>Ticket de ${tipoStr}</h1>`);
-       ventanaImpr.document.write(`<h3>${fechaStr} ${horaStr}</h3>`);
-       ventanaImpr.document.write(contenedorQR.innerHTML);
-       ventanaImpr.document.write('</body></html>');
-   
-       ventanaImpr.document.close();
-   
-       ventanaImpr.print();
-   }
+    // Obtenemos la fecha y hora actual
+    const dateAct = new Date();
+    const horaStr = dateAct.getHours().toString().padStart(2, '0') + ':' +
+                    dateAct.getMinutes().toString().padStart(2, '0') + ':' +
+                    dateAct.getSeconds().toString().padStart(2, '0');
+    const fechaStr = dateAct.toISOString().split('T')[0];
+
+    // Obtener el código QR generado
+    const codigoQR = contenedorContador.value;
+
+    if (!codigoQR) {
+        alert("No hay código QR generado para imprimir.");
+        return;
+    }
+
+    ventanaImpr.document.write(`
+        <html>
+            <head>
+                <title>Imprimir QR</title>
+                <style>
+                    body { text-align: center; font-family: Arial, sans-serif; }
+                    h1, h3 { margin: 5px; }
+                    .qr-container { display: flex; justify-content: center; margin-top: 10px; }
+                </style>
+            </head>
+            <body>
+                <h1>Ticket de Acceso</h1>
+                <h3>Fecha: ${fechaStr}</h3>
+                <h3>Hora: ${horaStr}</h3>
+                <h3>Código: ${codigoQR}</h3>
+                <div class="qr-container">
+                    ${contenedorQR.innerHTML}
+                </div>
+            </body>
+        </html>
+    `);
+
+    ventanaImpr.document.close();
+   // ventanaImpr.print();
+   setTimeout(function() {
+    ventanaImpr.print();
+  }, 500);
+}
+
+    function addUser(token) {
+    const url = urlBase+'/TerminalCalama/PHP/Restroom/addUser.php';
+    
+    const userData = {
+        pin: token,
+        idNo: token
+    };
+
+    try {
+        let response =  fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        let result =  response.text();
+        console.log('Respuesta de addUser:', result);
+    } catch (error) {
+        console.error('Error al agregar usuario:', error);
+    }
+}
+
+// Función para asignar niveles de acceso al usuario
+async function addUserAccessLevel(token) {
+  const url = urlBase+'/TerminalCalama/PHP/Restroom/addLevelUser.php';
+
+  const accessData = {
+      pin: token
+  };
+
+  try {
+      let response = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(accessData)
+      });
+
+      let result = await response.text();
+      console.log('Respuesta de addLevelUser:', result);
+  } catch (error) {
+      console.error('Error al asignar niveles de acceso:', error);
+  }
+}
   
   
 
