@@ -5,8 +5,10 @@ const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
 //urlBase='http://localhost';
-urlBase='https://andenes.terminal-calama.com'
-//urlbase='https://masgps-bi.wit.la'
+urlBase='https://andenes.terminal-calama.com';
+
+console.log (urlBase);
+
 
 leerDatosServer();
 
@@ -199,7 +201,7 @@ async function callApi (datos){
 }
 
 // Función para asignar niveles de acceso al usuario
-async function addUserAccessLevel(token) {
+ function addUserAccessLevel(token) {
   const url = urlBase+'/TerminalCalama/PHP/Restroom/addLevelUser.php';
 
   const accessData = {
@@ -207,7 +209,7 @@ async function addUserAccessLevel(token) {
   };
 
   try {
-      let response = await fetch(url, {
+      let response =  fetch(url, {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -216,7 +218,7 @@ async function addUserAccessLevel(token) {
           body: JSON.stringify(accessData)
       });
 
-      let result = await response.text();
+      let result =  response.text();
       console.log('Respuesta de addLevelUser:', result);
   } catch (error) {
       console.error('Error al asignar niveles de acceso:', error);
