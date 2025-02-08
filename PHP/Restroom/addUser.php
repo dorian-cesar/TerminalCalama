@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
+
+header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 // Configuración de la API
 include "configInbio.php";
 
