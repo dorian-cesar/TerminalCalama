@@ -4,8 +4,8 @@ contenedorContador.value = "Contador";
 const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
-//urlBase='http://localhost';
-urlBase='https://andenes.terminal-calama.com';
+urlBase='http://localhost';
+//urlBase='https://andenes.terminal-calama.com';
 
 console.log (urlBase);
 
@@ -139,7 +139,10 @@ async function callApi (datos){
     const fechaStr = dateAct.toISOString().split('T')[0];
 
     // Obtener el código QR generado
-    const codigoQR = contenedorContador.value;
+    const codigoQR = document.getElementById('keycont').value;
+
+    // Obtener el tipo seleccionado (Toilet o Ducha)
+    const tipoSeleccionado = document.querySelector('input[name="tipo"]:checked').value;
 
     if (!codigoQR) {
         alert("No hay código QR generado para imprimir.");
@@ -160,19 +163,21 @@ async function callApi (datos){
                 <h1>Ticket de Acceso</h1>
                 <h3>Fecha: ${fechaStr}</h3>
                 <h3>Hora: ${horaStr}</h3>
+                <h3>Tipo: ${tipoSeleccionado}</h3>
                 <h3>Código: ${codigoQR}</h3>
                 <div class="qr-container">
-                    ${contenedorQR.innerHTML}
+                    ${document.getElementById('contenedorQR').innerHTML}
                 </div>
             </body>
         </html>
     `);
     ventanaImpr.document.close();
-   // ventanaImpr.print();
-   setTimeout(function() {
-    ventanaImpr.print();
-  }, 500);
+    
+    setTimeout(function() {
+        ventanaImpr.print();
+    }, 500);
 }
+
 
     function addUser(token) {
     const url = urlBase+'/TerminalCalama/PHP/Restroom/addUser.php';
