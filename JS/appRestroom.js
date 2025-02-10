@@ -43,7 +43,7 @@ var numero=0
         fecha: fechaStr,
         tipo: tipoStr
       };
-    
+
     callApi(datos)
     .then(res => {
       QR.makeCode(numeroT);
@@ -56,7 +56,7 @@ var numero=0
       console.log(name);
       addUserAccessLevel(name);
     });
-    
+
 });
 
 function escribirTexto(){
@@ -90,7 +90,7 @@ async function callApi (datos){
     return ret;
   }
 
-  
+
   function generarTokenNumerico() {
     let token = (Math.floor(Math.random() * 9) + 1).toString(); // Primer dígito entre 1 y 9 (convertido a string)
     for (let i = 1; i < 10; i++) {
@@ -99,13 +99,13 @@ async function callApi (datos){
     return token;
 }
 
-    
+
     // Ejemplo de uso para un token de 6 caracteres
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
     const endpointURL = urlBase +'/TerminalCalama/PHP/Restroom/load.php';
-    
+
     fetch(endpointURL)
         .then(response => response.json())
         .then(data => {
@@ -151,30 +151,9 @@ async function callApi (datos){
             <head>
                 <title>Imprimir QR</title>
                 <style>
-                    @page {
-                        size: 5.5cm auto; /* Ancho fijo y alto dinámico basado en el contenido */
-                        margin: 0; /* Sin márgenes para evitar espacios adicionales */
-                    }
-                    body { 
-                        text-align: center; 
-                        font-family: Arial, sans-serif; 
-                        margin: 0; 
-                        padding: 0; 
-                        width: 5.5cm; /* Ancho del ticket */
-                    }
-                    h1, h3 { 
-                        margin: 5px 0; 
-                        font-size: 12px; /* Tamaño de fuente ajustado */
-                    }
-                    .qr-container { 
-                        display: flex; 
-                        justify-content: center; 
-                        margin: 10px 0; 
-                    }
-                    img { 
-                        max-width: 5cm; /* Ancho máximo del QR */
-                        height: auto; 
-                    }
+                    body { text-align: center; font-family: Arial, sans-serif; }
+                    h1, h3 { margin: 5px; }
+                    .qr-container { display: flex; justify-content: center; margin-top: 10px; }
                 </style>
             </head>
             <body>
@@ -188,7 +167,6 @@ async function callApi (datos){
             </body>
         </html>
     `);
-   
     ventanaImpr.document.close();
    // ventanaImpr.print();
    setTimeout(function() {
@@ -198,7 +176,7 @@ async function callApi (datos){
 
     function addUser(token) {
     const url = urlBase+'/TerminalCalama/PHP/Restroom/addUser.php';
-    
+
     const userData = {
         pin: token,
         idNo: token
@@ -245,7 +223,3 @@ async function callApi (datos){
       console.error('Error al asignar niveles de acceso:', error);
   }
 }
-  
-  
-
-
