@@ -50,7 +50,7 @@ curl_close($curl);
 $data = json_decode($response, true);
 
 if ($data && isset($data['code']) && $data['code'] === 0) {
-    echo json_encode(["success" => "Nivel(es) de acceso asignado(s) exitosamente"]);
+    echo json_encode(["success" => "Nivel(es) de acceso asignado(s) exitosamente: nivel $accessLevelIds"]);
 } else {
     echo json_encode(["error" => "Error al asignar el nivel de acceso: " . ($data['message'] ?? "Respuesta inválida")]);
 }
