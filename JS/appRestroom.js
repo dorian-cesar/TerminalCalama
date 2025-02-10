@@ -177,8 +177,12 @@ async function callApi (datos){
     
     setTimeout(function() {
         ventanaImpr.print();
+        setTimeout(function() {
+            ventanaImpr.close(); // Cierra la pestaña después de imprimir
+        }, 500);
     }, 500);
 }
+
 
 
     function addUser(token) {
