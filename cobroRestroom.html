@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobro Restroom</title>
+    <link rel="stylesheet" href="Styles/stylebol.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Cobro Restroom</h1>
+        <div class="izquierda">
+            <form id="facturaForm" class="formulario">
+                <label for="QRIn">Código QR:</label>
+                <input type="text" name="QRIn" id="QRIn" placeholder="Ingrese el código QR">
+                
+                <label for="tipo">Tipo:</label>
+                <select name="tipo" id="tipo">
+                    <option value="" disabled selected>Seleccione el tipo</option>
+                    <option value="Toilet">Toilet</option>
+                    <option value="Ducha">Ducha</option>
+                </select>
+                
+                <label for="valor">Valor a Pagar:</label>
+                <input type="number" name="valor" id="valor" placeholder="Ingrese el valor">
+                
+                <button type="submit" class="btn">Emitir Boleta</button>
+            </form>
+            <br><br>
+            <div>
+                <a href="index.html"><button class="btn">Volver</button></a>
+            </div>
+        </div>
+        
+        <div class="derecha">
+            <div class="contticket">
+                <div class="square" id="resultado">
+                    <!-- Aquí se mostrará el resultado de la generación de la boleta -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#facturaForm').submit(function (event) {
+                event.preventDefault();
+                
+                let servicio = $('#tipo').val();
+                let valor = $('#valor').val();
+
+                if (!servicio || !valor) {
+                    $('#resultado').html("<div class='alert alert-warning'>Por favor, complete todos los campos.</div>");
+                    return;
+                }
+                
+                let payload = {
+                    "codigoEmpresa": "89",
+                    "tipoDocumento": "39",
+                    "total": valor,
+                    "detalleBoleta": `53-${valor}-1-dsa-${servicio}`
+                };
+                
+                $.ajax({
+                    url: "https://qa.pullman.cl/srv-dte-web/rest/emisionDocumentoElectronico/generarDocumento",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(payload),
+                    success: function (response) {
+                        if (response.respuesta === "OK") {
+                            let boletaHtml = `
+                                <div class='alert alert-success'>
+                                    Boleta generada con éxito.<br>
+                                    <strong>Folio:</strong> ${response.folio}<br>
+                                    <strong>Fecha:</strong> ${response.fecha}<br>
+                                    <a href='${response.rutaAcepta}' target='_blank' class='btn btn-success mt-2'>Ver Boleta</a>
+                                </div>`;
+                            $('#resultado').html(boletaHtml);
+                        } else {
+                            $('#resultado').html("<div class='alert alert-danger'>Error al generar la boleta.</div>");
+                        }
+                    },
+                    error: function () {
+                        $('#resultado').html("<div class='alert alert-danger'>Error en la comunicación con el servidor.</div>");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
