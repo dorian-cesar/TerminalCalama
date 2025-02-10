@@ -13,8 +13,8 @@ const matX = 8;
 const matY = 6;
 
 // Generamos los botones de casilleros
-for(let i = 0; i < matY; i++){
-    for(let j = 0; j < matX; j++){
+for (let i = 0; i < matY; i++) {
+    for (let j = 0; j < matX; j++) {
         // Obtenemos una letra basada en un numero A-Z-a-z
         const letra = getLetterFromNumber(j);
 
@@ -23,7 +23,7 @@ for(let i = 0; i < matY; i++){
 
         // Clase: casilla, id: lockerbtn{Num}{Letra}, texto: {Num},{Letra}
         btn.className = 'casilla';
-        btn.id = 'lockerbtn'+i+letra;
+        btn.id = 'lockerbtn' + i + letra;
         btn.textContent = `${i},${letra}`;
         // Asignamos una función al hacer Click
         btn.addEventListener('click', () => toggleButton(btn));
@@ -36,24 +36,46 @@ for(let i = 0; i < matY; i++){
 
 // Convierte numeros a letras A-Z
 function getLetterFromNumber(num) {
-    if (num > 25) { num+=6; }
-    return String.fromCharCode(65+num);
+    if (num > 25) { num += 6; }
+    return String.fromCharCode(65 + num);
 }
 
 // Punteros a APIs PHP
-//const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
-//const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
-//const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
-//const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
-
 const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
 const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
 const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
 const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
 
+// Función para llamar a la API de manera asíncrona
+async function callAPI(datos, url) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datos), // Convertimos los datos a JSON
+        });
+
+        if (!response.ok) {
+            throw new Error('Error en la solicitud: ' + response.statusText);
+        }
+
+        const result = await response.json(); // Obtenemos la respuesta en JSON
+        console.log('Respuesta del servidor: ', result);
+        return result; // Retornamos los datos obtenidos del servidor
+    } catch (error) {
+        console.error('Error al enviar la solicitud: ', error);
+        throw error; // Relanzamos el error para manejarlo en el código que llama a esta función
+    }
+}
+
+// Actualizar la tabla y cargar el estado inicial
 actualizarTabla();
 cargarEstado();
 
+// Evento para manejar el envío del formulario
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -62,29 +84,30 @@ formulario.addEventListener('submit', (e) => {
     const rutStr = formulario.rut.value;
 
     // Validar Casilla y RUT
-    if(casillaStr && rutStr){
-        // Obtenemos el tamaño del bulto
-        const bultoStr = document.getElementById('bulto').value;
+    if (casillaStr && rutStr) {
+        // Obtenemos el tamaño del bulto y su precio
+        const bultoSelect = document.getElementById('bulto');
+        const bultoStr = bultoSelect.value;
+        const bultoPrecio = obtenerPrecioBulto(bultoStr); // Función para obtener el precio
 
-        // Validamos que el tamaño sea valido
-        if(bultoStr==0){
+        // Validamos que el tamaño sea válido
+        if (bultoStr == 0) {
             alert('Seleccione un tamaño para el bulto');
             return;
         }
 
         // Validamos el RUT mediante RegEx
-        if(!/^[0-9]+-[0-9kK]{1}$/.test(rutStr)){
+        if (!/^[0-9]+-[0-9kK]{1}$/.test(rutStr)) {
             alert('Ingrese un RUT válido');
             return;
         }
 
         // Obtenemos la fecha actual
         const dateAct = new Date();
-        // Separamos hora y fecha en constantes unicas
-        const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+        const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
         const fechaStr = dateAct.toISOString().split('T')[0];
 
-        // Desactivamos el boton de generar QR
+        // Desactivamos el botón de generar QR
         formulario.generar.disabled = true;
         formulario.generar.classList.add('disabled');
 
@@ -96,103 +119,107 @@ formulario.addEventListener('submit', (e) => {
             rut: rutStr,
             bulto: bultoStr,
             tipo: 'Ingresado',
-        }
+            valor: bultoPrecio, // Agregamos el precio inicial
+        };
 
         // Llamamos a la API para guardar un registro de entrada
         callAPI(datos, urlSave)
-        // Lo siguiente solo se ejecutará cuando la API entregue una respuesta
-        .then(result => {
-            // Generamos un QR con los datos de ingreso
-            const qrConv = btoa(result+'/'+casillaStr+'/'+rutStr+'/'+bultoStr+'/'+fechaStr+'/'+horaStr);
-            console.log(qrConv);
-            navigator.clipboard.writeText(qrConv);
-            QR.makeCode(qrConv);
-            actualizarTabla();
-            // Limpiamos la entrada de casilla para evitar doble envio
-            formulario.casillero.value = '';
-            guardarEstado();
-            // Rehabilitamos el boton de Generar QR
-            formulario.generar.disabled = false;
-            formulario.generar.classList.remove('disabled');
-        });
+            .then((result) => {
+                // Generamos un QR con los datos de ingreso
+                const qrConv = btoa(
+                    result +
+                    '/' +
+                    casillaStr +
+                    '/' +
+                    rutStr +
+                    '/' +
+                    bultoStr +
+                    '/' +
+                    fechaStr +
+                    '/' +
+                    horaStr
+                );
+                console.log(qrConv);
+                navigator.clipboard.writeText(qrConv);
+                QR.makeCode(qrConv);
+                actualizarTabla();
+
+                // Limpiamos la entrada de casilla para evitar doble envío
+                formulario.casillero.value = '';
+                guardarEstado();
+
+                // Rehabilitamos el botón de Generar QR
+                formulario.generar.disabled = false;
+                formulario.generar.classList.remove('disabled');
+            });
     } else {
         alert('Seleccione casilla e ingrese RUT');
     }
 });
 
-// Llamamos a la API de manera asincrona para guardar datos y retornar
-// la ultima ID registrada
-async function callAPI(datos, url) {
-    let id = await fetch(url, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            'Content-Type' : 'application/json'
-        },
-        // Convertimos la entrada a JSON
-        body: JSON.stringify(datos)
-    })
-    // Obtenemos la respuesta en JSON
-    .then(response => response.json())
-    .then(result => {
-        // Retornamos los datos obtenidos del servidor
-        console.log('Respuesta del servidor: ', result);
-        return result;
-    })
-    .catch(error => {
-        console.error('Error al enviar la solicitud: ', error);
-    })
-    // Retornar ultima ID ingresada
-    return id;
+// Función para obtener el precio del bulto
+function obtenerPrecioBulto(bultoStr) {
+    switch (bultoStr) {
+        case 'Small':
+            return 2200;
+        case 'Medium':
+            return 2500;
+        case 'Large':
+            return 3200;
+        case 'Extra Large':
+            return 3400;
+        case 'Extra Extra Large':
+            return 4500;
+        default:
+            return 0;
+    }
 }
 
 // Extraemos el historial y generamos una tabla
 function actualizarTabla() {
     fetch(urlLoad)
-    .then(response => response.json())
-    .then(data => {
-		const filasHTML = data.map(item =>
-            `
-			<tr>
-				<td>${item.idcustodia}</td>
-				<td>${item.posicion}</td>
-				<td>${item.rut}</td>
-				<td>${item.fecha} ${item.hora}</td>
-				<td>${item.fechasal != '0000-00-00' ? item.fechasal : ''} ${item.horasal != '00:00:00' ? item.horasal : ''}</td>
-				<td>${item.talla}</td>
-				<td>${item.tipo}</td>
-				<td>${item.valor > 0 ? item.valor : ''}</td>
-			</tr>
-		`).join('');
+        .then(response => response.json())
+        .then(data => {
+            const filasHTML = data.map(item =>
+                `
+                <tr>
+                    <td>${item.idcustodia}</td>
+                    <td>${item.posicion}</td>
+                    <td>${item.rut}</td>
+                    <td>${item.fecha} ${item.hora}</td>
+                    <td>${item.fechasal != '0000-00-00' ? item.fechasal : ''} ${item.horasal != '00:00:00' ? item.horasal : ''}</td>
+                    <td>${item.talla}</td>
+                    <td>${item.tipo}</td>
+                    <td>${item.valor > 0 ? item.valor : ''}</td>
+                </tr>
+            `).join('');
 
-        //console.log(JSON.stringify(data));
-
-		document.getElementById('tabla-body').innerHTML = filasHTML;
-    })
-    .catch(error => {
-        console.error('Error obteniendo datos: ', error);
-    })
+            document.getElementById('tabla-body').innerHTML = filasHTML;
+        })
+        .catch(error => {
+            console.error('Error obteniendo datos: ', error);
+        });
 }
 
 // Maneja el comportamiento de las casillas
 function toggleButton(btn) {
-    //Obtenemos todas las casillas
+    // Obtenemos todas las casillas
     const btns = document.querySelectorAll('.casilla');
 
     btns.forEach(bt => {
         // Recorremos cada casilla y limpiamos el estado activo
         // para que solo se pueda seleccionar una
-        if(bt.classList.contains('active')){
+        if (bt.classList.contains('active')) {
             bt.classList.remove('active');
         }
-    })
+    });
 
     // Si la casilla está deshabilitada, preguntamos si la queremos rehabilitar
-    if(!btn.classList.contains('disabled')){
+    if (!btn.classList.contains('disabled')) {
         // De lo contrario, seleccionamos una casilla como activa
         btn.classList.toggle('active');
 
-        if(btn.classList.contains('active')){
+        if (btn.classList.contains('active')) {
             formulario.casillero.value = btn.textContent;
         } else {
             formulario.casillero.value = '';
@@ -203,35 +230,40 @@ function toggleButton(btn) {
 }
 
 // Cargamos el estado de las casillas
-function cargarEstado(){
-    fetch(urlState)
-    .then(response => response.json())
-    .then(data => {
-        const est = JSON.parse(data.map(item => item.estado)[0]);
+function cargarEstado() {
+    fetch(urlLoad)
+        .then(response => response.json())
+        .then(data => {
+            // Limpiamos el input de casillero
+            formulario.casillero.value = '';
 
-        // Limpiamos el input de casillero
-        formulario.casillero.value = '';
+            // Obtenemos los casilleros ocupados (con tipo "Ingresado")
+            const casillerosOcupados = data
+                .filter(item => item.tipo === 'Ingresado') // Filtramos solo los registros con tipo "Ingresado"
+                .map(item => item.posicion); // Extraemos la posición de los casilleros ocupados
 
-        // Recorremos cada casilla
-        est.forEach(estado => {
-            // Obtenemos la casilla con el ID lockerbtn{Num}{Letra}
-            const btn = document.getElementById('lockerbtn'+estado.replace(',',''));
+            // Recorremos todos los botones de casilleros
+            const btns = document.querySelectorAll('.casilla');
+            btns.forEach(btn => {
+                const posicion = btn.textContent; // Obtenemos la posición del botón (ej: "1,A")
 
-            // Añadimos el estado disabled y removemos el active
-            // para evitar seleccionar una casilla deshabilitada antes
-            // de que cargue el estado
-            btn.classList.add('disabled');
-            btn.classList.remove('active');
+                // Si la posición está en la lista de casilleros ocupados, deshabilitamos el botón
+                if (casillerosOcupados.includes(posicion)) {
+                    btn.classList.add('disabled');
+                    btn.classList.remove('active');
+                } else {
+                    // Si no está ocupado, habilitamos el botón
+                    btn.classList.remove('disabled');
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener datos: ', error);
         });
-    })
-    .catch(error => {
-        console.error('Error al obtener datos: ', error);
-    });
 }
 
-
 // Guardamos el estado de las casillas
-function guardarEstado(){
+function guardarEstado() {
     // Creamos un array para guardar las casillas deshabilitadas
     estadoObj = [];
     const btns = document.querySelectorAll('.casilla');
@@ -240,54 +272,54 @@ function guardarEstado(){
     btns.forEach(btn => {
         // Si la casilla está activa o deshabilitada, guardamos la posicion
         // en el array
-        if(btn.classList.contains('active')||btn.classList.contains('disabled')){
+        if (btn.classList.contains('active') || btn.classList.contains('disabled')) {
             estadoObj.push(btn.textContent);
         }
         // Y si la casilla está solo activa, cambiamos su estado
-        if(btn.classList.contains('active')){
+        if (btn.classList.contains('active')) {
             btn.classList.add('disabled');
             btn.classList.remove('active');
         }
     });
 
     const dateAct = new Date();
-    const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+';'+dateAct.getSeconds();
+    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ';' + dateAct.getSeconds();
     const fechaStr = dateAct.toISOString().split('T')[0];
 
     const datos = {
         estado: JSON.stringify(estadoObj),
         hora: horaStr,
         fecha: fechaStr,
-    }
+    };
 
     callAPI(datos, urlStore);
 }
 
-function reactivarBoton(btn){
-	// Esta función deberá ser modificada para traer datos desde el lector de QR
-	// La siguiente implementación es solo para efectos demostrativos
-	// Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
-	const fechaHoraAct = new Date();
-	
-	const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
-	const fechaStr = fechaHoraAct.toISOString().split('T')[0];
+function reactivarBoton(btn) {
+    // Esta función deberá ser modificada para traer datos desde el lector de QR
+    // La siguiente implementación es solo para efectos demostrativos
+    // Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
+    const fechaHoraAct = new Date();
 
-	const posStr = btn.textContent;
+    const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds();
+    const fechaStr = fechaHoraAct.toISOString().split('T')[0];
 
-	const datos = {
-	hora: horaStr, // Traer desde la pistola
-	fecha: fechaStr, // Traer desde la pistola
-	casilla: posStr, // Traer desde la pistola
-	rut: "-", // Traer desde la pistola
-	bulto: "-", // Traer desde la pistola
-	tipo: "Entregado",
-	}
+    const posStr = btn.textContent;
+
+    const datos = {
+        hora: horaStr, // Traer desde la pistola
+        fecha: fechaStr, // Traer desde la pistola
+        casilla: posStr, // Traer desde la pistola
+        rut: "-", // Traer desde la pistola
+        bulto: "-", // Traer desde la pistola
+        tipo: "Entregado",
+    };
 
     callAPI(datos, urlSave)
-    .then(result => {
-        actualizarTabla();
-        guardarEstado();
-    });
+        .then(result => {
+            actualizarTabla();
+            guardarEstado();
+        });
 }
 
 function printQR() {
@@ -296,7 +328,7 @@ function printQR() {
     // Obtenemos la fecha actual
     const dateAct = new Date();
     // Separamos hora y fecha en constantes unicas
-    const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
     const fechaStr = dateAct.toISOString().split('T')[0];
 
     ventanaImpr.document.write('<html><head><title>Imprimir QR</title></head><body style="text-align:center; width: min-content;">');
