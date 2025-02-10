@@ -4,8 +4,8 @@ contenedorContador.value = "Contador";
 const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
-urlBase='http://localhost';
-//urlBase='https://andenes.terminal-calama.com';
+//urlBase='http://localhost';
+urlBase='https://andenes.terminal-calama.com';
 
 console.log (urlBase);
 
@@ -140,14 +140,15 @@ async function callApi (datos){
 
     // Obtener el código QR generado
     const codigoQR = document.getElementById('keycont').value;
-
-    // Obtener el tipo seleccionado (Toilet o Ducha)
     const tipoSeleccionado = document.querySelector('input[name="tipo"]:checked').value;
 
     if (!codigoQR) {
         alert("No hay código QR generado para imprimir.");
         return;
     }
+
+    // Obtener el precio desde restroom.js
+    const precio = restroom[tipoSeleccionado] !== undefined ? `$${restroom[tipoSeleccionado]}` : "No definido";
 
     ventanaImpr.document.write(`
         <html>
@@ -164,6 +165,7 @@ async function callApi (datos){
                 <h3>Fecha: ${fechaStr}</h3>
                 <h3>Hora: ${horaStr}</h3>
                 <h3>Tipo: ${tipoSeleccionado}</h3>
+                <h3>Precio: ${precio}</h3>
                 <h3>Código: ${codigoQR}</h3>
                 <div class="qr-container">
                     ${document.getElementById('contenedorQR').innerHTML}
