@@ -151,9 +151,30 @@ async function callApi (datos){
             <head>
                 <title>Imprimir QR</title>
                 <style>
-                    body { text-align: center; font-family: Arial, sans-serif; }
-                    h1, h3 { margin: 5px; }
-                    .qr-container { display: flex; justify-content: center; margin-top: 10px; }
+                    @page {
+                        size: 5.5cm auto; /* Ancho fijo y alto dinámico basado en el contenido */
+                        margin: 0; /* Sin márgenes para evitar espacios adicionales */
+                    }
+                    body { 
+                        text-align: center; 
+                        font-family: Arial, sans-serif; 
+                        margin: 0; 
+                        padding: 0; 
+                        width: 5.5cm; /* Ancho del ticket */
+                    }
+                    h1, h3 { 
+                        margin: 5px 0; 
+                        font-size: 12px; /* Tamaño de fuente ajustado */
+                    }
+                    .qr-container { 
+                        display: flex; 
+                        justify-content: center; 
+                        margin: 10px 0; 
+                    }
+                    img { 
+                        max-width: 5cm; /* Ancho máximo del QR */
+                        height: auto; 
+                    }
                 </style>
             </head>
             <body>
@@ -167,7 +188,7 @@ async function callApi (datos){
             </body>
         </html>
     `);
-
+   
     ventanaImpr.document.close();
    // ventanaImpr.print();
    setTimeout(function() {
