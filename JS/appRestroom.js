@@ -93,7 +93,7 @@ async function callApi (datos){
   
   function generarTokenNumerico() {
     let token = (Math.floor(Math.random() * 9) + 1).toString(); // Primer dígito entre 1 y 9 (convertido a string)
-    for (let i = 1; i < 20; i++) {
+    for (let i = 1; i < 10; i++) {
         token += Math.floor(Math.random() * 10); // Agregar dígitos entre 0 y 9
     }
     return token;
