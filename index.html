@@ -8,30 +8,32 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script defer src="JS/appRestroom.js"></script>
     <script defer src="JS/valores.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="contenedor">
         <h1>Restroom</h1>
         <div class="izquierda">
             <form id="formulario" class="formulario">
-                <input type="text" id="keycont" disabled/>
+                <input type="text" id="keycont" disabled />
                 <button class="btn" id="generar">Generar QR</button>
             </form>
             <div class="contenedorQR" id="contenedorQR"></div>
             <button class="btn" onclick="printQR()">Imprimir</button>
-            <button class="btn" id="entrada" onclick="window.location.href='cobroRestroom.html'">Cobrar ticket</button>
+            <button class="btn" id="entrada">Emitir boleta</button>
+            <div id="resultado"></div>
         </div>
         <div class="derecha">
             <div class="conttipo">
                 <div class="bultotxt">
                     <ul>
                         <li>
-                            <input type='radio' value='Toilet' name='tipo' id='radio1' checked/>
-                            <label class="radiolbl" type='radio' for='radio1'>Toilet</label>
+                            <input type="radio" value="Baño" name="tipo" id="radio1" checked />
+                            <label class="radiolbl" for="radio1">Baño</label>
                         </li>
                         <li>
-                            <input type='radio' value='Ducha' name='tipo'  id='radio2'/>
-                            <label class="radiolbl" type='radio' for='radio2'>Ducha</label>
+                            <input type="radio" value="Ducha" name="tipo" id="radio2" />
+                            <label class="radiolbl" for="radio2">Ducha</label>
                         </li>
                     </ul>
                 </div>
@@ -53,5 +55,74 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#entrada').click(function (event) {
+                event.preventDefault();
+
+                let servicio = $('input[name="tipo"]:checked').val();
+                let valor = restroom[servicio];
+
+                console.log("Servicio seleccionado:", servicio);
+                console.log("Valor asignado:", valor);
+
+                if (!valor) {
+                    console.error("El valor no fue encontrado para el servicio:", servicio);
+                    $('#resultado').html("<div class='alert alert-warning'>Tipo de servicio no válido.</div>");
+                    return;
+                }
+
+                let payload = {
+                    "codigoEmpresa": "89",
+                    "tipoDocumento": "39",
+                    "total": valor,
+                    "detalleBoleta": `53-${valor}-1-dsa-${servicio}`
+                };
+
+                console.log("Payload preparado para el envío:", payload);
+
+                $('#resultado').html("<div class='loading'>Generando boleta, por favor espere...</div>");
+
+                $.ajax({
+                    url: "https://qa.pullman.cl/srv-dte-web/rest/emisionDocumentoElectronico/generarDocumento",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(payload),
+                    beforeSend: function () {
+                        console.log("Iniciando conexión con el servidor...");
+                    },
+                    success: function (response) {
+                        try {
+                            console.log("Respuesta recibida:", response);
+
+                            if (response.respuesta === "OK") {
+                                let boletaHtml = `<div class='alert alert-success'>Boleta generada con éxito.<br>
+                                    <strong>Folio:</strong> ${response.folio}<br>
+                                    <strong>Fecha:</strong> ${response.fecha}<br>
+                                    <a href='${response.rutaAcepta}' target='_blank' class='btn btn-success mt-2'>Ver Boleta</a>
+                                </div>`;
+                                $('#resultado').html(boletaHtml);
+                                console.log("Boleta generada correctamente.");
+                            } else {
+                                $('#resultado').html("<div class='alert alert-danger'>Error al generar la boleta.</div>");
+                                console.warn("Error en la respuesta del servidor:", response);
+                            }
+                        } catch (error) {
+                            console.error("Error al procesar la respuesta:", error);
+                            $('#resultado').html("<div class='alert alert-danger'>Error inesperado. Consulte la consola para más detalles.</div>");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                        $('#resultado').html("<div class='alert alert-danger'>Error en la comunicación con el servidor.</div>");
+                    },
+                    complete: function () {
+                        console.log("Conexión con el servidor finalizada.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
