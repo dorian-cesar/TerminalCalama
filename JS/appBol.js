@@ -171,7 +171,7 @@ function printBol() {
     // Obtenemos la fecha actual
     const dateAct = new Date();
     // Separamos hora y fecha en constantes unicas
-    const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
     const fechaStr = dateAct.toISOString().split('T')[0];
 
     ventanaImpr.document.write('<html><head><title>Imprimir Boleta</title></head><body style="text-align:center; width: max-content;">');
@@ -181,6 +181,11 @@ function printBol() {
     ventanaImpr.document.write('</body></html>');
 
     ventanaImpr.document.close();
+
+    // Detectar cuando la impresión haya finalizado
+    ventanaImpr.addEventListener('afterprint', function () {
+        ventanaImpr.close(); // Cierra la ventana después de imprimir
+    });
 
     ventanaImpr.print();
 }
