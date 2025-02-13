@@ -302,3 +302,18 @@ input[type="radio"]:checked + label.radiolbl {
     border-right-width: 5px;
     border-radius: 10px;
 }
+
+/* Contenedor donde se renderiza el código de barras */
+.contenedorBarcode {
+    width: 100%;    /* Ocupa todo el ancho del contenedor */
+    height: 150px;  /* Ajusta la altura según tus necesidades */
+    display: flex;
+    justify-content: center;  /* Centra el código de barras */
+    align-items: center;      /* Centra el código de barras */
+}
+
+/* Restricciones para el código de barras */
+#barcode {
+    max-width: 100%;   /* El código de barras no se saldrá del contenedor */
+    height: auto;      /* Mantiene la relación de aspecto */
+}
