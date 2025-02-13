@@ -4,6 +4,7 @@ const formulario = document.getElementById('formulario');
 const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/custsave.php';
 const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/custload.php';
 const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/custstore.php';
+const urlCasilla = 'https://masgps-bi.wit.la/TerminalCalama/getCasillas.php';
 
 //const urlSave = 'http://localhost/TerminalCalama/PHP/Custodia/save.php';
 //const urlLoad = 'http://localhost/TerminalCalama/PHP/Custodia/load.php';
@@ -96,39 +97,6 @@ function enviarReactivacion(boton){
 	}, 3000);
 }
 
-function guardarEstado(){
-	estadoStr = "";
-	estadoObj = [];
-	const botones = document.querySelectorAll('.btn');
-
-	botones.forEach(btn => {
-		act = false;
-		if(btn.classList.contains('active')||btn.classList.contains('disabled')){
-			act = true;
-			estadoObj.push(btn.textContent);
-			estadoStr += btn.textContent + "|";
-		}
-		if(btn.classList.contains('active')){
-			btn.classList.add('disabled');
-			btn.classList.remove('active');
-			//btn.disabled = true;
-		}
-	});
-
-	const fechaHoraAct = new Date();
-	
-	const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
-	const fechaStr = fechaHoraAct.toISOString().split('T')[0];
-
-	const datos = {
-	estado: JSON.stringify(estadoObj),
-	hora: horaStr,
-	fecha: fechaStr,
-	}
-
-	callApi(datos, urlStore);
-	localStorage.setItem('estadoBotones', JSON.stringify(estadoStr));
-}
 
 // Datos: Datos a insertar, Url: PHP a utilizar
 async function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando JSON
@@ -173,3 +141,27 @@ function leerDatosServer() {
 		console.error('Error al obtener datos: ', error);
 	});
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    cargarEstadoCasilleros();
+});
+
+function cargarEstadoCasilleros() {
+    fetch(urlCasilla)  // Usando la URL que ya tienes definida
+        .then(response => response.json())
+        .then(data => {
+            data.forEach((estado, index) => {  // Recorre el array de estados
+                const casillero = document.getElementById(`casillero-${index + 1}`);  // Suponiendo que los botones son #casillero-1, #casillero-2, etc.
+                if (estado === "ocupado") {
+                    casillero.disabled = true;  // Deshabilita el casillero
+                    casillero.classList.add("ocupado");  // Clase para estilo visual
+                } else {
+                    casillero.disabled = false;
+                    casillero.classList.remove("ocupado");
+                }
+            });
+        })
+        .catch(error => console.error("Error al cargar el estado de los casilleros:", error));
+}
+
