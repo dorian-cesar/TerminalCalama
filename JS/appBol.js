@@ -97,7 +97,7 @@ formulario.addEventListener('submit', (e) => {
                 </tr>
                 <tr>
                     <td>Valor Total</td>
-                    <td style="text-align:right">$${acumulado.toFixed(2)}</td>
+                    <td style="text-align:right">$${Math.round(acumulado)}</td>
                 </tr>
             `;
             document.getElementById('tabla-body').innerHTML = filasHTML;
