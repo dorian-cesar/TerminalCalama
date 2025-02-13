@@ -99,6 +99,22 @@ formulario.addEventListener('submit', (e) => {
     }
 });
 
+// Llenar las opciones del select con los valores de valores.js
+const selectBulto = document.getElementById('bulto');
+
+// Limpiar las opciones anteriores
+selectBulto.innerHTML = '<option value="0" class="select-items selectClass">Seleccione</option>';
+
+// Agregar las opciones de tamaño directamente desde el objeto valoresBulto
+for (const [tamaño, valor] of Object.entries(valoresBulto)) {
+    const option = document.createElement('option');
+    option.value = tamaño;
+    option.classList.add('select-items', 'selectClass');
+    option.textContent = `Talla ${tamaño} ($${valor.toLocaleString()})`; // Agregar texto con valor formateado
+    selectBulto.appendChild(option);
+}
+
+
 
 // Llamamos a la API de manera asincrona para guardar datos y retornar
 // la ultima ID registrada
