@@ -1,51 +1,40 @@
-// Inicializar contenedores QR y formulario
-const contQR = document.getElementById('contQR');
+// Inicializar contenedores de código de barras y formulario
+const contBarcode = document.getElementById('contBarcode');
 const formulario = document.getElementById('formulario');
 
-// Generar QR por defecto
-const QR = new QRCode(contQR);
-QR.makeCode('wit.la');
+JsBarcode("#barcode", "wit.la", {
+    format: "CODE128",
+    displayValue: true,
+    width: 2,      // Ajusta el ancho de las barras
+    height: 50,    // Ajusta la altura del código de barras
+    margin: 10     // Espacio alrededor del código de barras
+});
+
 
 // Generar matriz de casilleros
 const matCont = document.getElementById('matriz');
-
 const matX = 8;
 const matY = 6;
 
-// Generamos los botones de casilleros
-for(let i = 0; i < matY; i++){
-    for(let j = 0; j < matX; j++){
-        // Obtenemos una letra basada en un numero A-Z-a-z
+for (let i = 0; i < matY; i++) {
+    for (let j = 0; j < matX; j++) {
         const letra = getLetterFromNumber(j);
-
-        // Creamos un nuevo boton
         const btn = document.createElement('button');
-
-        // Clase: casilla, id: lockerbtn{Num}{Letra}, texto: {Num},{Letra}
         btn.className = 'casilla';
-        btn.id = 'lockerbtn'+i+letra;
+        btn.id = 'lockerbtn' + i + letra;
         btn.textContent = `${i},${letra}`;
-        // Asignamos una función al hacer Click
         btn.addEventListener('click', () => toggleButton(btn));
-        // Agregamos el boton a la matriz
         matCont.appendChild(btn);
     }
-    // Saltamos a la proxima linea
     matCont.appendChild(document.createElement('br'));
 }
 
-// Convierte numeros a letras A-Z
 function getLetterFromNumber(num) {
-    if (num > 25) { num+=6; }
-    return String.fromCharCode(65+num);
+    if (num > 25) { num += 6; }
+    return String.fromCharCode(65 + num);
 }
 
 // Punteros a APIs PHP
-//const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
-//const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
-//const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
-//const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
-
 const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
 const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
 const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
@@ -57,38 +46,26 @@ cargarEstado();
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Obtenemos Casilla y RUT
     const casillaStr = formulario.casillero.value;
     const rutStr = formulario.rut.value;
 
-    // Validar Casilla y RUT
-    if(casillaStr && rutStr){
-        // Obtenemos el tamaño del bulto
+    if (casillaStr && rutStr) {
         const bultoStr = document.getElementById('bulto').value;
-
-        // Validamos que el tamaño sea valido
-        if(bultoStr==0){
+        if (bultoStr == 0) {
             alert('Seleccione un tamaño para el bulto');
             return;
         }
 
-        // Validamos el RUT mediante RegEx
-        if(!/^[0-9]+-[0-9kK]{1}$/.test(rutStr)){
-            alert('Ingrese un RUT válido');
-            return;
-        }
+        // Guardar el valor del bulto en localStorage
+        localStorage.setItem('bultoSeleccionado', bultoStr);
 
-        // Obtenemos la fecha actual
         const dateAct = new Date();
-        // Separamos hora y fecha en constantes unicas
-        const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+        const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
         const fechaStr = dateAct.toISOString().split('T')[0];
 
-        // Desactivamos el boton de generar QR
         formulario.generar.disabled = true;
         formulario.generar.classList.add('disabled');
 
-        // Añadimos los datos para enviar a la API
         const datos = {
             hora: horaStr,
             fecha: fechaStr,
@@ -96,22 +73,24 @@ formulario.addEventListener('submit', (e) => {
             rut: rutStr,
             bulto: bultoStr,
             tipo: 'Ingresado',
-        }
+        };
 
-        // Llamamos a la API para guardar un registro de entrada
         callAPI(datos, urlSave)
-        // Lo siguiente solo se ejecutará cuando la API entregue una respuesta
         .then(result => {
-            // Generamos un QR con los datos de ingreso
-            const qrConv = btoa(result+'/'+casillaStr+'/'+rutStr+'/'+bultoStr+'/'+fechaStr+'/'+horaStr);
-            console.log(qrConv);
-            navigator.clipboard.writeText(qrConv);
-            QR.makeCode(qrConv);
+            const barcodeData = `${result}/${casillaStr}/${rutStr}`;
+            console.log(barcodeData);
+            navigator.clipboard.writeText(barcodeData);
+
+            contBarcode.innerHTML = `<svg id="barcode"></svg>`;
+            JsBarcode("#barcode", barcodeData, {
+                format: "CODE128",
+                displayValue: true
+            });
+
             actualizarTabla();
-            // Limpiamos la entrada de casilla para evitar doble envio
             formulario.casillero.value = '';
             guardarEstado();
-            // Rehabilitamos el boton de Generar QR
+
             formulario.generar.disabled = false;
             formulario.generar.classList.remove('disabled');
         });
@@ -119,6 +98,23 @@ formulario.addEventListener('submit', (e) => {
         alert('Seleccione casilla e ingrese RUT');
     }
 });
+
+// Llenar las opciones del select con los valores de valores.js
+const selectBulto = document.getElementById('bulto');
+
+// Limpiar las opciones anteriores
+selectBulto.innerHTML = '<option value="0" class="select-items selectClass">Seleccione</option>';
+
+// Agregar las opciones de tamaño directamente desde el objeto valoresBulto
+for (const [tamaño, valor] of Object.entries(valoresBulto)) {
+    const option = document.createElement('option');
+    option.value = tamaño;
+    option.classList.add('select-items', 'selectClass');
+    option.textContent = `Talla ${tamaño} ($${valor.toLocaleString()})`; // Agregar texto con valor formateado
+    selectBulto.appendChild(option);
+}
+
+
 
 // Llamamos a la API de manera asincrona para guardar datos y retornar
 // la ultima ID registrada
@@ -290,22 +286,19 @@ function reactivarBoton(btn){
     });
 }
 
-function printQR() {
+function printBarcode() {
     const ventanaImpr = window.open('', '_blank');
 
-    // Obtenemos la fecha actual
     const dateAct = new Date();
-    // Separamos hora y fecha en constantes unicas
-    const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+':'+dateAct.getSeconds();
+    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
     const fechaStr = dateAct.toISOString().split('T')[0];
 
-    ventanaImpr.document.write('<html><head><title>Imprimir QR</title></head><body style="text-align:center; width: min-content;">');
+    ventanaImpr.document.write('<html><head><title>Imprimir Código de Barras</title></head><body style="text-align:center; width: min-content;">');
     ventanaImpr.document.write('<h1>Ticket de Recepción</h1>');
     ventanaImpr.document.write(`<h3>${fechaStr} ${horaStr}</h3>`);
-    ventanaImpr.document.write(contQR.innerHTML);
+    ventanaImpr.document.write(contBarcode.innerHTML);
     ventanaImpr.document.write('</body></html>');
 
     ventanaImpr.document.close();
-
     ventanaImpr.print();
 }
