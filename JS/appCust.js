@@ -56,6 +56,9 @@ formulario.addEventListener('submit', (e) => {
             return;
         }
 
+        // Guardar el valor del bulto en localStorage
+        localStorage.setItem('bultoSeleccionado', bultoStr);
+
         const dateAct = new Date();
         const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
         const fechaStr = dateAct.toISOString().split('T')[0];
@@ -95,6 +98,7 @@ formulario.addEventListener('submit', (e) => {
         alert('Seleccione casilla e ingrese RUT');
     }
 });
+
 
 // Llamamos a la API de manera asincrona para guardar datos y retornar
 // la ultima ID registrada

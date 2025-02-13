@@ -1,12 +1,11 @@
+<!-- boleta.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custodia - Entrega</title>
-
     <link rel="stylesheet"  href="Styles/stylebol.css" />
-    <script defer src="JS/appBol.js"></script>
 </head>
 <body>
     <div class="contenedor" >
@@ -14,57 +13,56 @@
         <div class="izquierda">
             <form id="formulario" class="formulario">
                 <input type="text" name="barcodeIn" id="barcodeIn">
-            <button class="btn" id="btnleer">Leer QR</button>    
+                <button class="btn" id="btnleer">Escanear Barcode</button>    
             </form> 
         </br>
         </br>
         <div>
-            <button class="btn" id="entrada" onclick="printBol()">Imprimir boleta</button>
+            <button class="btn" id="entrada" onclick="printBol()">Imprimir</button>
             <a href="custodia.html"><button class="btn" >Volver</button></a>
         </div>    
     </div>
-        <div class="derecha">
-            <div class="contticket">
-                <div class="square" id="boletaCont">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="text-align: center;" colspan="2">Detalle</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-body">
-                            <tr>
-                                <td>Casillero</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Fecha de Entrada</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Fecha de Salida</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Tiempo Ocupado</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Valor por Hora</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Valor a Pagar</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <div class="derecha">
+        <div class="contticket">
+            <div class="square" id="boletaCont">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;" colspan="2">Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                        <tr>
+                            <td>Casillero</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de Entrada</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha de Salida</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Tiempo Ocupado</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Valor por Día</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Valor a Pagar</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        
-        
     </div>
-
+    </div>
+    <script defer src="JS/valores.js"></script>
+    <script defer src="JS/appBol.js"></script>
 </body>
 </html>

@@ -23,14 +23,21 @@ formulario.addEventListener('submit', (e) => {
 
     const idIn = barcodeData[0]; // ID de custodia
     const casIn = barcodeData[1]; // Casillero
-    const rutIn= barcodeData[2]; // Rut
+    const rutIn = barcodeData[2]; // Rut
 
     // Obtenemos la fecha actual
     const dateAct = new Date();
     const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
     const fechaStr = dateAct.toISOString().split('T')[0];
 
-    const valorHora = 1000;
+    // Recuperamos el valor del bulto desde localStorage
+    const bultoStr = localStorage.getItem('bultoSeleccionado');
+    let valorHora = 1000; // Valor por hora por defecto
+
+    if (bultoStr) {
+        // Usamos la función getValorBulto para obtener el valor según el bulto seleccionado
+        valorHora = getValorBulto(bultoStr);
+    }
 
     traerDatos(idIn)
         .then(result => {
@@ -40,8 +47,32 @@ formulario.addEventListener('submit', (e) => {
             }
 
             const dateOld = new Date(result.fecha + 'T' + result.hora);
-            const horasOc = Math.ceil(Math.abs(dateAct - dateOld) / 36e5);
-            const valorTotal = (horasOc * valorHora);
+            const diffTime = Math.abs(dateAct - dateOld); // Diferencia total en milisegundos
+            const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24)); // Convertir a días completos
+
+            let valorTotal = diffDays * valorHora;
+
+            // Recuperamos la fecha de creación del ticket desde localStorage
+            const fechaCreacion = localStorage.getItem('fechaCreacion');
+            let acumulado = 0;
+
+            if (fechaCreacion) {
+                const lastTime = new Date(fechaCreacion);
+                const diff = Math.abs(dateAct - lastTime); // Diferencia total en milisegundos
+                const diffHoras = diff / 36e5; // Convertir la diferencia en horas
+                const ciclos24 = Math.floor(diffHoras / 24); // Número de ciclos de 24 horas transcurridos
+
+                // Calculamos el valor acumulado, sumando el valor cada ciclo de 24 horas
+                acumulado = ciclos24 * valorHora + valorTotal;
+            } else {
+                // Si no existe la fecha de creación, guardamos la fecha actual como fecha de inicio
+                localStorage.setItem('fechaCreacion', dateAct.toISOString());
+                acumulado = valorTotal; // Usamos el valor total si es el primer escaneo
+            }
+
+            // Guardamos el valor acumulado y la última hora de pago
+            localStorage.setItem('valorAcumulado', acumulado.toFixed(2));
+            localStorage.setItem('ultimoPago', dateAct.toISOString());
 
             const filasHTML = `
                 <tr>
@@ -58,15 +89,15 @@ formulario.addEventListener('submit', (e) => {
                 </tr>
                 <tr>
                     <td>Tiempo Ocupado</td>
-                    <td style="text-align:right">${horasOc} Hrs.</td>
+                    <td style="text-align:right">${diffDays} Días</td>
                 </tr>
                 <tr>
-                    <td>Valor por Hora</td>
+                    <td>Valor por Dia</td>
                     <td style="text-align:right">$${valorHora}</td>
                 </tr>
                 <tr>
-                    <td>Valor a Pagar</td>
-                    <td style="text-align:right">$${valorTotal}</td>
+                    <td>Valor Total</td>
+                    <td style="text-align:right">$${acumulado.toFixed(2)}</td>
                 </tr>
             `;
             document.getElementById('tabla-body').innerHTML = filasHTML;
@@ -76,23 +107,24 @@ formulario.addEventListener('submit', (e) => {
                 estado: "Entregado",
                 hora: horaStr,
                 fecha: fechaStr,
-                valor: valorTotal,
+                valor: acumulado,
                 rut: rutIn, // Incluir el RUT
             };
-            
+
             callAPI(datos, urlUpdate)
                 .then(result => {
                     console.log("Registro actualizado correctamente.");
                     cargarEstado(casIn);
                     alert("El ticket ha sido escaneado exitosamente!");
                 });
-            
+
         })
         .catch(err => {
             console.log(err);
             alert("El ticket ya ha sido escaneado anteriormente o es inválido.");
         });
 });
+
 
 // Desbloquea el casillero escaneado
 async function cargarEstado(casilla) {
