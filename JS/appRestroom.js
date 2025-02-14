@@ -104,29 +104,43 @@ async function callApi (datos){
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = urlBase +'/TerminalCalama/PHP/Restroom/load.php';
+    const endpointURL = urlBase + '/TerminalCalama/PHP/Restroom/load.php';
 
     fetch(endpointURL)
         .then(response => response.json())
         .then(data => {
-            // Construir filas de la tabla
-            const filasHTML = data.map(item => `
-                <tr>
-                    <td>${item.idrestroom}</td>
-                    <td>${item.Codigo}</td>
-                    <td>${item.tipo}</td>
-                    <td>${item.date}</td>
-                    <td>${item.time}</td>
-                </tr>
-            `).join('');
-
-            // Actualizar el contenido de la tabla
-            document.getElementById('tabla-body').innerHTML = filasHTML;
+            datosGlobales = data; // Almacenar datos globalmente
+            aplicarFiltros(); // Aplicar filtros actuales
         })
         .catch(error => {
             console.error('Error al obtener datos:', error);
         });
-   }
+    }
+
+    function aplicarFiltros() {
+        const codigoFiltro = document.getElementById('buscador-codigo').value.toLowerCase();
+        const tipoFiltro = document.getElementById('filtro-tipo').value;
+    
+        const datosFiltrados = datosGlobales.filter(item => {
+            const coincideCodigo = item.Codigo.toLowerCase().includes(codigoFiltro);
+            const coincideTipo = tipoFiltro === '' || item.tipo === tipoFiltro;
+            return coincideCodigo && coincideTipo;
+        });
+    
+        // Generar HTML para la tabla
+        const filasHTML = datosFiltrados.map(item => `
+            <tr>
+                <td>${item.idrestroom}</td>
+                <td>${item.Codigo}</td>
+                <td>${item.tipo}</td>
+                <td>${item.date}</td>
+                <td>${item.time}</td>
+            </tr>
+        `).join('');
+            
+        document.getElementById('tabla-body').innerHTML = filasHTML;
+    }
+    
 
    function printQR() {
     const ventanaImpr = window.open('', '_blank');
@@ -234,3 +248,11 @@ async function callApi (datos){
       console.error('Error al asignar niveles de acceso:', error);
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('boton-filtrar').addEventListener('click', aplicarFiltros);
+    
+    // Opcional: filtrado automático al escribir
+    document.getElementById('buscador-codigo').addEventListener('input', aplicarFiltros);
+    document.getElementById('filtro-tipo').addEventListener('change', aplicarFiltros);
+});
