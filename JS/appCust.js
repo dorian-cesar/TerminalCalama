@@ -288,17 +288,36 @@ function reactivarBoton(btn){
 
 function printBarcode() {
     const ventanaImpr = window.open('', '_blank');
+    const contBarcode = document.getElementById('contBarcode'); // Me aseguro de que este elemento esté definido
+
+    if (!contBarcode) {
+        console.error("El elemento contBarcode no fue encontrado.");
+        return;
+    }
 
     const dateAct = new Date();
-    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
+    const horaStr = dateAct.getHours().toString().padStart(2, '0') + ':' + 
+                    dateAct.getMinutes().toString().padStart(2, '0') + ':' + 
+                    dateAct.getSeconds().toString().padStart(2, '0');
     const fechaStr = dateAct.toISOString().split('T')[0];
 
-    ventanaImpr.document.write('<html><head><title>Imprimir Código de Barras</title></head><body style="text-align:center; width: min-content;">');
-    ventanaImpr.document.write('<h1>Ticket de Recepción</h1>');
-    ventanaImpr.document.write(`<h3>${fechaStr} ${horaStr}</h3>`);
-    ventanaImpr.document.write(contBarcode.innerHTML);
-    ventanaImpr.document.write('</body></html>');
+    ventanaImpr.document.write(`
+        <html>
+            <head><title>Imprimir Código de Barras</title></head>
+            <body style="text-align:center; width: min-content;">
+                <h1>Ticket de Recepción</h1>
+                <h3>${fechaStr} ${horaStr}</h3>
+                ${contBarcode.innerHTML}
+            </body>
+        </html>
+    `);
 
     ventanaImpr.document.close();
     ventanaImpr.print();
+
+    // Esperar un poco para asegurarse de que el documento termine de imprimirse antes de cerrar
+    setTimeout(() => {
+        ventanaImpr.close();
+    }, 500); // 500 ms de retraso para asegurar el cierre después de la impresión
 }
+
