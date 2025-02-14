@@ -40,6 +40,23 @@
                 </div>
             </div>
             <div id="matriz" class="contlocker"></div>
+            <div class="buscador-filtros">
+                <input type="text" id="buscador-rut" placeholder="Buscar por RUT..." aria-label="Buscar por RUT">
+                <select id="filtro-tipo" aria-label="Filtrar por tipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="Ingresado">Ingresado</option>
+                    <option value="Entregado">Entregado</option>
+                </select>
+                <select id="filtro-talla" aria-label="Filtrar por tamaño">
+                    <option value="">Todas las tallas</option>
+                    <option value="S Bolso Pequeño">Talla S</option>
+                    <option value="M Maleta Mediana">Talla M</option>
+                    <option value="L Maleta Grande">Talla L</option>
+                    <option value="XL Equipaje Extra Grande">Talla XL</option>
+                    <option value="XXL Sacos / Fardos">Talla XXL</option>
+                </select>
+                <button id="boton-filtrar">Filtrar</button>
+            </div>
             <div class="conttabla">
                 <table class="thist">
                     <thead class="thist">
