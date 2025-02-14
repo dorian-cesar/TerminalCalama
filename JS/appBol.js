@@ -199,20 +199,14 @@ async function callAPI(datos, url) {
 }
 
 function printBol() {
-    const ventanaImpr = window.open('', '_blank');
-    const contBoleta = document.getElementById('boletaCont');    
-    
     const valor = parseFloat(localStorage.getItem('valorAcumulado')); // Se obtiene el valor acumulado
-
     let servicio = "Custodia"; 
 
-    // Verificamos si hay un valor válido
     if (!valor) {
         console.error("El valor no fue encontrado para el servicio:", servicio);
         return;
     }
 
-    // Creamos el payload para enviar a la API
     let payload = {
         "codigoEmpresa": "89",
         "tipoDocumento": "39",
@@ -222,7 +216,6 @@ function printBol() {
 
     console.log("Payload preparado para el envío:", payload);
 
-    // Realizamos la solicitud AJAX para generar la boleta en PDF
     $.ajax({
         url: "https://qa.pullman.cl/srv-dte-web/rest/emisionDocumentoElectronico/generarDocumento",
         type: "POST",
@@ -236,37 +229,27 @@ function printBol() {
                 console.log("Respuesta recibida:", response);
 
                 if (response.respuesta === "OK") {
-                    // Recibimos la URL del PDF
                     let pdfUrl = response.rutaAcepta;
 
-                    // Obtener la fecha y hora actuales
-                    const dateAct = new Date();
-                    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
-                    const fechaStr = dateAct.toISOString().split('T')[0];
-
-                    // Mostrar la boleta en la ventana de impresión
-                    ventanaImpr.document.write('<html><head><title>Imprimir Boleta</title></head><body style="text-align:center; width: max-content;">');
-                    ventanaImpr.document.write('<h1>Ticket de Entrega</h1>');
-                    ventanaImpr.document.write(`<h3>${fechaStr} ${horaStr}</h3>`);
-                    ventanaImpr.document.write(contBoleta.innerHTML);
-                    ventanaImpr.document.write(`<p>Boleta generada con éxito. <a href="${pdfUrl}" target="_blank">Ver PDF</a></p>`);
-                    ventanaImpr.document.write('</body></html>');
-
-                    ventanaImpr.document.close();
-                    ventanaImpr.print();
-                    ventanaImpr.close();
+                    // Abrir el PDF directamente en una nueva ventana
+                    const ventanaImpr = window.open(pdfUrl, '_blank');
+                    if (!ventanaImpr) {
+                        alert("Por favor, habilite las ventanas emergentes para visualizar el PDF.");
+                    } else {
+                        console.log("PDF abierto en nueva ventana:", pdfUrl);
+                    }
                 } else {
                     console.error("Error al generar la boleta:", response);
-                    ventanaImpr.document.write("<p>Error al generar la boleta.</p>");
+                    alert("Error al generar la boleta.");
                 }
             } catch (error) {
                 console.error("Error al procesar la respuesta:", error);
-                ventanaImpr.document.write("<p>Error inesperado. Consulte la consola para más detalles.</p>");
+                alert("Error inesperado. Consulte la consola para más detalles.");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
-            ventanaImpr.document.write("<p>Error en la comunicación con el servidor.</p>");
+            alert("Error en la comunicación con el servidor.");
         },
         complete: function () {
             console.log("Conexión con el servidor finalizada.");
