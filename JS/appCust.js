@@ -169,6 +169,40 @@ function actualizarTabla() {
         console.error('Error obteniendo datos: ', error);
     })
 }
+document.getElementById('boton-filtrar').addEventListener('click', () => {
+    const rutBusqueda = document.getElementById('buscador-rut').value.toLowerCase();
+    const tipoFiltro = document.getElementById('filtro-tipo').value;
+    const tallaFiltro = document.getElementById('filtro-talla').value;
+
+    fetch(urlLoad)
+        .then(response => response.json())
+        .then(data => {
+            let datosFiltrados = data.filter(item => {
+                const rutMatch = item.rut.toLowerCase().includes(rutBusqueda);
+                const tipoMatch = tipoFiltro ? item.tipo === tipoFiltro : true;
+                const tallaMatch = tallaFiltro ? item.talla === tallaFiltro : true;
+                return rutMatch && tipoMatch && tallaMatch;
+            });
+
+            const filasHTML = datosFiltrados.map(item => `
+                <tr>
+                    <td>${item.idcustodia}</td>
+                    <td>${item.posicion}</td>
+                    <td>${item.rut}</td>
+                    <td>${item.fecha} ${item.hora}</td>
+                    <td>${item.fechasal !== '0000-00-00' ? item.fechasal : ''} ${item.horasal !== '00:00:00' ? item.horasal : ''}</td>
+                    <td>${item.talla}</td>
+                    <td>${item.tipo}</td>
+                    <td>${item.valor > 0 ? item.valor : ''}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('tabla-body').innerHTML = filasHTML;
+        })
+        .catch(error => {
+            console.error('Error obteniendo datos: ', error);
+        });
+});
 
 // Maneja el comportamiento de las casillas
 function toggleButton(btn) {
