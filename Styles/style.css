@@ -52,7 +52,7 @@ body{
 }
 
 .btn:hover {
-    background-color: blue;
+    background-color: rgb(7, 95, 48);
     border: 1px solid rgb(31, 7, 95);
     border-bottom-width: 5px;
     border-right-width: 5px;
@@ -150,7 +150,7 @@ input:hover {
 
 .bultotxt {
     font-size: 1.2rem;
-    color:rgb(34, 34, 150);
+    color:rgb(7, 95, 48);
 }
 
 table, td, th, tr {
@@ -214,7 +214,7 @@ select {
 }
 
 .active {
-    background-color: blue;
+    background-color: rgb(7, 95, 48);
     border: 1px solid rgb(31, 7, 95);
     border-bottom-width: 5px;
     border-right-width: 5px;
@@ -279,7 +279,7 @@ label.radiolbl {
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 label.radiolbl:hover {
-    background-color: yellow;
+    background-color: rgb(7, 95, 48);
     color:black;
     border: 1px solid rgb(95, 64, 7);
     border-bottom-width: 5px;
@@ -287,8 +287,8 @@ label.radiolbl:hover {
     border-radius: 10px;
 }
 input[type="radio"]:checked + label.radiolbl {
-    background-color: rgb(255, 0, 0);
-    border: 1px solid rgb(31, 7, 95);
+    background-color: rgb(16, 163, 85);
+    border: 1px solid rgb(7, 95, 48);
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
@@ -327,7 +327,7 @@ input[type="radio"]:checked + label.radiolbl {
 }
 
 #boton-filtrar:hover {
-    background-color: blue;
+    background-color: rgb(7, 95, 48);
     color: white;
     border: 1px solid rgb(31, 7, 95);
     border-bottom-width: 5px;
@@ -337,7 +337,7 @@ input[type="radio"]:checked + label.radiolbl {
 }
 
 select:hover {
-    background-color: blue;
+    background-color: rgb(7, 95, 48);
     color: white;
     border: 1px solid rgb(31, 7, 95);
     border-bottom-width: 5px;
