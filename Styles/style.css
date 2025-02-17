@@ -343,3 +343,63 @@ input[type="radio"]:checked + label.radiolbl {
     max-width: 100%;   /* El código de barras no se saldrá del contenedor */
     height: auto;      /* Mantiene la relación de aspecto */
 }
+
+/* Estilos generales para el campo de fecha */
+#filtro-fecha {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    width: 200px; /* Ancho personalizado */
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+/* Efecto de enfoque para el campo de fecha */
+#filtro-fecha:focus {
+    outline: none;
+    border-color: rgb(7, 95, 48); /* Color del borde cuando el campo tiene foco */
+    background-color: #e8f0fe; /* Color de fondo cuando está seleccionado */
+}
+
+/* Estilos para el contenedor del campo de fecha */
+#filtro-fecha::-webkit-calendar-picker-indicator {
+    background-color: yellow;
+    border-radius: 50%;
+    padding: 5px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Personalización del calendario del navegador (Limitado, no siempre funciona) */
+#filtro-fecha::-webkit-input-placeholder {
+    color: #888;
+}
+
+/* En algunos navegadores puede que necesites estilos adicionales */
+input[type="date"] {
+    background-color: white; /* Fondo blanco */
+    border: 1px solid #ccc;  /* Borde gris */
+    padding: 10px;
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+/* Estilos para el campo de texto (buscador-codigo) */
+#buscador-codigo {
+    width: 500px; /* Reducir el ancho del campo */
+    padding: 8px; /* Reducir el espacio interior */
+    font-size: 14px; /* Reducir el tamaño de la fuente */
+    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid #ccc; /* Borde gris claro */
+    background-color: #f9f9f9; /* Fondo claro */
+    transition: all 0.3s ease; /* Transición suave en el enfoque */
+}
+
+/* Efecto cuando el campo tiene foco (cuando el usuario hace clic) */
+#buscador-codigo:focus {
+    outline: none; /* Eliminar el borde de enfoque predeterminado */
+    border-color: rgb(7, 95, 48); /* Cambiar el color del borde al azul */
+    background-color: #e8f0fe; /* Fondo azul claro */
+}

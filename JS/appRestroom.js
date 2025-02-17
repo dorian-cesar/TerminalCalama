@@ -7,6 +7,8 @@ QR.makeCode('wit');
 urlBase='http://localhost';
 //urlBase='https://andenes.terminal-calama.com';
 
+const urlServer = 'https://andenes.terminal-calama.com'
+
 console.log (urlBase);
 
 
@@ -18,8 +20,7 @@ leerDatosServer();
 
 var numero=0
   // URL del endpoint en tu servidor PHP
-  const url = urlBase+'/TerminalCalama/PHP/Restroom/save.php';
-
+  const urlSave = urlServer + '/TerminalCalama/PHP/Restroom/save.php';
 
   genQR.addEventListener('click', (e) => {
     e.preventDefault();
@@ -104,9 +105,9 @@ async function callApi (datos){
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = urlBase + '/TerminalCalama/PHP/Restroom/load.php';
+    const urlLoad = urlServer + '/TerminalCalama/PHP/Restroom/load.php';
 
-    fetch(endpointURL)
+    fetch(urlLoad)
         .then(response => response.json())
         .then(data => {
             datosGlobales = data; // Almacenar datos globalmente
@@ -117,29 +118,39 @@ async function callApi (datos){
         });
     }
 
-    function aplicarFiltros() {
-        const codigoFiltro = document.getElementById('buscador-codigo').value.toLowerCase();
-        const tipoFiltro = document.getElementById('filtro-tipo').value;
-    
-        const datosFiltrados = datosGlobales.filter(item => {
-            const coincideCodigo = item.Codigo.toLowerCase().includes(codigoFiltro);
-            const coincideTipo = tipoFiltro === '' || item.tipo === tipoFiltro;
-            return coincideCodigo && coincideTipo;
-        });
-    
-        // Generar HTML para la tabla
-        const filasHTML = datosFiltrados.map(item => `
-            <tr>
-                <td>${item.idrestroom}</td>
-                <td>${item.Codigo}</td>
-                <td>${item.tipo}</td>
-                <td>${item.date}</td>
-                <td>${item.time}</td>
-            </tr>
-        `).join('');
+    // Función para aplicar filtros
+function aplicarFiltros() {
+    const codigoFiltro = document.getElementById('buscador-codigo').value.toLowerCase();
+    const tipoFiltro = document.getElementById('filtro-tipo').value;
+    const fechaFiltro = document.getElementById('filtro-fecha').value; // Obtener la fecha seleccionada
+
+    const datosFiltrados = datosGlobales.filter(item => {
+        const coincideCodigo = item.Codigo.toLowerCase().includes(codigoFiltro);
+        const coincideTipo = tipoFiltro === '' || item.tipo === tipoFiltro;
+
+        // Filtrar por fecha
+        const coincideFecha = fechaFiltro === '' || item.date === fechaFiltro;
+
+        return coincideCodigo && coincideTipo && coincideFecha;
+    });
+
+    // Generar HTML para la tabla
+    const filasHTML = datosFiltrados.map(item => `
+        <tr>
+            <td>${item.idrestroom}</td>
+            <td>${item.Codigo}</td>
+            <td>${item.tipo}</td>
+            <td>${item.date}</td>
+            <td>${item.time}</td>
+        </tr>
+    `).join('');
             
-        document.getElementById('tabla-body').innerHTML = filasHTML;
-    }
+    document.getElementById('tabla-body').innerHTML = filasHTML;
+}
+
+// Evento para aplicar el filtro cuando se presiona el botón
+document.getElementById('boton-filtrar').addEventListener('click', aplicarFiltros);
+
     
 
    function printQR() {
