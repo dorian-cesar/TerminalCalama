@@ -29,15 +29,26 @@
                     <ul>
                         <li>
                             <input type="radio" value="Baño" name="tipo" id="radio1" checked />
-                            <label class="radiolbl" for="radio1">Baño</label>
+                            <label class="radiolbl" for="radio1">Baño - <span id="valorBaño"></span></label>
                         </li>
                         <li>
                             <input type="radio" value="Ducha" name="tipo" id="radio2" />
-                            <label class="radiolbl" for="radio2">Ducha</label>
+                            <label class="radiolbl" for="radio2">Ducha - <span id="valorDucha"></span></label>
                         </li>
-                    </ul>
+                    </ul>                    
+                    
                 </div>
             </div>
+            <div class="buscador-filtros">
+                <input type="text" id="buscador-codigo" placeholder="Buscar por código" aria-label="Buscar por código">
+                <select id="filtro-tipo" aria-label="Filtrar por tipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="Ducha">Ducha</option>
+                    <option value="Baño">Baño</option>                    
+                </select>
+                <input type="date" id="filtro-fecha">
+                <button id="boton-filtrar">Filtrar</button>
+            </div>            
             <div class="conttabla" style="height:80%">
                 <table class="thist">
                     <thead>

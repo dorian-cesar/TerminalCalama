@@ -52,8 +52,8 @@ body{
 }
 
 .btn:hover {
-    background-color: blue;
-    border: 1px solid rgb(31, 7, 95);
+    background-color: rgb(7, 95, 48);
+    border: 1px solid rgb(5, 56, 29);
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;

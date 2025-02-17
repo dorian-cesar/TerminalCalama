@@ -7,6 +7,8 @@ QR.makeCode('wit');
 urlBase='http://localhost';
 //urlBase='https://andenes.terminal-calama.com';
 
+const urlServer = 'https://andenes.terminal-calama.com'
+
 console.log (urlBase);
 
 
@@ -18,8 +20,7 @@ leerDatosServer();
 
 var numero=0
   // URL del endpoint en tu servidor PHP
-  const url = urlBase+'/TerminalCalama/PHP/Restroom/save.php';
-
+  const urlSave = urlServer + '/TerminalCalama/PHP/Restroom/save.php';
 
   genQR.addEventListener('click', (e) => {
     e.preventDefault();
@@ -64,7 +65,7 @@ function escribirTexto(){
 };
 
 async function callApi (datos){
-  let ret = await fetch(url, {
+  let ret = await fetch(urlSave, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -104,29 +105,53 @@ async function callApi (datos){
    // const miToken = generarTokenAlfanumerico(6);
 
    function leerDatosServer() {
-    const endpointURL = urlBase +'/TerminalCalama/PHP/Restroom/load.php';
+    const urlLoad = urlServer + '/TerminalCalama/PHP/Restroom/load.php';
 
-    fetch(endpointURL)
+    fetch(urlLoad)
         .then(response => response.json())
         .then(data => {
-            // Construir filas de la tabla
-            const filasHTML = data.map(item => `
-                <tr>
-                    <td>${item.idrestroom}</td>
-                    <td>${item.Codigo}</td>
-                    <td>${item.tipo}</td>
-                    <td>${item.date}</td>
-                    <td>${item.time}</td>
-                </tr>
-            `).join('');
-
-            // Actualizar el contenido de la tabla
-            document.getElementById('tabla-body').innerHTML = filasHTML;
+            datosGlobales = data; // Almacenar datos globalmente
+            aplicarFiltros(); // Aplicar filtros actuales
         })
         .catch(error => {
             console.error('Error al obtener datos:', error);
         });
-   }
+    }
+
+    // Función para aplicar filtros
+function aplicarFiltros() {
+    const codigoFiltro = document.getElementById('buscador-codigo').value.toLowerCase();
+    const tipoFiltro = document.getElementById('filtro-tipo').value;
+    const fechaFiltro = document.getElementById('filtro-fecha').value; // Obtener la fecha seleccionada
+
+    const datosFiltrados = datosGlobales.filter(item => {
+        const coincideCodigo = item.Codigo.toLowerCase().includes(codigoFiltro);
+        const coincideTipo = tipoFiltro === '' || item.tipo === tipoFiltro;
+
+        // Filtrar por fecha
+        const coincideFecha = fechaFiltro === '' || item.date === fechaFiltro;
+
+        return coincideCodigo && coincideTipo && coincideFecha;
+    });
+
+    // Generar HTML para la tabla
+    const filasHTML = datosFiltrados.map(item => `
+        <tr>
+            <td>${item.idrestroom}</td>
+            <td>${item.Codigo}</td>
+            <td>${item.tipo}</td>
+            <td>${item.date}</td>
+            <td>${item.time}</td>
+        </tr>
+    `).join('');
+            
+    document.getElementById('tabla-body').innerHTML = filasHTML;
+}
+
+// Evento para aplicar el filtro cuando se presiona el botón
+document.getElementById('boton-filtrar').addEventListener('click', aplicarFiltros);
+
+    
 
    function printQR() {
     const ventanaImpr = window.open('', '_blank');
@@ -183,10 +208,8 @@ async function callApi (datos){
     }, 500);
 }
 
-
-
-    function addUser(token) {
-    const url = urlBase+'/TerminalCalama/PHP/Restroom/addUser.php';
+async function addUser(token) {
+    const urlAddUser = urlServer + '/TerminalCalama/PHP/Restroom/addUser.php';
 
     const userData = {
         pin: token,
@@ -194,7 +217,7 @@ async function callApi (datos){
     };
 
     try {
-        let response =  fetch(url, {
+        let response = await fetch(urlAddUser, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -203,7 +226,8 @@ async function callApi (datos){
             body: JSON.stringify(userData)
         });
 
-        let result =  response.text();
+        // Asegúrate de que la respuesta sea JSON, si lo es usa response.json() en vez de response.text()
+        let result = await response.text();  // Usamos text() si la respuesta es texto
         console.log('Respuesta de addUser:', result);
     } catch (error) {
         console.error('Error al agregar usuario:', error);
@@ -211,26 +235,35 @@ async function callApi (datos){
 }
 
 // Función para asignar niveles de acceso al usuario
- function addUserAccessLevel(token) {
-  const url = urlBase+'/TerminalCalama/PHP/Restroom/addLevelUser.php';
+async function addUserAccessLevel(token) {
+    const urlLevelUser = urlServer + '/TerminalCalama/PHP/Restroom/addLevelUser.php';
 
-  const accessData = {
-      pin: token
-  };
+    const accessData = {
+        pin: token
+    };
 
-  try {
-      let response =  fetch(url, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(accessData)
-      });
+    try {
+        let response = await fetch(urlLevelUser, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(accessData)
+        });
 
-      let result =  response.text();
-      console.log('Respuesta de addLevelUser:', result);
-  } catch (error) {
-      console.error('Error al asignar niveles de acceso:', error);
-  }
+        // Asegúrate de que la respuesta sea JSON, si lo es usa response.json() en vez de response.text()
+        let result = await response.text();  // Usamos text() si la respuesta es texto
+        console.log('Respuesta de addLevelUser:', result);
+    } catch (error) {
+        console.error('Error al asignar niveles de acceso:', error);
+    }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('boton-filtrar').addEventListener('click', aplicarFiltros);
+    
+    // Opcional: filtrado automático al escribir
+    document.getElementById('buscador-codigo').addEventListener('input', aplicarFiltros);
+    document.getElementById('filtro-tipo').addEventListener('change', aplicarFiltros);
+});

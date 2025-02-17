@@ -1,14 +1,11 @@
 const contenedorQR = document.getElementById('contenedorQR');
 const formulario = document.getElementById('formulario');
 
-const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/custsave.php';
-const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/custload.php';
-const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/custstore.php';
-const urlCasilla = 'https://masgps-bi.wit.la/TerminalCalama/getCasillas.php';
+const urlServer = 'https://andenes.terminal-calama.com'
 
-//const urlSave = 'http://localhost/TerminalCalama/PHP/Custodia/save.php';
-//const urlLoad = 'http://localhost/TerminalCalama/PHP/Custodia/load.php';
-//const urlStore = 'http://localhost/TerminalCalama/PHP/Custodia/store.php';
+const urlSave = 'TerminalCalama/PHP/Custodia/save.php';
+const urlLoad = 'TerminalCalama/PHP/Custodia/load.php';
+const urlCasilla = 'TerminalCalama/PHP/Custodia/getCasillas.php'
 
 leerDatosServer();
 
@@ -53,7 +50,7 @@ formulario.addEventListener('submit', (e) => {
 
 			// Funcion asincronica, esperará hasta que se complete la llamada API
 			// para generar QR y actualizar el historial
-			callApi(datos, urlSave).then(result => {
+			callApi(datos,urlServer + urlSave).then(result => {
 				// Formato QR: ID/Casillero/Rut/Talla/AAAA-MM-DD/HH-MM-SS
 				QR.makeCode(result+'/'+formulario.link.value+'/'+rutStr+'/'+tamStr+'/'+fechaStr+'/'+horaStr);
 				// Actualizar historial
@@ -91,36 +88,15 @@ function enviarReactivacion(boton){
 	tamano: "-", // Traer desde la pistola
 	tipo: "Entregado",
 	}
-	callApi(datos, urlSave);
+	callApi(datos, urlServer + urlSave);
 	setTimeout(() => {
 		leerDatosServer()
 	}, 3000);
 }
 
 
-// Datos: Datos a insertar, Url: PHP a utilizar
-async function callApi (datos, url){ // Insertar los datos mediante llamada PHP usando JSON
-	let id = await fetch(url, {
-		method: 'POST',
-		mode: 'cors',
-		headers: {
-			'Content-Type' : 'application/json'
-		},
-		body: JSON.stringify(datos)
-	})
-	.then(response => response.json())
-	.then(result => {
-		console.log('Respuesta del servidor: ', result);
-		return result;
-	})
-	.catch(error => {
-		console.error('Error al enviar la solicitud: ', error);
-	})
-	return id;
-}
-
 function leerDatosServer() {
-	fetch(urlLoad)
+	fetch(urlServer + urlLoad)
 	.then(response => response.json())
 	.then(data => {
 		const filasHTML = data.map(item => `
@@ -148,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function cargarEstadoCasilleros() {
-    fetch(urlCasilla)  // Usando la URL que ya tienes definida
+    fetch(urlServer + urlCasilla)  // Usando la URL que ya tienes definida
         .then(response => response.json())
         .then(data => {
             data.forEach((estado, index) => {  // Recorre el array de estados

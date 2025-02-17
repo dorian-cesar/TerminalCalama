@@ -52,7 +52,7 @@ body{
 }
 
 .btn:hover {
-    background-color: blue;
+    background-color: rgb(7, 95, 48);
     border: 1px solid rgb(31, 7, 95);
     border-bottom-width: 5px;
     border-right-width: 5px;
@@ -78,9 +78,9 @@ body{
 }
 
 .casilla:hover {
-    background-color: yellow;
+    background-color: rgb(7, 95, 48);
     color: black;
-    border: 1px solid rgb(95, 64, 7);
+    border: 1px solid rgb(3, 58, 29);
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
@@ -150,7 +150,7 @@ input:hover {
 
 .bultotxt {
     font-size: 1.2rem;
-    color:rgb(34, 34, 150);
+    color:rgb(7, 95, 48);
 }
 
 table, td, th, tr {
@@ -185,32 +185,6 @@ h1 {
     color:rgb(34, 34, 150);
     margin: 10px;
 }
-#boton-filtrar {
-    appearance: none;
-    -webkit-appearance: none;
-    font-size: 1.15rem;
-    padding: 10px 20px;
-    background-color: rgb(16, 163, 85);
-    border: 1px solid white;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    border: 1px solid rgb(7, 95, 48);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    transition: all 0.2s ease-in-out;
-}
-
-#boton-filtrar:hover {
-    background-color: yellow;
-    color: black;
-    border: 1px solid rgb(95, 64, 7);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
-    transform: translateY(-2px);
-}
 
 select {
     appearance: none;
@@ -230,15 +204,6 @@ select {
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-select:hover {
-    background-color: yellow;
-    color: black;
-    border: 1px solid rgb(95, 64, 7);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    border-radius: 10px;
-}
-
 .select-items {
     position: absolute;
     background-color: rgb(16, 163, 85);
@@ -249,7 +214,7 @@ select:hover {
 }
 
 .active {
-    background-color: blue;
+    background-color: rgb(7, 95, 48);
     border: 1px solid rgb(31, 7, 95);
     border-bottom-width: 5px;
     border-right-width: 5px;
@@ -314,7 +279,7 @@ label.radiolbl {
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 label.radiolbl:hover {
-    background-color: yellow;
+    background-color: rgb(7, 95, 48);
     color:black;
     border: 1px solid rgb(95, 64, 7);
     border-bottom-width: 5px;
@@ -322,8 +287,8 @@ label.radiolbl:hover {
     border-radius: 10px;
 }
 input[type="radio"]:checked + label.radiolbl {
-    background-color: rgb(255, 0, 0);
-    border: 1px solid rgb(31, 7, 95);
+    background-color: rgb(16, 163, 85);
+    border: 1px solid rgb(7, 95, 48);
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
@@ -342,4 +307,101 @@ input[type="radio"]:checked + label.radiolbl {
 #barcode {
     max-width: 100%;   /* El código de barras no se saldrá del contenedor */
     height: auto;      /* Mantiene la relación de aspecto */
+}
+
+#boton-filtrar {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 1.15rem;
+    padding: 10px 20px;
+    background-color: rgb(16, 163, 85);
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+#boton-filtrar:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+    transform: translateY(-2px);
+}
+
+select:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+}
+
+/* Estilos generales para el campo de fecha */
+#filtro-fecha {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    height: 15px;
+    width: 200px; /* Ancho personalizado */
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+/* Efecto de enfoque para el campo de fecha */
+#filtro-fecha:focus {
+    outline: none;
+    border-color: rgb(7, 95, 48); /* Color del borde cuando el campo tiene foco */
+    background-color: #e8f0fe; /* Color de fondo cuando está seleccionado */
+}
+
+/* Estilos para el contenedor del campo de fecha */
+#filtro-fecha::-webkit-calendar-picker-indicator {
+    background-color: rgb(16, 163, 85);
+    border-radius: 50%;
+    padding: 5px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Personalización del calendario del navegador (Limitado, no siempre funciona) */
+#filtro-fecha::-webkit-input-placeholder {
+    color: #888;
+}
+
+/* En algunos navegadores puede que necesites estilos adicionales */
+input[type="date"] {
+    background-color: white; /* Fondo blanco */
+    border: 1px solid #ccc;  /* Borde gris */
+    padding: 10px;
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+/* Estilos para el campo de texto (buscador-codigo) */
+#buscador-codigo {
+    width: 500px; /* Reducir el ancho del campo */
+    padding: 8px; /* Reducir el espacio interior */
+    font-size: 14px; /* Reducir el tamaño de la fuente */
+    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid #ccc; /* Borde gris claro */
+    background-color: #f9f9f9; /* Fondo claro */
+    transition: all 0.3s ease; /* Transición suave en el enfoque */
+}
+
+/* Efecto cuando el campo tiene foco (cuando el usuario hace clic) */
+#buscador-codigo:focus {
+    outline: none; /* Eliminar el borde de enfoque predeterminado */
+    border-color: rgb(7, 95, 48); /* Cambiar el color del borde al azul */
+    background-color: #e8f0fe; /* Fondo azul claro */
 }
