@@ -185,32 +185,6 @@ h1 {
     color:rgb(34, 34, 150);
     margin: 10px;
 }
-#boton-filtrar {
-    appearance: none;
-    -webkit-appearance: none;
-    font-size: 1.15rem;
-    padding: 10px 20px;
-    background-color: rgb(16, 163, 85);
-    border: 1px solid white;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    border: 1px solid rgb(7, 95, 48);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    transition: all 0.2s ease-in-out;
-}
-
-#boton-filtrar:hover {
-    background-color: yellow;
-    color: black;
-    border: 1px solid rgb(95, 64, 7);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
-    transform: translateY(-2px);
-}
 
 select {
     appearance: none;
@@ -228,15 +202,6 @@ select {
     border-right-width: 5px;
     border-radius: 10px;
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-select:hover {
-    background-color: yellow;
-    color: black;
-    border: 1px solid rgb(95, 64, 7);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    border-radius: 10px;
 }
 
 .select-items {
@@ -344,12 +309,49 @@ input[type="radio"]:checked + label.radiolbl {
     height: auto;      /* Mantiene la relación de aspecto */
 }
 
+#boton-filtrar {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 1.15rem;
+    padding: 10px 20px;
+    background-color: rgb(16, 163, 85);
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+#boton-filtrar:hover {
+    background-color: blue;
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+    transform: translateY(-2px);
+}
+
+select:hover {
+    background-color: blue;
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+}
+
 /* Estilos generales para el campo de fecha */
 #filtro-fecha {
     padding: 10px;
     font-size: 16px;
     border-radius: 5px;
     border: 2px solid #ccc;
+    height: 15px;
     width: 200px; /* Ancho personalizado */
     background-color: #f9f9f9;
     transition: all 0.3s ease;
@@ -364,7 +366,7 @@ input[type="radio"]:checked + label.radiolbl {
 
 /* Estilos para el contenedor del campo de fecha */
 #filtro-fecha::-webkit-calendar-picker-indicator {
-    background-color: yellow;
+    background-color: rgb(16, 163, 85);
     border-radius: 50%;
     padding: 5px;
     color: white;
