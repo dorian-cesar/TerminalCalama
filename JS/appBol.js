@@ -116,6 +116,15 @@ formulario.addEventListener('submit', (e) => {
                     console.log("Registro actualizado correctamente.");
                     cargarEstado(casIn);
                     alert("El ticket ha sido escaneado exitosamente!");
+
+                    // Limpiar localStorage después de procesar
+                    localStorage.removeItem('bultoSeleccionado');
+                    localStorage.removeItem('fechaCreacion');
+                    localStorage.removeItem('valorAcumulado');
+                    localStorage.removeItem('ultimoPago');
+
+                    // Limpiar formulario
+                    formulario.reset();
                 });
 
         })

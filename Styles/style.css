@@ -78,9 +78,9 @@ body{
 }
 
 .casilla:hover {
-    background-color: yellow;
+    background-color: rgb(7, 95, 48);
     color: black;
-    border: 1px solid rgb(95, 64, 7);
+    border: 1px solid rgb(3, 58, 29);
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
