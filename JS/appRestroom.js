@@ -9,6 +9,11 @@ urlBase='http://localhost';
 
 const urlServer = 'https://andenes.terminal-calama.com'
 
+const urlLoad = urlServer + '/TerminalCalama/PHP/Restroom/load.php';
+const urlSave = urlServer + '/TerminalCalama/PHP/Restroom/save.php';
+const urlAddUser = urlServer + '/TerminalCalama/PHP/Restroom/addUser.php';
+const urlLevelUser = urlServer + '/TerminalCalama/PHP/Restroom/addLevelUser.php';
+
 console.log (urlBase);
 
 
@@ -19,10 +24,7 @@ leerDatosServer();
 //const horaActual = fechaHoraActual.toLocaleTimeString();
 
 var numero=0
-  // URL del endpoint en tu servidor PHP
-  const urlSave = urlServer + '/TerminalCalama/PHP/Restroom/save.php';
-
-  genQR.addEventListener('click', (e) => {
+    genQR.addEventListener('click', (e) => {
     e.preventDefault();
     genQR.disabled = true;
     genQR.classList.add('disabled');
@@ -101,22 +103,17 @@ async function callApi (datos){
 }
 
 
-    // Ejemplo de uso para un token de 6 caracteres
-   // const miToken = generarTokenAlfanumerico(6);
-
-   function leerDatosServer() {
-    const urlLoad = urlServer + '/TerminalCalama/PHP/Restroom/load.php';
-
-    fetch(urlLoad)
-        .then(response => response.json())
-        .then(data => {
-            datosGlobales = data; // Almacenar datos globalmente
-            aplicarFiltros(); // Aplicar filtros actuales
-        })
-        .catch(error => {
-            console.error('Error al obtener datos:', error);
-        });
-    }
+function leerDatosServer() {
+fetch(urlLoad)
+    .then(response => response.json())
+    .then(data => {
+        datosGlobales = data; // Almacenar datos globalmente
+        aplicarFiltros(); // Aplicar filtros actuales
+    })
+    .catch(error => {
+        console.error('Error al obtener datos:', error);
+    });
+}
 
     // Función para aplicar filtros
 function aplicarFiltros() {
@@ -152,8 +149,7 @@ function aplicarFiltros() {
 document.getElementById('boton-filtrar').addEventListener('click', aplicarFiltros);
 
     
-
-   function printQR() {
+function printQR() {
     const ventanaImpr = window.open('', '_blank');
 
     // Obtenemos la fecha y hora actual
@@ -172,45 +168,43 @@ document.getElementById('boton-filtrar').addEventListener('click', aplicarFiltro
         return;
     }
 
-    // Obtener el precio desde restroom.js
-    const precio = restroom[tipoSeleccionado] !== undefined ? `$${restroom[tipoSeleccionado]}` : "No definido";
+        // Obtener el precio desde restroom.js
+        const precio = restroom[tipoSeleccionado] !== undefined ? `$${restroom[tipoSeleccionado]}` : "No definido";
 
-    ventanaImpr.document.write(`
-        <html>
-            <head>
-                <title>Imprimir QR</title>
-                <style>
-                    body { text-align: center; font-family: Arial, sans-serif; }
-                    h1, h3 { margin: 5px; }
-                    .qr-container { display: flex; justify-content: center; margin-top: 10px; }
-                </style>
-            </head>
-            <body>
-                <h1>Ticket de Acceso</h1>
-                <h3>Fecha: ${fechaStr}</h3>
-                <h3>Hora: ${horaStr}</h3>
-                <h3>Tipo: ${tipoSeleccionado}</h3>
-                <h3>Precio: ${precio}</h3>
-                <h3>Código: ${codigoQR}</h3>
-                <div class="qr-container">
-                    ${document.getElementById('contenedorQR').innerHTML}
-                </div>
-            </body>
-        </html>
-    `);
-    ventanaImpr.document.close();
-    
-    setTimeout(function() {
-        ventanaImpr.print();
+        ventanaImpr.document.write(`
+            <html>
+                <head>
+                    <title>Imprimir QR</title>
+                    <style>
+                        body { text-align: center; font-family: Arial, sans-serif; }
+                        h1, h3 { margin: 5px; }
+                        .qr-container { display: flex; justify-content: center; margin-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Ticket de Acceso</h1>
+                    <h3>Fecha: ${fechaStr}</h3>
+                    <h3>Hora: ${horaStr}</h3>
+                    <h3>Tipo: ${tipoSeleccionado}</h3>
+                    <h3>Precio: ${precio}</h3>
+                    <h3>Código: ${codigoQR}</h3>
+                    <div class="qr-container">
+                        ${document.getElementById('contenedorQR').innerHTML}
+                    </div>
+                </body>
+            </html>
+        `);
+        ventanaImpr.document.close();
+        
         setTimeout(function() {
-            ventanaImpr.close(); // Cierra la pestaña después de imprimir
+            ventanaImpr.print();
+            setTimeout(function() {
+                ventanaImpr.close(); // Cierra la pestaña después de imprimir
+            }, 500);
         }, 500);
-    }, 500);
 }
 
-async function addUser(token) {
-    const urlAddUser = urlServer + '/TerminalCalama/PHP/Restroom/addUser.php';
-
+async function addUser(token) {   
     const userData = {
         pin: token,
         idNo: token
@@ -236,8 +230,6 @@ async function addUser(token) {
 
 // Función para asignar niveles de acceso al usuario
 async function addUserAccessLevel(token) {
-    const urlLevelUser = urlServer + '/TerminalCalama/PHP/Restroom/addLevelUser.php';
-
     const accessData = {
         pin: token
     };
