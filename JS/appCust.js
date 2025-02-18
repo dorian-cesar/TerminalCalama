@@ -323,8 +323,8 @@ function reactivarBoton(btn){
 
 function printBarcode() {
     const ventanaImpr = window.open('', '_blank');
-    const contBarcode = document.getElementById('contBarcode'); // Me aseguro de que este elemento esté definido
-
+    const contBarcode = document.getElementById('contBarcode'); 
+    
     if (!contBarcode) {
         console.error("El elemento contBarcode no fue encontrado.");
         return;
@@ -340,6 +340,15 @@ function printBarcode() {
         <html>
             <head><title>Imprimir Código de Barras</title></head>
             <body style="text-align:center; width: min-content;">
+            <div style="margin-top: 70px;"></div>
+                <h1>Ticket de Recepción</h1>
+                <h3>${fechaStr} ${horaStr}</h3>
+                ${contBarcode.innerHTML}
+                
+                <!-- Espacio entre los dos tickets -->
+                <div style="margin-top: 140px;"></div>
+
+                <!-- Segunda impresión del ticket -->
                 <h1>Ticket de Recepción</h1>
                 <h3>${fechaStr} ${horaStr}</h3>
                 ${contBarcode.innerHTML}
@@ -355,4 +364,5 @@ function printBarcode() {
         ventanaImpr.close();
     }, 500); // 500 ms de retraso para asegurar el cierre después de la impresión
 }
+
 
