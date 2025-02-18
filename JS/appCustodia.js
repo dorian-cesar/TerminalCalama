@@ -59,8 +59,6 @@ formulario.addEventListener('submit', (e) => {
 				formulario.link.value = "";
 			});
 
-			
-
 			// Guardar estado de los botones
 			guardarEstado();
 		}

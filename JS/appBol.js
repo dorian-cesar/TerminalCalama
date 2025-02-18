@@ -46,10 +46,15 @@ formulario.addEventListener('submit', (e) => {
             const diffTime = Math.abs(dateAct - dateOld); // Diferencia total en milisegundos
             const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24)); // Convertir a días completos
 
-            // Definir el valor por hora basado en la API (si se necesita)
-            let valorHora = result.valorHora || 1000; // Valor por hora por defecto
+            // Obtener el valor del bulto según la talla usando la función de valores.js
+            const valorBulto = getValorBulto(result.talla); // Obtener el valor basado en la talla
 
-            let valorTotal = diffDays * valorHora;
+            if (valorBulto === 0) {
+                alert("Error: Talla no válida.");
+                return;
+            }
+
+            let valorTotal = diffDays * valorBulto;  // Cálculo por días y talla
 
             // Mostrar datos en la tabla
             const filasHTML = `
@@ -71,11 +76,11 @@ formulario.addEventListener('submit', (e) => {
                 </tr>
                 <tr>
                     <td>Valor por Día</td>
-                    <td style="text-align:right">$${valorHora}</td>
+                    <td style="text-align:right">$${valorBulto}</td>
                 </tr>
                 <tr>
                     <td>Valor Total</td>
-                    <td style="text-align:right">$${Math.round(valorTotal)}</td>
+                    <td style="text-align:right" id="valorTotal">$${Math.round(valorTotal)}</td>
                 </tr>
                 <tr>
                     <td>Talla</td>
@@ -183,26 +188,23 @@ async function cargarEstado(casilla) {
     return estados;
 }
 
-// Obtener datos de la boleta desde la API
-
-
-// Llamar a la API para guardar datos
-
-
 function printBol() {
-    const valor = parseFloat(localStorage.getItem('valorAcumulado')); // Se obtiene el valor acumulado
-    let servicio = "Custodia"; 
+    // Verifica que el valor total está disponible
+    const valorTotal = parseFloat(document.querySelector('#valorTotal').textContent.replace('$', '').trim());
 
-    if (!valor) {
-        console.error("El valor no fue encontrado para el servicio:", servicio);
+    // Si el valor total no está disponible o es NaN, se muestra un error
+    if (!valorTotal || isNaN(valorTotal)) {
+        console.error("El valor total no es válido para el servicio:", "Custodia");
         return;
     }
+
+    let servicio = "Custodia"; 
 
     let payload = {
         "codigoEmpresa": "89",
         "tipoDocumento": "39",
-        "total": valor,
-        "detalleBoleta": `53-${valor}-1-dsa-${servicio}`
+        "total": valorTotal.toString(), // Pasar el valor como string
+        "detalleBoleta": `53-${valorTotal}-1-dsa-${servicio}`
     };
 
     console.log("Payload preparado para el envío:", payload);
