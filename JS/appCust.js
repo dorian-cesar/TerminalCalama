@@ -34,11 +34,12 @@ function getLetterFromNumber(num) {
     return String.fromCharCode(65 + num);
 }
 
+const urlServer = 'https://andenes.terminal-calama.com'
 // Punteros a APIs PHP
-const urlSave = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/save.php';
-const urlLoad = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/load.php';
-const urlStore = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/store.php';
-const urlState = 'https://masgps-bi.wit.la/TerminalCalama/PHP/Custodia/reload.php';
+const urlSave = urlServer + '/TerminalCalama/PHP/Custodia/save.php';
+const urlLoad = urlServer + '/TerminalCalama/PHP/Custodia/load.php';
+const urlStore = urlServer + '/TerminalCalama/PHP/Custodia/store.php';
+const urlState = urlServer + '/TerminalCalama/PHP/Custodia/reload.php';
 
 actualizarTabla();
 cargarEstado();

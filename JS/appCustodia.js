@@ -3,9 +3,9 @@ const formulario = document.getElementById('formulario');
 
 const urlServer = 'https://andenes.terminal-calama.com'
 
-const urlSave = 'TerminalCalama/PHP/Custodia/save.php';
-const urlLoad = 'TerminalCalama/PHP/Custodia/load.php';
-const urlCasilla = 'TerminalCalama/PHP/Custodia/getCasillas.php'
+const urlSave = urlServer + 'TerminalCalama/PHP/Custodia/save.php';
+const urlLoad = urlServer + 'TerminalCalama/PHP/Custodia/load.php';
+
 
 leerDatosServer();
 
@@ -50,7 +50,7 @@ formulario.addEventListener('submit', (e) => {
 
 			// Funcion asincronica, esperará hasta que se complete la llamada API
 			// para generar QR y actualizar el historial
-			callApi(datos,urlServer + urlSave).then(result => {
+			callApi(datos, urlSave).then(result => {
 				// Formato QR: ID/Casillero/Rut/Talla/AAAA-MM-DD/HH-MM-SS
 				QR.makeCode(result+'/'+formulario.link.value+'/'+rutStr+'/'+tamStr+'/'+fechaStr+'/'+horaStr);
 				// Actualizar historial
@@ -88,7 +88,7 @@ function enviarReactivacion(boton){
 	tamano: "-", // Traer desde la pistola
 	tipo: "Entregado",
 	}
-	callApi(datos, urlServer + urlSave);
+	callApi(datos, urlSave);
 	setTimeout(() => {
 		leerDatosServer()
 	}, 3000);
@@ -96,7 +96,7 @@ function enviarReactivacion(boton){
 
 
 function leerDatosServer() {
-	fetch(urlServer + urlLoad)
+	fetch(urlLoad)
 	.then(response => response.json())
 	.then(data => {
 		const filasHTML = data.map(item => `
@@ -123,21 +123,4 @@ document.addEventListener("DOMContentLoaded", function() {
     cargarEstadoCasilleros();
 });
 
-function cargarEstadoCasilleros() {
-    fetch(urlServer + urlCasilla)  // Usando la URL que ya tienes definida
-        .then(response => response.json())
-        .then(data => {
-            data.forEach((estado, index) => {  // Recorre el array de estados
-                const casillero = document.getElementById(`casillero-${index + 1}`);  // Suponiendo que los botones son #casillero-1, #casillero-2, etc.
-                if (estado === "ocupado") {
-                    casillero.disabled = true;  // Deshabilita el casillero
-                    casillero.classList.add("ocupado");  // Clase para estilo visual
-                } else {
-                    casillero.disabled = false;
-                    casillero.classList.remove("ocupado");
-                }
-            });
-        })
-        .catch(error => console.error("Error al cargar el estado de los casilleros:", error));
-}
 
