@@ -1,21 +1,21 @@
 const formulario = document.getElementById('formulario');
 
-const urlServer = 'https://andenes.terminal-calama.com'
+const urlServer = 'https://andenes.terminal-calama.com';
 
-const urlLoad = urlServer + '/TerminalCalama/PHP/Boleta/load.php';
-const urlUpdate = '/TerminalCalama/PHP/Boleta/save.php';
 
-// Estado botones
+const urlUpdate = urlServer + '/TerminalCalama/PHP/Boleta/save.php';
 const urlStore = urlServer + '/TerminalCalama/PHP/Custodia/store.php';
 const urlState = urlServer + '/TerminalCalama/PHP/Custodia/reload.php';
 
+
+const urlLoad = urlServer + '/TerminalCalama/PHP/Boleta/load.php';
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Obtenemos el código de barras escaneado
     const barcodeTxt = formulario.barcodeIn.value;
 
-    // Separar ID y casillero (formato esperado: idcustodia-casillero)
+    // Separar ID y casillero (formato esperado: idcustodia-casillero-rut)
     const barcodeData = barcodeTxt.split('/');
 
     if (barcodeData.length !== 3) {
@@ -27,20 +27,14 @@ formulario.addEventListener('submit', (e) => {
     const casIn = barcodeData[1]; // Casillero
     const rutIn = barcodeData[2]; // Rut
 
-    // Obtenemos la fecha actual
+    // Obtenemos la fecha y hora actual
     const dateAct = new Date();
-    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
+    const horaStr = dateAct.getHours().toString().padStart(2, '0') + ':' +
+                    dateAct.getMinutes().toString().padStart(2, '0') + ':' +
+                    dateAct.getSeconds().toString().padStart(2, '0');
     const fechaStr = dateAct.toISOString().split('T')[0];
 
-    // Recuperamos el valor del bulto desde localStorage
-    const bultoStr = localStorage.getItem('bultoSeleccionado');
-    let valorHora = 1000; // Valor por hora por defecto
-
-    if (bultoStr) {
-        // Usamos la función getValorBulto para obtener el valor según el bulto seleccionado
-        valorHora = getValorBulto(bultoStr);
-    }
-
+    // Llamar a la API para obtener los datos de la custodia
     traerDatos(idIn)
         .then(result => {
             if (!result || !result.fecha || !result.hora) {
@@ -52,30 +46,17 @@ formulario.addEventListener('submit', (e) => {
             const diffTime = Math.abs(dateAct - dateOld); // Diferencia total en milisegundos
             const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24)); // Convertir a días completos
 
-            let valorTotal = diffDays * valorHora;
+            // Obtener el valor del bulto según la talla usando la función de valores.js
+            const valorBulto = getValorBulto(result.talla); // Obtener el valor basado en la talla
 
-            // Recuperamos la fecha de creación del ticket desde localStorage
-            const fechaCreacion = localStorage.getItem('fechaCreacion');
-            let acumulado = 0;
-
-            if (fechaCreacion) {
-                const lastTime = new Date(fechaCreacion);
-                const diff = Math.abs(dateAct - lastTime); // Diferencia total en milisegundos
-                const diffHoras = diff / 36e5; // Convertir la diferencia en horas
-                const ciclos24 = Math.floor(diffHoras / 24); // Número de ciclos de 24 horas transcurridos
-
-                // Calculamos el valor acumulado, sumando el valor cada ciclo de 24 horas
-                acumulado = ciclos24 * valorHora + valorTotal;
-            } else {
-                // Si no existe la fecha de creación, guardamos la fecha actual como fecha de inicio
-                localStorage.setItem('fechaCreacion', dateAct.toISOString());
-                acumulado = valorTotal; // Usamos el valor total si es el primer escaneo
+            if (valorBulto === 0) {
+                alert("Error: Talla no válida.");
+                return;
             }
 
-            // Guardamos el valor acumulado y la última hora de pago
-            localStorage.setItem('valorAcumulado', acumulado.toFixed(2));
-            localStorage.setItem('ultimoPago', dateAct.toISOString());
+            let valorTotal = diffDays * valorBulto;  // Cálculo por días y talla
 
+            // Mostrar datos en la tabla
             const filasHTML = `
                 <tr>
                     <td>Casillero</td>
@@ -94,12 +75,16 @@ formulario.addEventListener('submit', (e) => {
                     <td style="text-align:right">${diffDays} Días</td>
                 </tr>
                 <tr>
-                    <td>Valor por Dia</td>
-                    <td style="text-align:right">$${valorHora}</td>
+                    <td>Valor por Día</td>
+                    <td style="text-align:right">$${valorBulto}</td>
                 </tr>
                 <tr>
                     <td>Valor Total</td>
-                    <td style="text-align:right">$${Math.round(acumulado)}</td>
+                    <td style="text-align:right" id="valorTotal">$${Math.round(valorTotal)}</td>
+                </tr>
+                <tr>
+                    <td>Talla</td>
+                    <td style="text-align:right">${result.talla || 'No especificado'}</td>
                 </tr>
             `;
             document.getElementById('tabla-body').innerHTML = filasHTML;
@@ -109,7 +94,7 @@ formulario.addEventListener('submit', (e) => {
                 estado: "Entregado",
                 hora: horaStr,
                 fecha: fechaStr,
-                valor: acumulado,
+                valor: valorTotal,
                 rut: rutIn, // Incluir el RUT
             };
 
@@ -118,12 +103,6 @@ formulario.addEventListener('submit', (e) => {
                     console.log("Registro actualizado correctamente.");
                     cargarEstado(casIn);
                     alert("El ticket ha sido escaneado exitosamente!");
-
-                    // Limpiar localStorage después de procesar
-                    localStorage.removeItem('bultoSeleccionado');
-                    localStorage.removeItem('fechaCreacion');
-                    localStorage.removeItem('valorAcumulado');
-                    localStorage.removeItem('ultimoPago');
 
                     // Limpiar formulario
                     formulario.reset();
@@ -136,6 +115,46 @@ formulario.addEventListener('submit', (e) => {
         });
 });
 
+
+// Función para obtener datos desde la API en lugar de localStorage
+async function traerDatos(id) {
+    let datos = await fetch(urlLoad, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(id)
+        })
+        .then(response => response.json())
+        .then(result => {
+            return result;
+        })
+        .catch(error => {
+            console.error('Error obteniendo datos: ', error);
+        });
+    return datos;
+}
+
+// Función para enviar datos a la API
+async function callAPI(datos, url) {
+    let id = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('Respuesta del servidor: ', result);
+            return result;
+        })
+        .catch(error => {
+            console.error('Error al enviar la solicitud: ', error);
+        });
+    return id;
+}
 
 // Desbloquea el casillero escaneado
 async function cargarEstado(casilla) {
@@ -169,60 +188,23 @@ async function cargarEstado(casilla) {
     return estados;
 }
 
-// Obtener datos de la boleta desde la API
-async function traerDatos(id) {
-    let datos = await fetch(urlLoad, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(id)
-        })
-        .then(response => response.json())
-        .then(result => {
-            return result;
-        })
-        .catch(error => {
-            console.error('Error obteniendo datos: ', error);
-        });
-    return datos;
-}
-
-// Llamar a la API para guardar datos
-async function callAPI(datos, url) {
-    let id = await fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datos)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Respuesta del servidor: ', result);
-            return result;
-        })
-        .catch(error => {
-            console.error('Error al enviar la solicitud: ', error);
-        });
-    return id;
-}
-
 function printBol() {
-    const valor = parseFloat(localStorage.getItem('valorAcumulado')); // Se obtiene el valor acumulado
-    let servicio = "Custodia"; 
+    // Verifica que el valor total está disponible
+    const valorTotal = parseFloat(document.querySelector('#valorTotal').textContent.replace('$', '').trim());
 
-    if (!valor) {
-        console.error("El valor no fue encontrado para el servicio:", servicio);
+    // Si el valor total no está disponible o es NaN, se muestra un error
+    if (!valorTotal || isNaN(valorTotal)) {
+        console.error("El valor total no es válido para el servicio:", "Custodia");
         return;
     }
+
+    let servicio = "Custodia"; 
 
     let payload = {
         "codigoEmpresa": "89",
         "tipoDocumento": "39",
-        "total": valor,
-        "detalleBoleta": `53-${valor}-1-dsa-${servicio}`
+        "total": valorTotal.toString(), // Pasar el valor como string
+        "detalleBoleta": `53-${valorTotal}-1-dsa-${servicio}`
     };
 
     console.log("Payload preparado para el envío:", payload);
