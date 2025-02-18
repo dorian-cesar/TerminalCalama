@@ -118,7 +118,6 @@ for (const [tamaño, valor] of Object.entries(valoresBulto)) {
 
 
 // Llamamos a la API de manera asincrona para guardar datos y retornar
-// la ultima ID registrada
 async function callAPI(datos, url) {
     let id = await fetch(url, {
         method: 'POST',
@@ -294,10 +293,7 @@ function guardarEstado(){
     callAPI(datos, urlStore);
 }
 
-function reactivarBoton(btn){
-	// Esta función deberá ser modificada para traer datos desde el lector de QR
-	// La siguiente implementación es solo para efectos demostrativos
-	// Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
+function reactivarBoton(btn){	
 	const fechaHoraAct = new Date();
 	
 	const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
@@ -340,13 +336,13 @@ function printBarcode() {
         <html>
             <head><title>Imprimir Código de Barras</title></head>
             <body style="text-align:center; width: min-content;">
-            <div style="margin-top: 70px;"></div>
+            <div style="margin-top: 90px;"></div>
                 <h1>Ticket de Recepción</h1>
                 <h3>${fechaStr} ${horaStr}</h3>
                 ${contBarcode.innerHTML}
                 
                 <!-- Espacio entre los dos tickets -->
-                <div style="margin-top: 140px;"></div>
+                <div style="margin-top: 200px;"></div>
 
                 <!-- Segunda impresión del ticket -->
                 <h1>Ticket de Recepción</h1>

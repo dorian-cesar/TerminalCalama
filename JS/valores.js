@@ -1,9 +1,7 @@
-var restroom = {
+window.restroom = {
     Baño: 500, 
     Ducha: 4000        
-  };
-
-
+};
 
 var valoresBulto = {
     "S Bolso Pequeño": 2200,
@@ -16,12 +14,3 @@ var valoresBulto = {
 function getValorBulto(tamaño) {
     return valoresBulto[tamaño] || 0;  // Devuelve el valor correspondiente o 0 si no se encuentra el tamaño
 }
-
-function inicializarValores() {
-    document.getElementById("valorBaño").textContent = `$${restroom.Baño}`;
-    document.getElementById("valorDucha").textContent = `$${restroom.Ducha}`;
-    }
-
-document.addEventListener("DOMContentLoaded", function () {
-    inicializarValores();
-})

@@ -9,6 +9,13 @@
     <script defer src="JS/appRestroom.js"></script>
     <script defer src="JS/valores.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("valorBaño").textContent = `$${window.restroom.Baño}`;
+            document.getElementById("valorDucha").textContent = `$${window.restroom.Ducha}`;
+        });
+    </script>
+        
 </head>
 <body>
     <div class="contenedor">
@@ -73,7 +80,7 @@
                 event.preventDefault();
 
                 let servicio = $('input[name="tipo"]:checked').val();
-                let valor = restroom[servicio];
+                let valor = String(restroom[servicio]);
 
                 console.log("Servicio seleccionado:", servicio);
                 console.log("Valor asignado:", valor);
@@ -87,7 +94,7 @@
                 let payload = {
                     "codigoEmpresa": "89",
                     "tipoDocumento": "39",
-                    "total": valor,
+                    "total": valor, 
                     "detalleBoleta": `53-${valor}-1-dsa-${servicio}`
                 };
 
