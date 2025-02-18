@@ -55,11 +55,13 @@ var numero=0
       genQR.disabled = false;
       genQR.classList.remove('disabled');
       addUser(numeroT);
-      let name=numeroT.substring(0,6);
-      console.log(name);
-      addUserAccessLevel(name);
+      
+      setTimeout(() => {
+        let name = numeroT.substring(0, 6);
+        console.log(name);
+        addUserAccessLevel(name);
+    }, 1000)
     });
-
 });
 
 function escribirTexto(){
