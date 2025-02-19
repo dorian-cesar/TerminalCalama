@@ -49,6 +49,22 @@
             <div class="buscador-filtros">
                 <input type="text" id="buscador-codigo" placeholder="Buscar por código" aria-label="Buscar por código">
                 <button id="boton-verificar">Verificar Código</button>
+                <div id="resultado-verificacion" style="display: none; margin-bottom: 50px;">
+                    <button id="cerrar-tabla" aria-label="Cerrar tabla">✖</button>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Estado boleto</th>
+                                <th>Fecha de uso</th>
+                                <th>Puerta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-resultados">
+                            <!-- Aquí se insertarán los resultados dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>    
                 <select id="filtro-tipo" aria-label="Filtrar por tipo">
                     <option value="">Todos los tipos</option>
                     <option value="Ducha">Ducha</option>
@@ -56,7 +72,7 @@
                 </select>
                 <input type="date" id="filtro-fecha">
                 <button id="boton-filtrar">Filtrar</button>
-            </div>            
+            </div>                   
             <div class="conttabla" style="height:80%">
                 <table class="thist">
                     <thead>
@@ -64,7 +80,7 @@
                             <th>Id</th>
                             <th>Codigo</th>
                             <th>Tipo</th>
-                            <th>Fecha</th>
+                            <th>Fecha emisión</th>
                             <th>Hora</th>
                         </tr>
                     </thead>

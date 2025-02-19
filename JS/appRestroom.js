@@ -265,9 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function verificarCodigo() {
     const codigoInput = document.getElementById('buscador-codigo').value.trim();
+    const resultadoDiv = document.getElementById('resultado-verificacion');
+    const tablaResultados = document.getElementById('tabla-resultados');
 
-    if (!codigoInput) {
-        alert("Por favor, ingrese un código para verificar.");
+    // Verificar si el código tiene al menos 6 caracteres
+    if (!codigoInput || codigoInput.length < 6) {
+        alert("El código debe tener al menos 6 caracteres.");
         return;
     }
 
@@ -282,19 +285,43 @@ function verificarCodigo() {
         return response.json();
     })
     .then(data => {
+        // Limpiar tabla antes de agregar nuevos datos
+        tablaResultados.innerHTML = "";
+
         if (data.error) {
-            alert("Error: " + data.error);
-        } else if (data.message === "El boleto ha sido ocupado.") {
-            alert(`El boleto ha sido ocupado.\nFecha: ${data.eventTime}\nPuerta: ${data.doorName}`);
+            tablaResultados.innerHTML = `<tr><td colspan="4" style="color: red;">Error: ${data.error}</td></tr>`;
         } else {
-            alert(data.message);
+            const mensaje = data.message || "Verificación exitosa";
+            const fecha = data.eventTime || "N/A";
+            const puerta = data.doorName || "N/A";
+
+            tablaResultados.innerHTML = `
+                <tr>
+                    <td>${codigoInput}</td>
+                    <td>${mensaje}</td>
+                    <td>${fecha}</td>
+                    <td>${puerta}</td>
+                </tr>
+            `;
         }
+
+        // Mostrar la tabla
+        resultadoDiv.style.display = "block";
     })
     .catch(error => {
         console.error("Error en la solicitud:", error);
-        alert("Hubo un problema al verificar el código.");
+        tablaResultados.innerHTML = `<tr><td colspan="4" style="color: red;">Hubo un problema al verificar el código.</td></tr>`;
+        resultadoDiv.style.display = "block";
     });
 }
 
-// Agregar evento para ejecutar la verificación cuando se presione un botón
+// Función para cerrar la tabla
+function cerrarTabla() {
+    document.getElementById('resultado-verificacion').style.display = 'none';
+}
+
+// Agregar evento al botón de verificación
 document.getElementById('boton-verificar').addEventListener('click', verificarCodigo);
+
+// Agregar evento al botón de cerrar
+document.getElementById('cerrar-tabla').addEventListener('click', cerrarTabla);
