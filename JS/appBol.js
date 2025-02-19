@@ -249,3 +249,96 @@ function printBol() {
         }
     });
 }
+
+const consultarTicket = (barcodeTxt) => {
+    const barcodeData = barcodeTxt.split('/');
+
+    if (barcodeData.length !== 3) {
+        alert("Código de barras inválido.");
+        return;
+    }
+
+    const idIn = barcodeData[0]; // ID de custodia
+    const casIn = barcodeData[1]; // Casillero
+    const rutIn = barcodeData[2]; // Rut
+
+    // Obtener la fecha y hora actual
+    const dateAct = new Date();
+    const horaStr = dateAct.getHours().toString().padStart(2, '0') + ':' +
+                    dateAct.getMinutes().toString().padStart(2, '0') + ':' +
+                    dateAct.getSeconds().toString().padStart(2, '0');
+    const fechaStr = dateAct.toISOString().split('T')[0];
+
+    // Llamar a la API para obtener los datos de la custodia
+    traerDatos(idIn)
+        .then(result => {
+            if (!result || !result.fecha || !result.hora) {
+                alert("Error: No se encontró la información del ticket.");
+                return;
+            }
+
+            const dateOld = new Date(result.fecha + 'T' + result.hora);
+            const diffTime = Math.abs(dateAct - dateOld); // Diferencia total en milisegundos
+            const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24)); // Convertir a días completos
+
+            // Obtener el valor del bulto según la talla usando la función de valores.js
+            const valorBulto = getValorBulto(result.talla);
+
+            if (valorBulto === 0) {
+                alert("Error: Talla no válida.");
+                return;
+            }
+
+            let valorTotal = diffDays * valorBulto; // Cálculo por días y talla
+
+            // Mostrar datos en la tabla
+            const filasHTML = `
+                <tr>
+                    <td>Casillero</td>
+                    <td style="text-align:right">${result.posicion}</td>
+                </tr>
+                <tr>
+                    <td>Fecha de Entrada</td>
+                    <td style="text-align:right">${result.fecha} ${result.hora}</td>
+                </tr>
+                <tr>
+                    <td>Fecha de Salida</td>
+                    <td style="text-align:right">${fechaStr} ${horaStr}</td>
+                </tr>
+                <tr>
+                    <td>Tiempo Ocupado</td>
+                    <td style="text-align:right">${diffDays} Días</td>
+                </tr>
+                <tr>
+                    <td>Valor por Día</td>
+                    <td style="text-align:right">$${valorBulto}</td>
+                </tr>
+                <tr>
+                    <td>Valor Total</td>
+                    <td style="text-align:right">$${Math.round(valorTotal)}</td>
+                </tr>
+                <tr>
+                    <td>Talla</td>
+                    <td style="text-align:right">${result.talla || 'No especificado'}</td>
+                </tr>
+            `;
+            document.getElementById('tabla-body').innerHTML = filasHTML;
+
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Error al consultar el ticket.");
+        });
+};
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("btnConsultar").addEventListener("click", function() {
+        const barcodeTxt = document.getElementById("barcodeIn").value.trim();
+
+        if (barcodeTxt === "") {
+            alert("Por favor, ingrese un código de barras.");
+            return;
+        }
+
+        consultarTicket(barcodeTxt);
+    });
+});

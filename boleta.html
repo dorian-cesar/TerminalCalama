@@ -12,13 +12,15 @@
         <h1>Custodia - Entrega</h1>
         <div class="izquierda">
             <form id="formulario" class="formulario">
-                <input type="text" name="barcodeIn" id="barcodeIn">
-                <button class="btn" id="btnleer">Escanear código de barras</button>    
+                <input type="text" name="barcodeIn" id="barcodeIn" placeholder="Escanea o ingresa código">
+                <button type="button" class="btn" id="btnConsultar">Consultar Ticket</button>
+                <button class="btn" id="btnleer">Liberar casilla</button>  
             </form> 
+            
         </br>
         </br>
         <div>
-            <button class="btn" id="entrada" onclick="printBol()">Imprimir</button>
+            <button class="btn" id="entrada" onclick="printBol()">Imprimir boleta</button>
             <a href="custodia.html"><button class="btn" >Volver</button></a>
         </div>    
     </div>

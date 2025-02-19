@@ -17,18 +17,18 @@
             <form id="formulario" class="formulario">
                 <input type="text" id="casillero" placeholder="Casillero" disabled/>
                 <input type="text" id="rut" placeholder="XXXXXXXX-X"/>
-                <button class="btn" id="generar">Generar Código de Barras</button>
+                <button class="btn" id="generar">Generar código de barras</button>
             </form>
             <div class="contenedorBarcode" id="contBarcode">
                 <svg id="barcode"></svg>
             </div>
-            <button class="btn" onclick="printBarcode()">Imprimir</button>
+            <button class="btn" onclick="printBarcode()">Imprimir ticket</button>
             <a href="boleta.html"><button class="btn">Entrega</button></a>
         </div>
         <div class="derecha">
             <div class="contbulto">
                 <div class="bultotxt">
-                    <b><label class="bulto">Seleccione el Tamaño</label></b>
+                    <b><label class="bulto">Seleccione el tamaño</label></b>
                     <select name="bulto" id="bulto"> 
                         <option value=0 class="select-items selectClass">Seleccione</option>
                         <option value="S Bolso Pequeño " class="select-items selectClass">Talla S (Bolso Pequeño $2.200)</option>
