@@ -13,6 +13,7 @@ const urlLoad = urlServer + '/TerminalCalama/PHP/Restroom/load.php';
 const urlSave = urlServer + '/TerminalCalama/PHP/Restroom/save.php';
 const urlAddUser = urlServer + '/TerminalCalama/PHP/Restroom/addUser.php';
 const urlLevelUser = urlServer + '/TerminalCalama/PHP/Restroom/addLevelUser.php';
+const urlBoleto = urlServer + '/TerminalCalama/PHP/Restroom/estadoBoleto.php'
 
 console.log (urlBase);
 
@@ -261,3 +262,37 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('buscador-codigo').addEventListener('input', aplicarFiltros);
     document.getElementById('filtro-tipo').addEventListener('change', aplicarFiltros);
 });
+
+function verificarCodigo() {
+    const codigoInput = document.getElementById('buscador-codigo').value.trim();
+
+    if (!codigoInput) {
+        alert("Por favor, ingrese un código para verificar.");
+        return;
+    }
+
+    fetch(`${urlBoleto}?userPin=${encodeURIComponent(codigoInput)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error en la respuesta del servidor: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert("Error: " + data.error);
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error en la solicitud:", error);
+        alert("Hubo un problema al verificar el código.");
+    });
+}
+
+// Agregar evento para ejecutar la verificación cuando se presione un botón
+document.getElementById('boton-verificar').addEventListener('click', verificarCodigo);
