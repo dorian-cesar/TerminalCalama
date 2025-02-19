@@ -284,6 +284,8 @@ function verificarCodigo() {
     .then(data => {
         if (data.error) {
             alert("Error: " + data.error);
+        } else if (data.message === "El boleto ha sido ocupado.") {
+            alert(`El boleto ha sido ocupado.\nFecha: ${data.eventTime}\nPuerta: ${data.doorName}`);
         } else {
             alert(data.message);
         }

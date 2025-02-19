@@ -48,7 +48,8 @@ body{
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
 }
 
 .btn:hover {
@@ -57,7 +58,9 @@ body{
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
+    transform: translateY(-2px); /* Efecto de elevación */
 }
+
 
 .casilla {
     background-color: rgb(16, 163, 85);
@@ -276,22 +279,28 @@ label.radiolbl {
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
 }
+
 label.radiolbl:hover {
     background-color: rgb(7, 95, 48);
-    color:black;
+    color: white;
     border: 1px solid rgb(95, 64, 7);
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
+    transform: translateY(-2px); /* Efecto de elevación */
 }
+
 input[type="radio"]:checked + label.radiolbl {
     background-color: rgb(16, 163, 85);
     border: 1px solid rgb(7, 95, 48);
+    color: white;
     border-bottom-width: 5px;
     border-right-width: 5px;
     border-radius: 10px;
+    transform: translateY(-2px); /* Efecto de elevación al estar seleccionado */
 }
 
 /* Contenedor donde se renderiza el código de barras */
@@ -313,7 +322,7 @@ input[type="radio"]:checked + label.radiolbl {
     appearance: none;
     -webkit-appearance: none;
     font-size: 1.15rem;
-    padding: 10px 20px;
+    padding: 8px 18px;
     background-color: rgb(16, 163, 85);
     border: 1px solid white;
     border-radius: 10px;
@@ -390,9 +399,9 @@ input[type="date"] {
 
 /* Estilos para el campo de texto (buscador-codigo) */
 #buscador-codigo {
-    width: 500px; /* Reducir el ancho del campo */
+    width: 400px; /* Reducir el ancho del campo */
     padding: 8px; /* Reducir el espacio interior */
-    font-size: 14px; /* Reducir el tamaño de la fuente */
+    font-size: 20px; /* Reducir el tamaño de la fuente */
     border-radius: 5px; /* Bordes redondeados */
     border: 1px solid #ccc; /* Borde gris claro */
     background-color: #f9f9f9; /* Fondo claro */
@@ -404,4 +413,58 @@ input[type="date"] {
     outline: none; /* Eliminar el borde de enfoque predeterminado */
     border-color: rgb(7, 95, 48); /* Cambiar el color del borde al azul */
     background-color: #e8f0fe; /* Fondo azul claro */
+}
+
+#boton-verificar {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 1.15rem;
+    padding: 8px 18px;
+    background-color: rgb(16, 163, 85);
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+#boton-verificar:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+    transform: translateY(-2px);
+}
+
+#filtro-tipo {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 1.15rem;
+    padding: 5px 10px;
+    background-color: rgb(16, 163, 85);
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+#filtro-tipo:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+    transform: translateY(-2px);
 }
