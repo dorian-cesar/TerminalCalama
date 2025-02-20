@@ -16,7 +16,7 @@
         <div class="izquierda">
             <form id="formulario" class="formulario">
                 <input type="text" id="casillero" placeholder="Casillero" disabled/>
-                <input type="text" id="rut" placeholder="XXXXXXXX-X"/>
+                <input type="text" id="rut" placeholder="RUT/DNI sin puntos ni guión"/>
                 <button class="btn" id="generar">Generar código de barras</button>
             </form>
             <div class="contenedorBarcode" id="contBarcode">
@@ -44,7 +44,7 @@
             </div>
             <div id="matriz" class="contlocker"></div>
             <div class="buscador-filtros">
-                <input type="text" id="buscador-rut" placeholder="Buscar por RUT..." aria-label="Buscar por RUT">
+                <input type="text" id="buscador-rut" placeholder="Buscar por RUT / DNI / Pasaporte" aria-label="Buscar por RUT">
                 <select id="filtro-tipo" aria-label="Filtrar por tipo">
                     <option value="">Todos los tipos</option>
                     <option value="Ingresado">Ingresado</option>
@@ -58,7 +58,7 @@
                     <option value="XL Equipaje Extra Grande">Talla XL</option>
                     <option value="XXL Sacos / Fardos">Talla XXL</option>
                 </select>
-                <button id="boton-filtrar">Filtrar</button>
+                <button id="boton-filtrar">Buscar</button>
             </div>
             <div class="conttabla">
                 <table class="thist">

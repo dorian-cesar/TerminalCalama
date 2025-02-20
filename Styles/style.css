@@ -19,11 +19,13 @@ body{
 .izquierda {
     background-color: aliceblue;
     border-radius: 25px;
-    width: 30%;
+    width: 35%; 
     float: left;
     padding: 10px;
     height: 100%;
+    margin-left: -5%; /* Desplaza un poco más a la izquierda */
 }
+
 
 .derecha {
     background-color: aliceblue;
