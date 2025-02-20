@@ -132,11 +132,15 @@
                             console.log("Respuesta recibida:", response);
 
                             if (response.respuesta === "OK") {
-                                let boletaHtml = `<div class='alert alert-success'>Boleta generada con éxito.<br>
-                                    <strong>Folio:</strong> ${response.folio}<br>
-                                    <strong>Fecha:</strong> ${response.fecha}<br>
-                                    <a href='${response.rutaAcepta}' target='_blank' class='btn btn-success mt-2'>Ver Boleta</a>
-                                </div>`;
+                                let boletaHtml = `
+                                    <div class='alert alert-success'>
+                                        <p><strong>Boleta generada con éxito.</strong></p>
+                                        <p><strong>Folio:</strong> ${response.folio}</p>
+                                        <p><strong>Fecha:</strong> ${response.fecha}</p>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href='${response.rutaAcepta}' target='_blank' class='btn btn-success'>Ver Boleta</a>
+                                    </div>`;
                                 $('#resultado').html(boletaHtml);
                                 console.log("Boleta generada correctamente.");
                             } else {
