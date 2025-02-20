@@ -44,29 +44,35 @@ const urlState = urlServer + '/TerminalCalama/PHP/Custodia/reload.php';
 actualizarTabla();
 cargarEstado();
 
-formulario.addEventListener('submit', (e) => {
+formulario.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const casillaStr = formulario.casillero.value;
-    const rutStr = formulario.rut.value;
+    const casillaStr = formulario.casillero.value.trim();
+    const rutStr = formulario.rut.value.trim();
 
-    if (casillaStr && rutStr) {
-        const bultoStr = document.getElementById('bulto').value;
-        if (bultoStr == 0) {
-            alert('Seleccione un tamaño para el bulto');
-            return;
-        }
+    // Validar campos obligatorios
+    if (!casillaStr || !rutStr) {
+        alert('Seleccione casilla e ingrese RUT');
+        return;
+    }
 
-        // Guardar el valor del bulto en localStorage
-        localStorage.setItem('bultoSeleccionado', bultoStr);
+    const bultoStr = document.getElementById('bulto').value;
+    if (bultoStr == 0) {
+        alert('Seleccione un tamaño para el bulto');
+        return;
+    }
 
-        const dateAct = new Date();
-        const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
-        const fechaStr = dateAct.toISOString().split('T')[0];
+    // Obtener fecha y hora actuales
+    const dateAct = new Date();
+    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ':' + dateAct.getSeconds();
+    const fechaStr = dateAct.toISOString().split('T')[0];
 
-        formulario.generar.disabled = true;
-        formulario.generar.classList.add('disabled');
+    // Deshabilitar botón durante el proceso
+    formulario.generar.disabled = true;
+    formulario.generar.classList.add('disabled');
 
+    try {
+        // Construir datos para enviar a la API
         const datos = {
             hora: horaStr,
             fecha: fechaStr,
@@ -76,27 +82,30 @@ formulario.addEventListener('submit', (e) => {
             tipo: 'Ingresado',
         };
 
-        callAPI(datos, urlSave)
-        .then(result => {
-            const barcodeData = `${result}/${casillaStr}/${rutStr}`;
-            console.log(barcodeData);
-            navigator.clipboard.writeText(barcodeData);
+        // Llamar a la API
+        const result = await callAPI(datos, urlSave);
 
-            contBarcode.innerHTML = `<svg id="barcode"></svg>`;
-            JsBarcode("#barcode", barcodeData, {
-                format: "CODE128",
-                displayValue: true
-            });
-
-            actualizarTabla();
-            formulario.casillero.value = '';
-            guardarEstado();
-
-            formulario.generar.disabled = false;
-            formulario.generar.classList.remove('disabled');
+        // Generar código de barras con solo ID y RUT
+        const barcodeData = `${result}/${rutStr}`;
+        console.log(barcodeData);
+        await navigator.clipboard.writeText(barcodeData);
+        contBarcode.innerHTML = `<svg id="barcode"></svg>`;
+        JsBarcode("#barcode", barcodeData, {
+            format: "CODE128",
+            displayValue: true
         });
-    } else {
-        alert('Seleccione casilla e ingrese RUT');
+
+        // Actualizar tabla y limpiar campos
+        actualizarTabla();
+        formulario.casillero.value = '';
+        guardarEstado();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Ocurrió un error al procesar los datos. Inténtelo nuevamente.');
+    } finally {
+        // Habilitar botón nuevamente
+        formulario.generar.disabled = false;
+        formulario.generar.classList.remove('disabled');
     }
 });
 

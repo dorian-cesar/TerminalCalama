@@ -116,7 +116,6 @@ formulario.addEventListener('submit', (e) => {
 });
 
 
-// Función para obtener datos desde la API en lugar de localStorage
 async function traerDatos(id) {
     let datos = await fetch(urlLoad, {
             method: 'POST',
