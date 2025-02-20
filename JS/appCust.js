@@ -362,3 +362,28 @@ function printBarcode() {
 }
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    let selectSelected = document.querySelector(".select-selected");
+    let selectItems = document.querySelector(".select-items");
+    let selectOptions = selectItems.querySelectorAll("div");
+    let hiddenInput = document.getElementById("bulto");
+
+    selectSelected.addEventListener("click", function () {
+        selectItems.style.display = selectItems.style.display === "block" ? "none" : "block";
+    });
+
+    selectOptions.forEach(option => {
+        option.addEventListener("click", function () {
+            selectSelected.innerText = this.innerText;
+            hiddenInput.value = this.getAttribute("data-value");
+            selectItems.style.display = "none";
+        });
+    });
+
+    // Cierra el menú si se hace clic fuera de él
+    document.addEventListener("click", function (event) {
+        if (!selectSelected.contains(event.target) && !selectItems.contains(event.target)) {
+            selectItems.style.display = "none";
+        }
+    });
+});

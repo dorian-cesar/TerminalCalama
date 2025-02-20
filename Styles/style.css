@@ -533,3 +533,112 @@ input[type="date"] {
     margin: auto;
     margin-top: 20px;
 }
+
+#resultado .alert-success {
+    padding: 15px;
+}
+
+#resultado .btn-success {
+    display: block;
+    margin-top: 10px;
+}
+
+/* Estilo para el select con apariencia similar al botón */
+#bulto {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 1.15rem;
+    padding: 8px 13px;
+    background-color: rgb(16, 163, 85);
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+}
+
+/* Cambio de color al pasar el cursor sobre el select */
+#bulto:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+    border: 1px solid rgb(31, 7, 95);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+    transform: translateY(-2px);
+}
+
+/* Opciones dentro del select */
+#bulto option {
+    background-color: white;
+    color: black;
+    padding: 10px;
+    
+}
+
+/* Efecto hover en las opciones */
+#bulto option:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+}
+/* Contenedor del select */
+.custom-select {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 360px;
+    font-size: 1.15rem;
+}
+
+/* Estilo del select "cerrado" */
+.select-selected {
+    background-color: rgb(16, 163, 85);
+    color: white;
+    padding: 8px 13px;
+    border: 1px solid rgb(7, 95, 48);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover del select */
+.select-selected:hover {
+    background-color: rgb(7, 95, 48);
+    transform: translateY(-2px);
+}
+
+/* Opciones ocultas inicialmente */
+.select-items {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(7, 95, 48);
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+    z-index: 100;
+}
+
+/* Opciones dentro del select */
+.select-items div {
+    padding: 10px;
+    color: black;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Efecto hover en las opciones */
+.select-items div:hover {
+    background-color: rgb(7, 95, 48);
+    color: white;
+}
+
