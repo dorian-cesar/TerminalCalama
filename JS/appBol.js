@@ -252,14 +252,13 @@ function printBol() {
 const consultarTicket = (barcodeTxt) => {
     const barcodeData = barcodeTxt.split('/');
 
-    if (barcodeData.length !== 3) {
+    if (barcodeData.length !== 2) {
         alert("Código de barras inválido.");
         return;
     }
 
     const idIn = barcodeData[0]; // ID de custodia
-    const casIn = barcodeData[1]; // Casillero
-    const rutIn = barcodeData[2]; // Rut
+    const rutIn = barcodeData[1]; // RUT
 
     // Obtener la fecha y hora actual
     const dateAct = new Date();
@@ -294,7 +293,7 @@ const consultarTicket = (barcodeTxt) => {
             const filasHTML = `
                 <tr>
                     <td>Casillero</td>
-                    <td style="text-align:right">${result.posicion}</td>
+                    <td style="text-align:right">${result.posicion || 'No especificado'}</td>
                 </tr>
                 <tr>
                     <td>Fecha de Entrada</td>
@@ -329,6 +328,7 @@ const consultarTicket = (barcodeTxt) => {
             alert("Error al consultar el ticket.");
         });
 };
+
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btnConsultar").addEventListener("click", function() {
         const barcodeTxt = document.getElementById("barcodeIn").value.trim();
