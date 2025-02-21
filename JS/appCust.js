@@ -154,29 +154,28 @@ async function callAPI(datos, url) {
 // Extraemos el historial y generamos una tabla
 function actualizarTabla() {
     fetch(urlLoad)
-    .then(response => response.json())
-    .then(data => {
-		const filasHTML = data.map(item =>
-            `
-			<tr>
-				<td>${item.idcustodia}</td>
-				<td>${item.posicion}</td>
-				<td>${item.rut}</td>
-				<td>${item.fecha} ${item.hora}</td>
-				<td>${item.fechasal != '0000-00-00' ? item.fechasal : ''} ${item.horasal != '00:00:00' ? item.horasal : ''}</td>
-				<td>${item.talla}</td>
-				<td>${item.tipo}</td>
-				<td>${item.valor > 0 ? item.valor : ''}</td>
-			</tr>
-		`).join('');
-
-        //console.log(JSON.stringify(data));
-
-		document.getElementById('tabla-body').innerHTML = filasHTML;
-    })
-    .catch(error => {
-        console.error('Error obteniendo datos: ', error);
-    })
+        .then(response => response.json())
+        .then(data => {
+            const filasHTML = data.map(item =>
+                `
+                <tr>
+                    <td>${item.idcustodia}/${item.rut}</td> 
+                   
+                    <td>${item.posicion}</td>
+                    <td>${item.rut}</td>
+                    <td>${item.fecha} ${item.hora}</td>
+                    <td>${item.fechasal !== '0000-00-00' ? item.fechasal : ''} ${item.horasal !== '00:00:00' ? item.horasal : ''}</td>
+                    <td>${item.talla}</td>
+                    <td>${item.tipo}</td>
+                    <td>${item.valor > 0 ? item.valor : ''}</td>
+                </tr>
+                `
+            ).join('');
+            document.getElementById('tabla-body').innerHTML = filasHTML;
+        })
+        .catch(error => {
+            console.error('Error obteniendo datos: ', error);
+        });
 }
 document.getElementById('boton-filtrar').addEventListener('click', () => {
     const rutBusqueda = document.getElementById('buscador-rut').value.toLowerCase();
@@ -194,8 +193,9 @@ document.getElementById('boton-filtrar').addEventListener('click', () => {
             });
 
             const filasHTML = datosFiltrados.map(item => `
-                <tr>
-                    <td>${item.idcustodia}</td>
+                <tr>  
+                    <td>${item.idcustodia}/${item.rut}</td>                  
+                    
                     <td>${item.posicion}</td>
                     <td>${item.rut}</td>
                     <td>${item.fecha} ${item.hora}</td>
@@ -203,6 +203,7 @@ document.getElementById('boton-filtrar').addEventListener('click', () => {
                     <td>${item.talla}</td>
                     <td>${item.tipo}</td>
                     <td>${item.valor > 0 ? item.valor : ''}</td>
+                     
                 </tr>
             `).join('');
 
