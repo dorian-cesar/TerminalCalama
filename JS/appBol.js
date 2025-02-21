@@ -10,17 +10,14 @@ const urlLoad = urlServer + '/TerminalCalama/PHP/Boleta/load.php';
 
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-
     // Obtenemos el código de barras escaneado
     const barcodeTxt = formulario.barcodeIn.value.trim();
-
     // Separar ID y RUT (formato esperado: idcustodia/rut)
     const barcodeData = barcodeTxt.split('/');
     if (barcodeData.length !== 2) {
         alert("Código de barras inválido. El formato debe ser: idcustodia/rut");
         return;
     }
-
     const idIn = barcodeData[0]; // ID de custodia
     const rutIn = barcodeData[1]; // RUT
 
@@ -35,8 +32,12 @@ formulario.addEventListener('submit', (e) => {
     traerDatos(idIn)
         .then(result => {
             if (!result || !result.fecha || !result.hora) {
-                alert("Error: No se encontró la información del ticket.");
-                return;
+                throw new Error("Este ticket ya fue procesado o inválido.");
+            }
+
+            // Verificar si el ticket ya fue marcado como entregado
+            if (result.estado === "Entregado") {
+                throw new Error("El ticket ya ha sido escaneado anteriormente.");
             }
 
             // Calcular la diferencia de tiempo entre la fecha de entrada y la fecha actual
@@ -47,8 +48,7 @@ formulario.addEventListener('submit', (e) => {
             // Obtener el valor del bulto según la talla usando la función de valores.js
             const valorBulto = getValorBulto(result.talla); // Obtener el valor basado en la talla
             if (valorBulto === 0) {
-                alert("Error: Talla no válida.");
-                return;
+                throw new Error("Error: Talla no válida.");
             }
 
             // Cálculo del valor total
@@ -100,7 +100,6 @@ formulario.addEventListener('submit', (e) => {
             // Actualizar el registro en la base de datos
             return callAPI(datos, urlUpdate).then(() => {
                 console.log("Registro actualizado correctamente.");
-
                 // Liberar el casillero llamando a cargarEstado
                 const casilla = result.posicion; // Casillero asociado al ticket
                 if (casilla) {
@@ -114,8 +113,8 @@ formulario.addEventListener('submit', (e) => {
             formulario.reset();
         })
         .catch(err => {
-            console.error(err);
-            alert("El ticket ya ha sido escaneado anteriormente o es inválido.");
+            console.error(err.message);
+            alert(err.message || "El ticket ya ha sido escaneado anteriormente o es inválido.");
         });
 });
 
@@ -267,12 +266,10 @@ function printBol() {
 
 const consultarTicket = (barcodeTxt) => {
     const barcodeData = barcodeTxt.split('/');
-
     if (barcodeData.length !== 2) {
         alert("Código de barras inválido.");
         return;
     }
-
     const idIn = barcodeData[0]; // ID de custodia
     const rutIn = barcodeData[1]; // RUT
 
@@ -287,23 +284,27 @@ const consultarTicket = (barcodeTxt) => {
     traerDatos(idIn)
         .then(result => {
             if (!result || !result.fecha || !result.hora) {
-                alert("Error: No se encontró la información del ticket.");
-                return;
+                throw new Error("El ticket ya ha sido escaneado anteriormente o es inválido.");
             }
 
+            // Verificar si el ticket ya fue marcado como entregado
+            if (result.estado === "Entregado") {
+                throw new Error("El ticket ya ha sido marcado como entregado.");
+            }
+
+            // Calcular la diferencia de tiempo entre la fecha de entrada y la fecha actual
             const dateOld = new Date(result.fecha + 'T' + result.hora);
             const diffTime = Math.abs(dateAct - dateOld); // Diferencia total en milisegundos
             const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24)); // Convertir a días completos
 
             // Obtener el valor del bulto según la talla usando la función de valores.js
             const valorBulto = getValorBulto(result.talla);
-
             if (valorBulto === 0) {
-                alert("Error: Talla no válida.");
-                return;
+                throw new Error("Error: Talla no válida.");
             }
 
-            let valorTotal = diffDays * valorBulto; // Cálculo por días y talla
+            // Cálculo del valor total
+            let valorTotal = diffDays * valorBulto;
 
             // Mostrar datos en la tabla
             const filasHTML = `
@@ -337,11 +338,10 @@ const consultarTicket = (barcodeTxt) => {
                 </tr>
             `;
             document.getElementById('tabla-body').innerHTML = filasHTML;
-
         })
         .catch(err => {
-            console.log(err);
-            alert("Error al consultar el ticket.");
+            console.error(err.message);
+            alert(err.message || "Error al consultar el ticket.");
         });
 };
 
