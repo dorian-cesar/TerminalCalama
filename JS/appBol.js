@@ -357,3 +357,146 @@ document.addEventListener("DOMContentLoaded", function() {
         consultarTicket(barcodeTxt);
     });
 });
+
+function printComp() {
+    // Obtener los datos del DOM (tabla generada previamente)
+    const casillero = document.querySelector('#tabla-body tr:nth-child(1) td:nth-child(2)').innerText;
+    const fechaEntrada = document.querySelector('#tabla-body tr:nth-child(2) td:nth-child(2)').innerText;
+    const fechaSalida = document.querySelector('#tabla-body tr:nth-child(3) td:nth-child(2)').innerText;
+    const tiempoOcupado = document.querySelector('#tabla-body tr:nth-child(4) td:nth-child(2)').innerText;
+    const valorPorDia = document.querySelector('#tabla-body tr:nth-child(5) td:nth-child(2)').innerText;
+    const valorTotal = document.querySelector('#tabla-body tr:nth-child(6) td:nth-child(2)').innerText;
+    const talla = document.querySelector('#tabla-body tr:nth-child(7) td:nth-child(2)').innerText;
+
+    // Generar un número de comprobante aleatorio (opcional)
+    const numeroComprobante = Math.floor(100000 + Math.random() * 900000);
+
+    // Crear el contenido HTML del comprobante
+    const comprobanteHTML = `
+        <html>
+        <head>
+            <title>Comprobante de Entrega</title>
+            <style>
+                /* Estilos generales */
+                body {
+                    font-family: 'Roboto', Arial, sans-serif;
+                    margin: 20px;
+                    background-color: #f9f9f9;
+                    color: #333;
+                }
+                .container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background: #fff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    text-align: center;
+                    font-size: 28px;
+                    color: rgb(16, 163, 85);
+                    margin-bottom: 20px;
+                }
+                h2 {
+                    font-size: 20px;
+                    color: #555;
+                    margin-bottom: 10px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f4f4f4;
+                    color: #333;
+                }
+                .total {
+                    font-weight: bold;
+                    text-align: right;
+                    color: rgb(16, 163, 85);
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 20px;
+                    font-size: 14px;
+                    color: #777;
+                }
+                .logo {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .logo img {
+                    max-width: 150px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <!-- Logo -->
+                <div class="logo">
+                    <img src="img/logo.png" alt="Logo de la Empresa">
+                </div>
+
+                <!-- Título -->
+                <h1>Comprobante de Entrega</h1>
+                <h2>Número de Comprobante: ${numeroComprobante}</h2>
+
+                <!-- Tabla de Datos -->
+                <table>
+                    <tr>
+                        <th>Casillero</th>
+                        <td>${casillero}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Entrada</th>
+                        <td>${fechaEntrada}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Salida</th>
+                        <td>${fechaSalida}</td>
+                    </tr>
+                    <tr>
+                        <th>Tiempo Ocupado</th>
+                        <td>${tiempoOcupado}</td>
+                    </tr>
+                    <tr>
+                        <th>Valor por Día</th>
+                        <td>${valorPorDia}</td>
+                    </tr>
+                    <tr>
+                        <th>Talla</th>
+                        <td>${talla}</td>
+                    </tr>
+                    <tr>
+                        <th class="total">Valor Total</th>
+                        <td class="total">${valorTotal}</td>
+                    </tr>
+                </table>
+
+                <!-- Pie de Página -->
+                <div class="footer">
+                    Gracias por utilizar nuestros servicios. Este es un comprobante válido.
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+
+    // Abrir una nueva ventana y escribir el contenido del comprobante
+    const ventanaImpresion = window.open('', '_blank');
+    ventanaImpresion.document.open();
+    ventanaImpresion.document.write(comprobanteHTML);
+    ventanaImpresion.document.close();
+
+    // Esperar a que se cargue el contenido y luego imprimir
+    ventanaImpresion.onload = function () {
+        ventanaImpresion.print();
+    };
+}
