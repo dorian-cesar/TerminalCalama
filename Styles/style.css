@@ -1,6 +1,7 @@
 *{
     margin:0;
     padding:0;
+    
 }
 
 body{
@@ -41,14 +42,17 @@ body{
     height: 510px;
     
 }
-.conttablacus {
-    width: 90%; /* Ajusta el ancho según lo necesites */
+
+body .conttablacus {
+    width: 90%;
     overflow: auto;
     background-color: white;
-    height: 38%;
+    height: 38vh;
     border-radius: 25px;
-    margin-top: 20px; /* Espacio adicional si es necesario */
+    margin-top: 20px;
 }
+
+
 
 .btn {
     background-color: rgb(16, 163, 85);
