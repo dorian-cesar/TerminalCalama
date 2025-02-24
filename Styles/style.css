@@ -16,6 +16,11 @@ body{
     text-align: center;
 }
 
+.wrapper {
+    display: flex;
+    gap: 20px; /* Ajusta el valor para aumentar o reducir el espacio */
+}
+
 .izquierda {
     background-color: aliceblue;
     border-radius: 25px;
@@ -34,6 +39,15 @@ body{
     float: right;
     padding: 10px;
     height: 510px;
+    
+}
+.conttablacus {
+    width: 90%; /* Ajusta el ancho según lo necesites */
+    overflow: auto;
+    background-color: white;
+    height: 38%;
+    border-radius: 25px;
+    margin-top: 20px; /* Espacio adicional si es necesario */
 }
 
 .btn {
@@ -526,21 +540,14 @@ input[type="date"] {
     color: rgb(7, 95, 48);
 }
 
-
-.wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center; /* Centra el contenido de la tabla */
-    margin-top: 20px; /* Deja un espacio entre los elementos superiores y la tabla */
-}
-
 .conttabla {
-    width: 90%; /* Ajusta el ancho según lo necesites */
+    width: 100%;
     overflow: auto;
     background-color: white;
     height: 38%;
     border-radius: 25px;
-    margin-top: 20px; /* Espacio adicional si es necesario */
+    margin: auto;
+    margin-top: 20px;
 }
 
 
