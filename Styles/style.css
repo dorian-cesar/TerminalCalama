@@ -665,11 +665,7 @@ input[type="date"] {
 /* Efecto hover en las opciones */
 .select-items div:hover {
     background-color: rgb(7, 95, 48);
-    border: 1px solid rgb(31, 7, 95);
-    border-bottom-width: 5px;
-    border-right-width: 5px;
-    border-radius: 10px;
-    transform: translateY(-2px);
+    
 }
 
 .btn.volver {
