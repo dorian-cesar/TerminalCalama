@@ -22,7 +22,7 @@ body{
     width: 35%; 
     float: left;
     padding: 10px;
-    height: 100%;
+    height: 70%;
     margin-left: -5%; /* Desplaza un poco más a la izquierda */
 }
 
@@ -33,7 +33,7 @@ body{
     width: 65%;
     float: right;
     padding: 10px;
-    height: 100%;
+    height: 510px;
 }
 
 .btn {
@@ -123,7 +123,7 @@ input:hover {
     white-space: nowrap;
     overflow: scroll;
     background-color: white;
-    height: 40%;
+    height: 265px;
     border-radius: 25px;
     padding: 20px;
 }
@@ -171,6 +171,7 @@ table {
     width: 95%;
     text-align: center;
     margin: auto;
+    margin-bottom: 20px;
     margin-top: 25px;
     background-color: white;
     color:rgb(46, 46, 46);
@@ -526,15 +527,22 @@ input[type="date"] {
 }
 
 
-.conttabla {
+.wrapper {
     width: 100%;
+    display: flex;
+    justify-content: center; /* Centra el contenido de la tabla */
+    margin-top: 20px; /* Deja un espacio entre los elementos superiores y la tabla */
+}
+
+.conttabla {
+    width: 90%; /* Ajusta el ancho según lo necesites */
     overflow: auto;
     background-color: white;
     height: 38%;
     border-radius: 25px;
-    margin: auto;
-    margin-top: 20px;
+    margin-top: 20px; /* Espacio adicional si es necesario */
 }
+
 
 #resultado .alert-success {
     padding: 15px;
@@ -676,4 +684,23 @@ input[type="date"] {
     border-right-width: 5px;
     border-radius: 10px;
     transform: translateY(-2px);   
+}
+#buscador-rut {
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+    border: 1px solid rgb(63, 63, 63);
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    font-weight: bolder;
+    background-color: white;
+}
+
+#buscador-rut:hover {
+    background-color: aliceblue;
 }
