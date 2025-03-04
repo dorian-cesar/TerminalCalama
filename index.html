@@ -11,11 +11,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Mostrar valores iniciales
             document.getElementById("valorBaño").textContent = `$${window.restroom.Baño}`;
             document.getElementById("valorDucha").textContent = `$${window.restroom.Ducha}`;
+
+            // Limpiar el contenedor de resultados al presionar "Generar QR"
+            document.getElementById("generar").addEventListener("click", function () {
+                const resultadoContenedor = document.getElementById("resultado");
+                resultadoContenedor.innerHTML = ""; // Limpiar el contenido
+            });
         });
     </script>
-        
 </head>
 <body>
     <div class="contenedor">
@@ -44,7 +50,6 @@
                             <label class="radiolbl" for="radio2">Ducha - <span id="valorDucha"></span></label>
                         </li>
                     </ul>                    
-                    
                 </div>
             </div>
             <div class="buscador-filtros">
@@ -164,4 +169,5 @@
             });
         });
     </script>
+</body>
 </html>
