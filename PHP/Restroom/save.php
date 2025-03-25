@@ -27,11 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hora = $data["hora"];
         $fecha = $data["fecha"];
         $tipo = $data["tipo"];
-       // $valor = $data["valor"];
+        $valor = $data["valor"];
 
         // Prepared Statement
-        $stmt = $conn->prepare("INSERT INTO restroom (Codigo, time, date, tipo) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $codigo,$hora,$fecha,$tipo);
+        $stmt = $conn->prepare("INSERT INTO restroom (Codigo, time, date, tipo, valor) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssi", $codigo,$hora,$fecha,$tipo,$valor);
 
         if($stmt->execute()){
             echo "Datos insertados correctamente";

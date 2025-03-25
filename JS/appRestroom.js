@@ -25,7 +25,7 @@ leerDatosServer();
 //const horaActual = fechaHoraActual.toLocaleTimeString();
 
 var numero=0
-    genQR.addEventListener('click', (e) => {
+genQR.addEventListener('click', (e) => {
     e.preventDefault();
     genQR.disabled = true;
     genQR.classList.add('disabled');
@@ -37,31 +37,29 @@ var numero=0
 
     const tipoStr = document.querySelector('input[name="tipo"]:checked').value;
 
-    //console.log(tipoStr);
-
-    const numeroT=generarTokenNumerico();
-   // var numeroT='XXX'+numero++ ;
+    const numeroT = generarTokenNumerico();
     const datos = {
         Codigo: numeroT,
         hora: horaStr,
         fecha: fechaStr,
-        tipo: tipoStr
-      };
+        tipo: tipoStr,
+        valor: restroom[tipoStr] || 0  // Aquí está el cambio importante
+    };
 
     callApi(datos)
     .then(res => {
-      QR.makeCode(numeroT);
-      contenedorContador.value = numeroT;
-      leerDatosServer();
-      genQR.disabled = false;
-      genQR.classList.remove('disabled');
-      addUser(numeroT);
-      
-      setTimeout(() => {
-        let name = numeroT.substring(0, 6);
-        console.log(name);
-        addUserAccessLevel(name);
-    }, 1000)
+        QR.makeCode(numeroT);
+        contenedorContador.value = numeroT;
+        leerDatosServer();
+        genQR.disabled = false;
+        genQR.classList.remove('disabled');
+        addUser(numeroT);
+        
+        setTimeout(() => {
+            let name = numeroT.substring(0, 6);
+            console.log(name);
+            addUserAccessLevel(name);
+        }, 1000)
     });
 });
 
