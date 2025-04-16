@@ -4,6 +4,7 @@ contenedorContador.value = "Contador";
 const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
+
 //urlBase='http://localhost';
 urlBase='https://andenes.terminal-calama.com';
 
@@ -27,14 +28,22 @@ leerDatosServer();
 var numero=0
 genQR.addEventListener('click', (e) => {
     e.preventDefault();
+    
+    // Validación de id_caja en localStorage
+    const id_caja = localStorage.getItem('id_caja');
+    if (!id_caja) {
+        alert('Por favor, primero debe abrir la caja antes de generar un QR.');
+        return; // Detiene la ejecución si no hay id_caja
+    }
+
     genQR.disabled = true;
     genQR.classList.add('disabled');
+    
     // Generamos un nuevo Date() para obtener la fecha y hora al momento de hacer Click
     const fechaHoraAct = new Date();
 
-    const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
+    const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds();
     const fechaStr = fechaHoraAct.toISOString().split('T')[0];
-
     const tipoStr = document.querySelector('input[name="tipo"]:checked').value;
 
     const numeroT = generarTokenNumerico();
@@ -43,7 +52,8 @@ genQR.addEventListener('click', (e) => {
         hora: horaStr,
         fecha: fechaStr,
         tipo: tipoStr,
-        valor: restroom[tipoStr] || 0  // Aquí está el cambio importante
+        valor: restroom[tipoStr] || 0,
+        id_caja: id_caja
     };
 
     callApi(datos)
@@ -59,7 +69,13 @@ genQR.addEventListener('click', (e) => {
             let name = numeroT.substring(0, 6);
             console.log(name);
             addUserAccessLevel(name);
-        }, 1000)
+        }, 1000);
+    })
+    .catch(error => {
+        console.error('Error al generar QR:', error);
+        genQR.disabled = false;
+        genQR.classList.remove('disabled');
+        alert('Ocurrió un error al generar el QR. Por favor, intente nuevamente.');
     });
 });
 
