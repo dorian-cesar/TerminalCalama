@@ -1,8 +1,5 @@
 const formulario = document.getElementById('formulario');
 
-const urlServer = 'https://andenes.terminal-calama.com';
-
-
 const urlUpdate = urlServer + '/TerminalCalama/PHP/Boleta/save.php';
 const urlStore = urlServer + '/TerminalCalama/PHP/Custodia/store.php';
 const urlState = urlServer + '/TerminalCalama/PHP/Custodia/reload.php';

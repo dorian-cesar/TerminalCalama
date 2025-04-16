@@ -34,7 +34,7 @@ function getLetterFromNumber(num) {
     return String.fromCharCode(65 + num);
 }
 
-const urlServer = 'https://andenes.terminal-calama.com'
+
 // Punteros a APIs PHP
 const urlSave = urlServer + '/TerminalCalama/PHP/Custodia/save.php';
 const urlLoad = urlServer + '/TerminalCalama/PHP/Custodia/load.php';
