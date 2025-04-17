@@ -1,5 +1,8 @@
 const formulario = document.getElementById('formulario');
 
+const urlServer = 'http://localhost'
+// const urlServer = 'https://andenes.terminal-calama.com'
+
 const urlUpdate = urlServer + '/TerminalCalama/PHP/Boleta/save.php';
 const urlStore = urlServer + '/TerminalCalama/PHP/Custodia/store.php';
 const urlState = urlServer + '/TerminalCalama/PHP/Custodia/reload.php';
@@ -7,7 +10,7 @@ const urlLoad = urlServer + '/TerminalCalama/PHP/Boleta/load.php';
 
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-    // Obtenemos el código de barras escaneado
+    
     const barcodeTxt = formulario.barcodeIn.value.trim();
     // Separar ID y RUT (formato esperado: idcustodia/rut)
     const barcodeData = barcodeTxt.split('/');
@@ -91,7 +94,8 @@ formulario.addEventListener('submit', (e) => {
                 hora: horaStr,
                 fecha: fechaStr,
                 valor: valorTotal,
-                rut: rutIn, // Incluir el RUT
+                rut: rutIn,
+                id_caja: id_caja
             };
 
             // Actualizar el registro en la base de datos

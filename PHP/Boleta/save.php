@@ -24,9 +24,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $hora = $data["hora"];
         $fecha = $data["fecha"];
         $value = $data["valor"];
+        $id_caja = $data["id_caja"];
 
-        $stmt = $conn->prepare("UPDATE custodias SET tipo = ?, horasal = ?, fechasal = ?, valor = ? WHERE idcustodia = ?");
-        $stmt->bind_param("sssii", $estado,$hora,$fecha,$value,$id);
+        $stmt = $conn->prepare("UPDATE custodias SET tipo = ?, horasal = ?, fechasal = ?, valor = ?, id_caja = ? WHERE idcustodia = ?");
+        $stmt->bind_param("sssiii", $estado,$hora,$fecha,$value,$id, $id_caja);
 
         if ($stmt->execute()){
             header('Content-Type: application/json');

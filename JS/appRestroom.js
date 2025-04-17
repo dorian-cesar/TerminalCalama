@@ -5,10 +5,10 @@ const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
 
-//urlBase='http://localhost';
-urlBase='https://andenes.terminal-calama.com';
+urlBase='http://localhost'
+//urlBase='https://andenes.terminal-calama.com'
 
-const urlServer = 'https://andenes.terminal-calama.com'
+const urlServer = 'http://localhost'
 
 const urlLoad = urlServer + '/TerminalCalama/PHP/Restroom/load.php';
 const urlSave = urlServer + '/TerminalCalama/PHP/Restroom/save.php';

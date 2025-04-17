@@ -2,6 +2,9 @@
 const contBarcode = document.getElementById('contBarcode');
 const formulario = document.getElementById('formulario');
 
+const urlServer = 'http://localhost'
+// const urlServer = 'https://andenes.terminal-calama.com'
+
 JsBarcode("#barcode", "wit.la", {
     format: "CODE128",
     displayValue: true,
@@ -47,6 +50,12 @@ cargarEstado();
 formulario.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const id_caja = localStorage.getItem('id_caja');
+    if (!id_caja) {
+        alert('Por favor, primero debe abrir la caja antes de generar un código de barras.');
+        return; // Detiene la ejecución si no hay id_caja
+    }
+
     const casillaStr = formulario.casillero.value.trim();
     const rutStr = formulario.rut.value.trim();
 
@@ -80,6 +89,7 @@ formulario.addEventListener('submit', async (e) => {
             rut: rutStr,
             bulto: bultoStr,
             tipo: 'Ingresado',
+            id_caja: id_caja
         };
 
         // Llamar a la API
