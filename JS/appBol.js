@@ -10,7 +10,12 @@ const urlLoad = urlServer + '/TerminalCalama/PHP/Boleta/load.php';
 
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-    
+
+    const id_caja = localStorage.getItem('id_caja');
+    if (!id_caja) {
+        alert('Por favor, primero debe abrir la caja antes de liberar un casillero.');
+        return; // Detiene la ejecución si no hay id_caja
+    }
     const barcodeTxt = formulario.barcodeIn.value.trim();
     // Separar ID y RUT (formato esperado: idcustodia/rut)
     const barcodeData = barcodeTxt.split('/');
