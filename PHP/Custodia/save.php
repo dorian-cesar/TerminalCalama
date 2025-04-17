@@ -25,6 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $fecha = $data["fecha"];
         $bulto = $data["bulto"];
         $tipo = $data["tipo"];
+        
 
         // SQL Seguro
         $stmt = $conn->prepare("INSERT INTO custodias (posicion, rut, hora, fecha, talla, tipo, horasal, fechasal, valor) VALUES (?, ?, ?, ?, ?, ?, '-', '-', 0)");

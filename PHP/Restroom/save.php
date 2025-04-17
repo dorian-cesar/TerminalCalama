@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($stmt->execute()){
             echo "Datos insertados correctamente";
         } else {
-            echo "Error al insertar datos: " + $conn->error;
+            echo "Error al insertar datos: " . $conn->error;
         }
 
         // Cerrar la conexión a la base de datos

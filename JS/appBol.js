@@ -1,7 +1,7 @@
 const formulario = document.getElementById('formulario');
 
-const urlServer = 'http://localhost'
-// const urlServer = 'https://andenes.terminal-calama.com'
+//const urlServer = 'http://localhost'
+const urlServer = 'https://andenes.terminal-calama.com'
 
 const urlUpdate = urlServer + '/TerminalCalama/PHP/Boleta/save.php';
 const urlStore = urlServer + '/TerminalCalama/PHP/Custodia/store.php';
@@ -16,6 +16,7 @@ formulario.addEventListener('submit', (e) => {
         alert('Por favor, primero debe abrir la caja antes de liberar un casillero.');
         return; // Detiene la ejecución si no hay id_caja
     }
+    
     const barcodeTxt = formulario.barcodeIn.value.trim();
     // Separar ID y RUT (formato esperado: idcustodia/rut)
     const barcodeData = barcodeTxt.split('/');

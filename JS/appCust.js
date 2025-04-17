@@ -2,8 +2,8 @@
 const contBarcode = document.getElementById('contBarcode');
 const formulario = document.getElementById('formulario');
 
-const urlServer = 'http://localhost'
-// const urlServer = 'https://andenes.terminal-calama.com'
+//const urlServer = 'http://localhost'
+const urlServer = 'https://andenes.terminal-calama.com'
 
 JsBarcode("#barcode", "wit.la", {
     format: "CODE128",
