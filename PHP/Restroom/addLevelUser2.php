@@ -1,10 +1,11 @@
 <?php
-// Configuración CORS
+// --- Configuración CORS simple para cualquier origen ---
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
 
-// Si la petición es OPTIONS, devolvemos respuesta vacía y terminamos
+// Responder correctamente a la preflight OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
