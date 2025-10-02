@@ -1,10 +1,16 @@
 <?php
-// Configuración CORS
-header("Access-Control-Allow-Origin: *");
+<?php
+// --- Configuración CORS ---
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+} else {
+    header("Access-Control-Allow-Origin: *");
+}
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
 
-// Si la petición es OPTIONS, devolvemos respuesta vacía y terminamos
+// Si la petición es OPTIONS, terminamos aquí
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
