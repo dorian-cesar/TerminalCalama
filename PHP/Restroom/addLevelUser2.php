@@ -1,7 +1,14 @@
 <?php
-header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
+// Configuración CORS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-header("Access-Control-Allow-Methods: POST, OPTIONS"); // Permitir solicitudes POST y OPTIONS
+// Si la petición es OPTIONS, devolvemos respuesta vacía y terminamos
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 // Configuración de la API
 include 'configInbio.php';
 
