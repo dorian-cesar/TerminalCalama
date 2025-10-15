@@ -1,6 +1,6 @@
 const contenedorQR = document.getElementById("contenedorQR");
 const contenedorContador = document.getElementById("keycont");
-contenedorContador.value = "Contador";
+contenedorContador.value = "Código QR";
 const genQR = document.getElementById("generar");
 const QR = new QRCode(contenedorQR);
 QR.makeCode("wit");
