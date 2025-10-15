@@ -1,0 +1,708 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: rgb(240, 240, 240);
+  font-family: "Open Sans", sans-serif;
+}
+
+.contenedor {
+  position: relative;
+  width: 1024px;
+  height: 720px;
+  margin: auto;
+  text-align: center;
+}
+
+.wrapper {
+  display: flex;
+  gap: 20px; /* Ajusta el valor para aumentar o reducir el espacio */
+}
+
+.izquierda {
+  background-color: aliceblue;
+  border-radius: 25px;
+  width: 35%;
+  float: left;
+  padding: 10px;
+  height: 70%;
+  margin-left: -5%; /* Desplaza un poco más a la izquierda */
+}
+
+.derecha {
+  background-color: aliceblue;
+  border-radius: 25px;
+  width: 65%;
+  float: right;
+  padding: 10px;
+  height: 510px;
+}
+
+body .conttablacus {
+  width: 90%;
+  overflow: auto;
+  background-color: white;
+  height: 38vh;
+  border-radius: 25px;
+  margin-top: 20px;
+  margin-left: 5%;
+}
+
+.btn {
+  background-color: rgb(16, 163, 85);
+  color: aliceblue;
+  padding: 15px;
+  font-size: 20px;
+  border: 1px solid aliceblue;
+  margin: auto;
+  text-align: center;
+  width: 90%;
+  margin-bottom: 10px;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: rgb(7, 95, 48);
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  transform: translateY(-2px); /* Efecto de elevación */
+}
+
+.casilla {
+  background-color: rgb(16, 163, 85);
+  color: aliceblue;
+  font-size: 1.1rem;
+  width: 65px;
+  height: 40px;
+  border: 1px solid aliceblue;
+  border-radius: 4px;
+  margin: auto;
+  text-align: center;
+  margin: 1px;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.casilla:hover {
+  background-color: rgb(7, 95, 48);
+  color: black;
+  border: 1px solid rgb(3, 58, 29);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+}
+
+input {
+  padding: 15px;
+  font-size: 20px;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 10px;
+  border: 1px solid white;
+  border-radius: 8px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  font-weight: bolder;
+  background-color: white;
+  border: 1px solid rgb(63, 63, 63);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+}
+
+input:hover {
+  background-color: aliceblue;
+}
+
+.contenedorQR {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.contlocker {
+  white-space: nowrap;
+  overflow: scroll;
+  background-color: white;
+  height: 265px;
+  border-radius: 25px;
+  padding: 20px;
+}
+
+.contbulto {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 25px;
+}
+
+.conttipo {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 50px;
+  border-radius: 25px;
+}
+
+.bultotxt {
+  font-size: 1.2rem;
+  color: rgb(7, 95, 48);
+}
+
+table,
+td,
+th,
+tr {
+  font-size: 0.8rem;
+  border-right: 1px dotted gray;
+  border-left: 1px dotted gray;
+}
+
+table,
+th {
+  border-bottom: 2px solid black;
+}
+
+table,
+td {
+  border-bottom: 2px solid gainsboro;
+}
+
+tr:nth-child(even) {
+  background-color: aliceblue;
+}
+
+table {
+  border-collapse: collapse;
+  width: 95%;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 25px;
+  background-color: white;
+  color: rgb(46, 46, 46);
+}
+
+h1 {
+  color: rgb(34, 34, 150);
+  margin: 10px;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 1.15rem;
+  padding: 5px 10px 5px 10px;
+  background-color: rgb(16, 163, 85);
+  border: 1px solid white;
+  border-radius: 0.25rem;
+  text-align: center;
+  color: #ffffff;
+  cursor: pointer;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.select-items {
+  position: absolute;
+  background-color: rgb(16, 163, 85);
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+.active {
+  background-color: rgb(7, 95, 48);
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+}
+
+.disabled {
+  background-color: grey;
+  cursor: not-allowed;
+  border: 1px solid rgb(63, 63, 63);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+}
+
+.contticket {
+  background-color: white;
+  position: center;
+  width: 60%;
+  height: 80%;
+  border: 1px solid #ccc;
+  margin: auto;
+  margin-top: 10px;
+  border-radius: 15px;
+}
+
+.square {
+  position: center;
+  margin: auto;
+  margin-top: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-family: "Lucida Console", Courier, monospace;
+  text-align: left;
+}
+
+ul {
+  list-style: none;
+}
+li {
+  display: inline-block;
+}
+input[type="radio"] {
+  visibility: hidden;
+}
+label.radiolbl {
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  padding: 15px;
+  padding-left: 40px;
+  padding-right: 40px;
+  font-size: 1.1rem;
+  border: 1px solid aliceblue;
+  border-radius: 8px;
+  margin: auto;
+  text-align: center;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+label.radiolbl:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+  border: 1px solid rgb(95, 64, 7);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  transform: translateY(-2px); /* Efecto de elevación */
+}
+
+input[type="radio"]:checked + label.radiolbl {
+  background-color: rgb(16, 163, 85);
+  border: 1px solid rgb(7, 95, 48);
+  color: white;
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  transform: translateY(-2px); /* Efecto de elevación al estar seleccionado */
+}
+
+/* Contenedor donde se renderiza el código de barras */
+.contenedorBarcode {
+  width: 100%; /* Ocupa todo el ancho del contenedor */
+  height: 150px; /* Ajusta la altura según tus necesidades */
+  display: flex;
+  justify-content: center; /* Centra el código de barras */
+  align-items: center; /* Centra el código de barras */
+}
+
+/* Restricciones para el código de barras */
+#barcode {
+  max-width: 100%; /* El código de barras no se saldrá del contenedor */
+  height: auto; /* Mantiene la relación de aspecto */
+}
+
+#boton-filtrar {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 1.15rem;
+  padding: 8px 18px;
+  background-color: rgb(16, 163, 85);
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+#boton-filtrar:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  transform: translateY(-2px);
+}
+
+select:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+}
+
+/* Estilos generales para el campo de fecha */
+#filtro-fecha {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+  height: 15px;
+  width: 200px; /* Ancho personalizado */
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+/* Efecto de enfoque para el campo de fecha */
+#filtro-fecha:focus {
+  outline: none;
+  border-color: rgb(7, 95, 48); /* Color del borde cuando el campo tiene foco */
+  background-color: #e8f0fe; /* Color de fondo cuando está seleccionado */
+}
+
+/* Estilos para el contenedor del campo de fecha */
+#filtro-fecha::-webkit-calendar-picker-indicator {
+  background-color: rgb(16, 163, 85);
+  border-radius: 50%;
+  padding: 5px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Personalización del calendario del navegador (Limitado, no siempre funciona) */
+#filtro-fecha::-webkit-input-placeholder {
+  color: #888;
+}
+
+/* En algunos navegadores puede que necesites estilos adicionales */
+input[type="date"] {
+  background-color: white; /* Fondo blanco */
+  border: 1px solid #ccc; /* Borde gris */
+  padding: 10px;
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Estilos para el campo de texto (buscador-codigo) */
+#buscador-codigo {
+  width: 400px; /* Reducir el ancho del campo */
+  padding: 8px; /* Reducir el espacio interior */
+  font-size: 20px; /* Reducir el tamaño de la fuente */
+  border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid #ccc; /* Borde gris claro */
+  background-color: #f9f9f9; /* Fondo claro */
+  transition: all 0.3s ease; /* Transición suave en el enfoque */
+}
+
+/* Efecto cuando el campo tiene foco (cuando el usuario hace clic) */
+#buscador-codigo:focus {
+  outline: none; /* Eliminar el borde de enfoque predeterminado */
+  border-color: rgb(7, 95, 48); /* Cambiar el color del borde al azul */
+  background-color: #e8f0fe; /* Fondo azul claro */
+}
+
+#boton-verificar {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 1.15rem;
+  padding: 8px 18px;
+  background-color: rgb(16, 163, 85);
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+#boton-verificar:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  transform: translateY(-2px);
+}
+
+#filtro-tipo {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 1.15rem;
+  padding: 5px 10px;
+  background-color: rgb(16, 163, 85);
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+#filtro-tipo:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  transform: translateY(-2px);
+}
+
+#resultado-verificacion {
+  display: none;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(16, 163, 85, 0.1);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  overflow-x: auto;
+  position: relative;
+}
+
+#cerrar-tabla {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgb(163, 16, 16);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+#cerrar-tabla:hover {
+  background: rgb(120, 10, 10);
+}
+
+#resultado-verificacion table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;
+}
+
+#resultado-verificacion th,
+#resultado-verificacion td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 2px solid rgba(7, 95, 48, 0.3);
+}
+
+#resultado-verificacion thead {
+  background: rgb(16, 163, 85);
+  color: white;
+}
+
+#resultado-verificacion tbody tr:hover {
+  background: rgba(7, 95, 48, 0.1);
+  transition: background 0.2s ease-in-out;
+}
+
+#resultado-verificacion th {
+  font-size: 1.1rem;
+}
+
+#resultado-verificacion td {
+  font-size: 1rem;
+  color: rgb(7, 95, 48);
+}
+
+.conttabla {
+  width: 100%;
+  overflow: auto;
+  background-color: white;
+  height: 38%;
+  border-radius: 25px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+#resultado .alert-success {
+  padding: 15px;
+}
+
+#resultado .btn-success {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Estilo para el select con apariencia similar al botón */
+#bulto {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 1.15rem;
+  padding: 8px 13px;
+  background-color: rgb(16, 163, 85);
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+/* Cambio de color al pasar el cursor sobre el select */
+#bulto:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+  border: 1px solid rgb(31, 7, 95);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  transform: translateY(-2px);
+}
+
+/* Opciones dentro del select */
+#bulto option {
+  background-color: white;
+  color: black;
+  padding: 10px;
+}
+
+/* Efecto hover en las opciones */
+#bulto option:hover {
+  background-color: rgb(7, 95, 48);
+  color: white;
+}
+/* Contenedor del select */
+.custom-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 360px;
+  font-size: 1.15rem;
+}
+
+/* Estilo del select "cerrado" */
+.select-selected {
+  background-color: rgb(16, 163, 85);
+  color: white;
+  padding: 8px 13px;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover del select */
+.select-selected:hover {
+  background-color: rgb(7, 95, 48);
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  transform: translateY(-2px);
+}
+
+/* Opciones ocultas inicialmente */
+.select-items {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid rgb(7, 95, 48);
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+  z-index: 100;
+}
+
+/* Opciones dentro del select */
+.select-items div {
+  padding: 10px;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efecto hover en las opciones */
+.select-items div:hover {
+  background-color: rgb(7, 95, 48);
+}
+
+.btn.volver {
+  position: absolute;
+  top: 0px;
+  right: 100px;
+  width: 10%;
+  background-color: rgb(16, 163, 85);
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 1px solid rgb(7, 95, 48);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  text-decoration: none;
+}
+.btn.volver:hover {
+  background-color: rgb(7, 95, 48);
+  border: 1px solid rgb(31, 7, 95);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  transform: translateY(-2px);
+}
+#buscador-rut {
+  padding: 10px;
+  font-size: 20px;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 10px;
+  border: 1px solid rgb(63, 63, 63);
+  border-bottom-width: 5px;
+  border-right-width: 5px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  font-weight: bolder;
+  background-color: white;
+}
+
+#buscador-rut:hover {
+  background-color: aliceblue;
+}

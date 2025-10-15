@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Control - Baños y Duchas</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #0a0a0a;
+        color: #e5e5e5;
+      }
+
+      .main-content {
+        min-height: 100vh;
+        width: 100%; /* Ocupa todo el ancho ahora */
+      }
+
+      .header {
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #2a2a2a;
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-title {
+        font-size: 1.875rem;
+        font-weight: bold;
+      }
+
+      .header-subtitle {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+
+      .content {
+        padding: 2rem;
+        max-width: 1366px;
+        margin: 0 auto; /* Centra en pantalla de 1366px */
+      }
+
+      /* Stats Cards */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stat-info h3 {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .icon-green {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+      }
+      .icon-blue {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+      }
+      .icon-purple {
+        background-color: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+      }
+      .icon-yellow {
+        background-color: rgba(234, 179, 8, 0.1);
+        color: #eab308;
+      }
+
+      .card {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #9ca3af;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-input {
+        width: 100%;
+        background-color: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        color: #e5e5e5;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .radio-option {
+        flex: 1;
+        position: relative;
+      }
+
+      .radio-input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .radio-label {
+        display: block;
+        background-color: #0a0a0a;
+        border: 2px solid #2a2a2a;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .radio-input:checked + .radio-label {
+        border-color: #3b82f6;
+        background-color: rgba(59, 130, 246, 0.1);
+      }
+
+      .radio-label-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .radio-label-price {
+        color: #3b82f6;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        background-color: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #2563eb;
+      }
+
+      .btn-secondary {
+        background-color: #2a2a2a;
+        color: #e5e5e5;
+      }
+
+      .btn-secondary:hover {
+        background-color: #3a3a3a;
+      }
+
+      .btn-full {
+        width: 100%;
+      }
+
+      .qr-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 2rem;
+        background-color: #0a0a0a;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      #qrcode {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin-top: 1rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background-color: #0a0a0a;
+      }
+
+      th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #9ca3af;
+        border-bottom: 1px solid #2a2a2a;
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #2a2a2a;
+        font-size: 0.875rem;
+      }
+
+      tbody tr:hover {
+        background-color: #0a0a0a;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .badge-bano {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+      }
+
+      .badge-ducha {
+        background-color: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+      }
+
+      .badge-success {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+      }
+
+      .badge-error {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .alert-success {
+        background-color: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+      }
+
+      .alert-error {
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+
+      .filter-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="header">
+        <div>
+          <h1 class="header-title">Baños y Duchas</h1>
+          <p class="header-subtitle">
+            Sistema de Control de Terminales Terrestres
+          </p>
+        </div>
+        <button class="btn btn-secondary" onclick="location.reload()">
+          <i data-lucide="refresh-cw" style="width: 16px; height: 16px"></i>
+          Actualizar
+        </button>
+      </header>
+
+      <div class="content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Total del Día</h3>
+              <div class="stat-value" id="totalDay">$0</div>
+            </div>
+            <div class="stat-icon icon-green">
+              <i
+                data-lucide="dollar-sign"
+                style="width: 24px; height: 24px"
+              ></i>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Transacciones</h3>
+              <div class="stat-value" id="totalTransactions">0</div>
+            </div>
+            <div class="stat-icon icon-blue">
+              <i
+                data-lucide="trending-up"
+                style="width: 24px; height: 24px"
+              ></i>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Baños</h3>
+              <div class="stat-value" id="totalBanos">0</div>
+            </div>
+            <div class="stat-icon icon-purple">
+              <i data-lucide="bath" style="width: 24px; height: 24px"></i>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Duchas</h3>
+              <div class="stat-value" id="totalDuchas">0</div>
+            </div>
+            <div class="stat-icon icon-yellow">
+              <i data-lucide="droplet" style="width: 24px; height: 24px"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate QR Section -->
+        <div class="card">
+          <h2 class="card-title">Generar Código QR</h2>
+
+          <div id="alertContainer"></div>
+
+          <form id="generateForm">
+            <div class="form-group">
+              <label class="form-label">Seleccionar Servicio</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="bano"
+                    name="servicio"
+                    value="Baño"
+                    class="radio-input"
+                    checked
+                  />
+                  <label for="bano" class="radio-label">
+                    <div class="radio-label-title">Baño</div>
+                    <div class="radio-label-price">$500</div>
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="ducha"
+                    name="servicio"
+                    value="Ducha"
+                    class="radio-input"
+                  />
+                  <label for="ducha" class="radio-label">
+                    <div class="radio-label-title">Ducha</div>
+                    <div class="radio-label-price">$1000</div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">
+              <i data-lucide="qr-code" style="width: 16px; height: 16px"></i>
+              Generar Código QR
+            </button>
+          </form>
+
+          <div id="qrSection" class="hidden">
+            <div class="qr-container">
+              <div id="qrcode"></div>
+              <div style="text-align: center">
+                <p style="font-weight: 600; margin-bottom: 0.5rem">
+                  Código: <span id="generatedCode"></span>
+                </p>
+                <p style="color: #9ca3af; font-size: 0.875rem">
+                  Servicio: <span id="generatedService"></span>
+                </p>
+                <p style="color: #9ca3af; font-size: 0.875rem">
+                  Precio: <span id="generatedPrice"></span>
+                </p>
+              </div>
+              <button onclick="printQR()" class="btn btn-secondary">
+                <i data-lucide="printer" style="width: 16px; height: 16px"></i>
+                Imprimir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verify Code Section -->
+        <div class="card">
+          <h2 class="card-title">Verificar Código</h2>
+
+          <div id="verifyAlertContainer"></div>
+
+          <form id="verifyForm">
+            <div class="form-group">
+              <label class="form-label" for="verifyCode"
+                >Código a Verificar</label
+              >
+              <input
+                type="text"
+                id="verifyCode"
+                class="form-input"
+                placeholder="Ingrese el código"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">
+              <i data-lucide="search" style="width: 16px; height: 16px"></i>
+              Verificar Código
+            </button>
+          </form>
+        </div>
+
+        <!-- History Section -->
+        <div class="card">
+          <h2 class="card-title">Historial de Transacciones</h2>
+
+          <div class="filter-group">
+            <div class="form-group" style="margin-bottom: 0">
+              <label class="form-label" for="filterType"
+                >Filtrar por Tipo</label
+              >
+              <select id="filterType" class="form-input">
+                <option value="">Todos</option>
+                <option value="Baño">Baño</option>
+                <option value="Ducha">Ducha</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0">
+              <label class="form-label" for="filterDate"
+                >Filtrar por Fecha</label
+              >
+              <input type="date" id="filterDate" class="form-input" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0">
+              <label class="form-label" style="opacity: 0">Acción</label>
+              <button onclick="applyFilters()" class="btn btn-primary btn-full">
+                <i data-lucide="filter" style="width: 16px; height: 16px"></i>
+                Aplicar Filtros
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Servicio</th>
+                  <th>Precio</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: #9ca3af">
+                    No hay transacciones registradas
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Data storage
+      let transactions = [];
+      let currentQRCode = null;
+
+      // Load data from localStorage
+      function loadData() {
+        const saved = localStorage.getItem("restroomTransactions");
+        if (saved) {
+          transactions = JSON.parse(saved);
+          updateStats();
+          renderHistory();
+        }
+      }
+
+      // Save data to localStorage
+      function saveData() {
+        localStorage.setItem(
+          "restroomTransactions",
+          JSON.stringify(transactions)
+        );
+      }
+
+      // Generate random code
+      function generateCode() {
+        return (
+          "QR" +
+          Date.now() +
+          Math.random().toString(36).substr(2, 9).toUpperCase()
+        );
+      }
+
+      // Get price for service
+      function getPrice(service) {
+        return service === "Baño" ? 500 : 1000;
+      }
+
+      // Show alert
+      function showAlert(containerId, message, type) {
+        const container = document.getElementById(containerId);
+        const alertClass = type === "success" ? "alert-success" : "alert-error";
+        const icon = type === "success" ? "check-circle" : "alert-circle";
+
+        container.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i data-lucide="${icon}" style="width: 20px; height: 20px;"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+        lucide.createIcons();
+
+        setTimeout(() => {
+          container.innerHTML = "";
+        }, 5000);
+      }
+
+      // Generate QR Code
+      document
+        .getElementById("generateForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const service = document.querySelector(
+            'input[name="servicio"]:checked'
+          ).value;
+          const price = getPrice(service);
+          const code = generateCode();
+          const now = new Date();
+
+          // Create transaction
+          const transaction = {
+            code: code,
+            service: service,
+            price: price,
+            date: now.toLocaleDateString("es-CL"),
+            time: now.toLocaleTimeString("es-CL"),
+            timestamp: now.getTime(),
+            status: "Generado",
+            used: false,
+          };
+
+          transactions.unshift(transaction);
+          saveData();
+          updateStats();
+          renderHistory();
+
+          // Clear previous QR
+          const qrContainer = document.getElementById("qrcode");
+          qrContainer.innerHTML = "";
+
+          // Generate new QR
+          currentQRCode = new QRCode(qrContainer, {
+            text: code,
+            width: 200,
+            height: 200,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+          });
+
+          // Update info
+          document.getElementById("generatedCode").textContent = code;
+          document.getElementById("generatedService").textContent = service;
+          document.getElementById("generatedPrice").textContent = "$" + price;
+
+          // Show QR section
+          document.getElementById("qrSection").classList.remove("hidden");
+
+          showAlert(
+            "alertContainer",
+            "Código QR generado exitosamente",
+            "success"
+          );
+
+          // Simulate API call to Pullman (commented out for demo)
+          // sendToPullman(transaction);
+        });
+
+      // Verify Code
+      document
+        .getElementById("verifyForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const code = document.getElementById("verifyCode").value.trim();
+          const transaction = transactions.find((t) => t.code === code);
+
+          if (!transaction) {
+            showAlert("verifyAlertContainer", "Código no encontrado", "error");
+            return;
+          }
+
+          if (transaction.used) {
+            showAlert(
+              "verifyAlertContainer",
+              "Este código ya fue utilizado",
+              "error"
+            );
+            return;
+          }
+
+          // Mark as used
+          transaction.used = true;
+          transaction.status = "Utilizado";
+          saveData();
+          renderHistory();
+
+          showAlert(
+            "verifyAlertContainer",
+            `Código válido - ${transaction.service} - $${transaction.price}`,
+            "success"
+          );
+
+          document.getElementById("verifyCode").value = "";
+        });
+
+      // Update statistics
+      function updateStats() {
+        const today = new Date().toLocaleDateString("es-CL");
+        const todayTransactions = transactions.filter((t) => t.date === today);
+
+        const totalAmount = todayTransactions.reduce(
+          (sum, t) => sum + t.price,
+          0
+        );
+        const totalBanos = todayTransactions.filter(
+          (t) => t.service === "Baño"
+        ).length;
+        const totalDuchas = todayTransactions.filter(
+          (t) => t.service === "Ducha"
+        ).length;
+
+        document.getElementById("totalDay").textContent = "$" + totalAmount;
+        document.getElementById("totalTransactions").textContent =
+          todayTransactions.length;
+        document.getElementById("totalBanos").textContent = totalBanos;
+        document.getElementById("totalDuchas").textContent = totalDuchas;
+      }
+
+      // Render history table
+      function renderHistory(filtered = null) {
+        const tbody = document.getElementById("historyTable");
+        const data = filtered || transactions;
+
+        if (data.length === 0) {
+          tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #9ca3af;">
+                            No hay transacciones registradas
+                        </td>
+                    </tr>
+                `;
+          return;
+        }
+
+        tbody.innerHTML = data
+          .map(
+            (t) => `
+                <tr>
+                    <td><code style="color: #3b82f6;">${t.code}</code></td>
+                    <td>
+                        <span class="badge ${
+                          t.service === "Baño" ? "badge-bano" : "badge-ducha"
+                        }">
+                            ${t.service}
+                        </span>
+                    </td>
+                    <td style="font-weight: 600;">$${t.price}</td>
+                    <td>${t.date}</td>
+                    <td>${t.time}</td>
+                    <td>
+                        <span class="badge ${
+                          t.used ? "badge-success" : "badge-error"
+                        }">
+                            ${t.status}
+                        </span>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      // Apply filters
+      function applyFilters() {
+        const typeFilter = document.getElementById("filterType").value;
+        const dateFilter = document.getElementById("filterDate").value;
+
+        let filtered = transactions;
+
+        if (typeFilter) {
+          filtered = filtered.filter((t) => t.service === typeFilter);
+        }
+
+        if (dateFilter) {
+          const filterDate = new Date(dateFilter).toLocaleDateString("es-CL");
+          filtered = filtered.filter((t) => t.date === filterDate);
+        }
+
+        renderHistory(filtered);
+      }
+
+      // Print QR
+      function printQR() {
+        const qrSection = document.getElementById("qrSection");
+        const printWindow = window.open("", "", "height=600,width=800");
+
+        printWindow.document.write("<html><head><title>Imprimir QR</title>");
+        printWindow.document.write(
+          "<style>body{text-align:center;font-family:Arial;padding:20px;}</style>"
+        );
+        printWindow.document.write("</head><body>");
+        printWindow.document.write(qrSection.innerHTML);
+        printWindow.document.write("</body></html>");
+
+        printWindow.document.close();
+        printWindow.focus();
+
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 250);
+      }
+
+      // Simulate API call to Pullman (for reference)
+      function sendToPullman(transaction) {
+        // This would be your actual API call
+        /*
+            fetch('https://pullman.wit.la/api/caja/registrar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    codigo: transaction.code,
+                    servicio: transaction.service,
+                    precio: transaction.price,
+                    fecha: transaction.date,
+                    hora: transaction.time
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            */
+      }
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        loadData();
+        lucide.createIcons();
+      });
+    </script>
+  </body>
+</html>
