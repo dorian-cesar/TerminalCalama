@@ -56,7 +56,9 @@
         cursor: pointer;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
+        text-align: center;
       }
 
       .btn:hover {
@@ -73,6 +75,10 @@
 
       .btn-success {
         background-color: var(--accent-success);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
       }
 
       .btn-success:hover {
@@ -493,10 +499,7 @@
             class="mt-6 flex justify-center bg-gray-700 border border-gray-600 rounded-lg p-4"
           ></div>
 
-          <button
-            class="btn btn-success w-full mt-4 text-center"
-            onclick="printQR()"
-          >
+          <button class="btn btn-success w-full mt-4" onclick="printQR()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
