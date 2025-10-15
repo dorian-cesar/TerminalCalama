@@ -1,91 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Custodia</title>
     <link rel="stylesheet" href="Styles/style.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="contenedor">
-        <h1>Custodia</h1>
-        <a href="https://andenes.terminal-calama.com/parkingCalama/?#" class="btn volver">Volver</a>
-        
-        <div class="wrapper">
-            <div class="izquierda">
-                <form id="formulario" class="formulario">
-                    <input type="text" id="casillero" placeholder="Casillero" disabled/>
-                    <input type="text" id="rut" placeholder="RUT/DNI sin puntos ni guión" maxlength="12"/>
-                    <button class="btn" id="generar">Generar código de barras</button>
-                </form>
-                <div class="contenedorBarcode" id="contBarcode">
-                    <svg id="barcode"></svg>
-                </div>
-                <button class="btn" onclick="printBarcode()">Imprimir ticket</button>
-                <a href="boleta.html"><button class="btn">Entrega</button></a>
-            </div>
+      <h1>Custodia</h1>
+      <a
+        href="https://andenes.terminal-calama.com/parkingCalama/?#"
+        class="btn volver"
+        >Volver</a
+      >
 
-            <div class="derecha">
-                <div class="contbulto">
-                    <div class="bultotxt">
-                        <b><label class="bulto">Seleccione el tamaño</label></b>
-                        <div class="custom-select">
-                            <div class="select-selected">Seleccione</div>
-                            <div class="select-items">
-                                <div data-value="S Bolso Pequeño">Talla S (Bolso Pequeño $2.200)</div>
-                                <div data-value="M Maleta Mediana">Talla M (Maleta Mediana $2.500)</div>
-                                <div data-value="L Maleta Grande">Talla L (Maleta Grande $3.200)</div>
-                                <div data-value="XL Equipaje Extra Grande">Talla XL (Equipaje Extra Grande $3.400)</div>
-                                <div data-value="XXL Sacos / Fardos">Talla XXL (Sacos / Fardos $4.500)</div>
-                            </div>
-                            <input type="hidden" name="bulto" id="bulto">
-                        </div>                    
-                    </div>
+      <div class="wrapper">
+        <div class="izquierda">
+          <form id="formulario" class="formulario">
+            <input
+              type="text"
+              id="casillero"
+              placeholder="Casillero"
+              disabled
+            />
+            <input
+              type="text"
+              id="rut"
+              placeholder="RUT/DNI sin puntos ni guión"
+              maxlength="12"
+            />
+            <button class="btn" id="generar">Generar código de barras</button>
+          </form>
+          <div class="contenedorBarcode" id="contBarcode">
+            <svg id="barcode"></svg>
+          </div>
+          <button class="btn" onclick="printBarcode()">Imprimir ticket</button>
+          <a href="boleta.html"><button class="btn">Entrega</button></a>
+        </div>
+
+        <div class="derecha">
+          <div class="contbulto">
+            <div class="bultotxt">
+              <b><label class="bulto">Seleccione el tamaño</label></b>
+              <div class="custom-select">
+                <div class="select-selected">Seleccione</div>
+                <div class="select-items">
+                  <div data-value="S Bolso Pequeño">
+                    Talla S (Bolso Pequeño $2.200)
+                  </div>
+                  <div data-value="M Maleta Mediana">
+                    Talla M (Maleta Mediana $2.500)
+                  </div>
+                  <div data-value="L Maleta Grande">
+                    Talla L (Maleta Grande $3.200)
+                  </div>
+                  <div data-value="XL Equipaje Extra Grande">
+                    Talla XL (Equipaje Extra Grande $3.400)
+                  </div>
+                  <div data-value="XXL Sacos / Fardos">
+                    Talla XXL (Sacos / Fardos $4.500)
+                  </div>
                 </div>
-                <div id="matriz" class="contlocker"></div>
-                <div class="buscador-filtros">
-                    <input type="text" id="buscador-rut" placeholder="Buscar por RUT / DNI / Pasaporte" aria-label="Buscar por RUT">
-                    <select id="filtro-tipo" aria-label="Filtrar por tipo">
-                        <option value="">Todos los tipos</option>
-                        <option value="Ingresado">Ingresado</option>
-                        <option value="Entregado">Entregado</option>
-                    </select>
-                    <select id="filtro-talla" aria-label="Filtrar por tamaño">
-                        <option value="">Todas las tallas</option>
-                        <option value="S Bolso Pequeño">Talla S</option>
-                        <option value="M Maleta Mediana">Talla M</option>
-                        <option value="L Maleta Grande">Talla L</option>
-                        <option value="XL Equipaje Extra Grande">Talla XL</option>
-                        <option value="XXL Sacos / Fardos">Talla XXL</option>
-                    </select>
-                    <button id="boton-filtrar">Buscar</button>
-                </div>            
+                <input type="hidden" name="bulto" id="bulto" />
+              </div>
             </div>
+          </div>
+          <div id="matriz" class="contlocker"></div>
+          <div class="buscador-filtros">
+            <input
+              type="text"
+              id="buscador-rut"
+              placeholder="Buscar por RUT / DNI / Pasaporte"
+              aria-label="Buscar por RUT"
+            />
+            <select id="filtro-tipo" aria-label="Filtrar por tipo">
+              <option value="">Todos los tipos</option>
+              <option value="Ingresado">Ingresado</option>
+              <option value="Entregado">Entregado</option>
+            </select>
+            <select id="filtro-talla" aria-label="Filtrar por tamaño">
+              <option value="">Todas las tallas</option>
+              <option value="S Bolso Pequeño">Talla S</option>
+              <option value="M Maleta Mediana">Talla M</option>
+              <option value="L Maleta Grande">Talla L</option>
+              <option value="XL Equipaje Extra Grande">Talla XL</option>
+              <option value="XXL Sacos / Fardos">Talla XXL</option>
+            </select>
+            <button id="boton-filtrar">Buscar</button>
+          </div>
         </div>
-        <div class="conttablacus">
-            <table class="thist">
-                <thead class="thist">
-                    <tr class="thist">
-                        <th class="thist">Código</th>
-                        <th class="thist">Casillero</th>
-                        <th class="thist">RUT</th>
-                        <th class="thist">Entrada</th>
-                        <th class="thist">Salida</th>
-                        <th class="thist">Tamaño</th>
-                        <th class="thist">Estado</th>
-                        <th class="thist">Valor</th>
-                    </tr>
-                </thead>
-                <tbody class="thist" id="tabla-body">
-                </tbody>
-            </table>
-        </div>
+      </div>
+      <div class="conttablacus">
+        <table class="thist">
+          <thead class="thist">
+            <tr class="thist">
+              <th class="thist">Código</th>
+              <th class="thist">Casillero</th>
+              <th class="thist">RUT</th>
+              <th class="thist">Entrada</th>
+              <th class="thist">Salida</th>
+              <th class="thist">Tamaño</th>
+              <th class="thist">Estado</th>
+              <th class="thist">Valor</th>
+            </tr>
+          </thead>
+          <tbody class="thist" id="tabla-body"></tbody>
+        </table>
+      </div>
     </div>
-</body>
-<script defer src="JS/valores.js"></script>
-<script defer src="JS/appCust.js"></script>
+  </body>
+  <script defer src="JS/valores.js"></script>
+  <script defer src="JS/appCust.js"></script>
 </html>

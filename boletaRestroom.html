@@ -1,72 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facturación de Servicios</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container mt-5">
-        <h2 class="text-center">Facturación de Servicios</h2>
-        <form id="facturaForm" class="mt-4">
-            <div class="mb-3">
-                <label for="servicio" class="form-label">Seleccione el servicio:</label>
-                <select class="form-select" id="servicio" required>
-                    <option value="Servicios de bano">Servicios de baño</option>
-                    <option value="Servicios de ducha">Servicios de ducha</option>
-                    <option value="Servicios de Custodia">Servicios de Custodia</option>
-                    <option value="Servicio de Parking">Servicio de Parking</option>
-                    <option value="Servicios de andenes">Servicios de andenes</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="valor" class="form-label">Valor del servicio:</label>
-                <input type="number" class="form-control" id="valor" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Generar Boleta</button>
-        </form>
-        <div id="resultado" class="mt-4"></div>
+      <h2 class="text-center">Facturación de Servicios</h2>
+      <form id="facturaForm" class="mt-4">
+        <div class="mb-3">
+          <label for="servicio" class="form-label"
+            >Seleccione el servicio:</label
+          >
+          <select class="form-select" id="servicio" required>
+            <option value="Servicios de bano">Servicios de baño</option>
+            <option value="Servicios de ducha">Servicios de ducha</option>
+            <option value="Servicios de Custodia">Servicios de Custodia</option>
+            <option value="Servicio de Parking">Servicio de Parking</option>
+            <option value="Servicios de andenes">Servicios de andenes</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="valor" class="form-label">Valor del servicio:</label>
+          <input type="number" class="form-control" id="valor" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Generar Boleta</button>
+      </form>
+      <div id="resultado" class="mt-4"></div>
     </div>
 
     <script>
-        $(document).ready(function () {
-            $('#facturaForm').submit(function (event) {
-                event.preventDefault();
-                let servicio = $('#servicio').val();
-                let valor = $('#valor').val();
-                
-                let payload = {
-                    "codigoEmpresa": "89",
-                    "tipoDocumento": "39",
-                    "total": valor,
-                    "detalleBoleta": '53-'+valor+'-1-dsa-'+servicio
-                };
-                
-                $.ajax({
-                    url: "https://qa.pullman.cl/srv-dte-web/rest/emisionDocumentoElectronico/generarDocumento",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(payload),
-                    success: function (response) {
-                        if (response.respuesta === "OK") {
-                            let boletaHtml = `<div class='alert alert-success'>Boleta generada con éxito.<br>
+      $(document).ready(function () {
+        $("#facturaForm").submit(function (event) {
+          event.preventDefault();
+          let servicio = $("#servicio").val();
+          let valor = $("#valor").val();
+
+          let payload = {
+            codigoEmpresa: "89",
+            tipoDocumento: "39",
+            total: valor,
+            detalleBoleta: "53-" + valor + "-1-dsa-" + servicio,
+          };
+
+          $.ajax({
+            url: "https://qa.pullman.cl/srv-dte-web/rest/emisionDocumentoElectronico/generarDocumento",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(payload),
+            success: function (response) {
+              if (response.respuesta === "OK") {
+                let boletaHtml = `<div class='alert alert-success'>Boleta generada con éxito.<br>
                                 <strong>Folio:</strong> ${response.folio}<br>
                                 <strong>Fecha:</strong> ${response.fecha}<br>
                                 <a href='${response.rutaAcepta}' target='_blank' class='btn btn-success mt-2'>Ver Boleta</a>
                             </div>`;
-                            $('#resultado').html(boletaHtml);
-                        } else {
-                            $('#resultado').html("<div class='alert alert-danger'>Error al generar la boleta.</div>");
-                        }
-                    },
-                    error: function () {
-                        $('#resultado').html("<div class='alert alert-danger'>Error en la comunicación con el servidor.</div>");
-                    }
-                });
-            });
+                $("#resultado").html(boletaHtml);
+              } else {
+                $("#resultado").html(
+                  "<div class='alert alert-danger'>Error al generar la boleta.</div>"
+                );
+              }
+            },
+            error: function () {
+              $("#resultado").html(
+                "<div class='alert alert-danger'>Error en la comunicación con el servidor.</div>"
+              );
+            },
+          });
         });
+      });
     </script>
-</body>
+  </body>
 </html>
