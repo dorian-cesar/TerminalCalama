@@ -29,7 +29,6 @@ for (let i = 0; i < matY; i++) {
         btn.addEventListener('click', () => toggleButton(btn));
         matCont.appendChild(btn);
     }
-    matCont.appendChild(document.createElement('br'));
 }
 
 function getLetterFromNumber(num) {
@@ -57,7 +56,7 @@ formulario.addEventListener('submit', async (e) => {
     }
 
     const casillaStr = formulario.casillero.value.trim();
-    const rutStr = formulario.rut.value.trim();
+    const rutStr = document.getElementById('rut').value.trim(); // Cambio aquí
 
     // Validar campos obligatorios
     if (!casillaStr || !rutStr) {
@@ -66,7 +65,7 @@ formulario.addEventListener('submit', async (e) => {
     }
 
     const bultoStr = document.getElementById('bulto').value;
-    if (bultoStr == 0) {
+    if (!bultoStr) { // Cambio aquí para validar correctamente
         alert('Seleccione un tamaño para el bulto');
         return;
     }
@@ -142,21 +141,21 @@ async function callAPI(datos, url) {
         method: 'POST',
         mode: 'cors',
         headers: {
-            'Content-Type' : 'application/json'
+            'Content-Type': 'application/json'
         },
         // Convertimos la entrada a JSON
         body: JSON.stringify(datos)
     })
-    // Obtenemos la respuesta en JSON
-    .then(response => response.json())
-    .then(result => {
-        // Retornamos los datos obtenidos del servidor
-        console.log('Respuesta del servidor: ', result);
-        return result;
-    })
-    .catch(error => {
-        console.error('Error al enviar la solicitud: ', error);
-    })
+        // Obtenemos la respuesta en JSON
+        .then(response => response.json())
+        .then(result => {
+            // Retornamos los datos obtenidos del servidor
+            console.log('Respuesta del servidor: ', result);
+            return result;
+        })
+        .catch(error => {
+            console.error('Error al enviar la solicitud: ', error);
+        })
     // Retornar ultima ID ingresada
     return id;
 }
@@ -232,17 +231,17 @@ function toggleButton(btn) {
     btns.forEach(bt => {
         // Recorremos cada casilla y limpiamos el estado activo
         // para que solo se pueda seleccionar una
-        if(bt.classList.contains('active')){
+        if (bt.classList.contains('active')) {
             bt.classList.remove('active');
         }
     })
 
     // Si la casilla está deshabilitada, preguntamos si la queremos rehabilitar
-    if(!btn.classList.contains('disabled')){
+    if (!btn.classList.contains('disabled')) {
         // De lo contrario, seleccionamos una casilla como activa
         btn.classList.toggle('active');
 
-        if(btn.classList.contains('active')){
+        if (btn.classList.contains('active')) {
             formulario.casillero.value = btn.textContent;
         } else {
             formulario.casillero.value = '';
@@ -253,35 +252,35 @@ function toggleButton(btn) {
 }
 
 // Cargamos el estado de las casillas
-function cargarEstado(){
+function cargarEstado() {
     fetch(urlState)
-    .then(response => response.json())
-    .then(data => {
-        const est = JSON.parse(data.map(item => item.estado)[0]);
+        .then(response => response.json())
+        .then(data => {
+            const est = JSON.parse(data.map(item => item.estado)[0]);
 
-        // Limpiamos el input de casillero
-        formulario.casillero.value = '';
+            // Limpiamos el input de casillero
+            formulario.casillero.value = '';
 
-        // Recorremos cada casilla
-        est.forEach(estado => {
-            // Obtenemos la casilla con el ID lockerbtn{Num}{Letra}
-            const btn = document.getElementById('lockerbtn'+estado.replace(',',''));
+            // Recorremos cada casilla
+            est.forEach(estado => {
+                // Obtenemos la casilla con el ID lockerbtn{Num}{Letra}
+                const btn = document.getElementById('lockerbtn' + estado.replace(',', ''));
 
-            // Añadimos el estado disabled y removemos el active
-            // para evitar seleccionar una casilla deshabilitada antes
-            // de que cargue el estado
-            btn.classList.add('disabled');
-            btn.classList.remove('active');
+                // Añadimos el estado disabled y removemos el active
+                // para evitar seleccionar una casilla deshabilitada antes
+                // de que cargue el estado
+                btn.classList.add('disabled');
+                btn.classList.remove('active');
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener datos: ', error);
         });
-    })
-    .catch(error => {
-        console.error('Error al obtener datos: ', error);
-    });
 }
 
 
 // Guardamos el estado de las casillas
-function guardarEstado(){
+function guardarEstado() {
     // Creamos un array para guardar las casillas deshabilitadas
     estadoObj = [];
     const btns = document.querySelectorAll('.casilla');
@@ -290,18 +289,18 @@ function guardarEstado(){
     btns.forEach(btn => {
         // Si la casilla está activa o deshabilitada, guardamos la posicion
         // en el array
-        if(btn.classList.contains('active')||btn.classList.contains('disabled')){
+        if (btn.classList.contains('active') || btn.classList.contains('disabled')) {
             estadoObj.push(btn.textContent);
         }
         // Y si la casilla está solo activa, cambiamos su estado
-        if(btn.classList.contains('active')){
+        if (btn.classList.contains('active')) {
             btn.classList.add('disabled');
             btn.classList.remove('active');
         }
     });
 
     const dateAct = new Date();
-    const horaStr = dateAct.getHours()+':'+dateAct.getMinutes()+';'+dateAct.getSeconds();
+    const horaStr = dateAct.getHours() + ':' + dateAct.getMinutes() + ';' + dateAct.getSeconds();
     const fechaStr = dateAct.toISOString().split('T')[0];
 
     const datos = {
@@ -313,43 +312,43 @@ function guardarEstado(){
     callAPI(datos, urlStore);
 }
 
-function reactivarBoton(btn){	
-	const fechaHoraAct = new Date();
-	
-	const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
-	const fechaStr = fechaHoraAct.toISOString().split('T')[0];
+function reactivarBoton(btn) {
+    const fechaHoraAct = new Date();
 
-	const posStr = btn.textContent;
+    const horaStr = fechaHoraAct.getHours() + ":" + fechaHoraAct.getMinutes() + ":" + fechaHoraAct.getSeconds()
+    const fechaStr = fechaHoraAct.toISOString().split('T')[0];
 
-	const datos = {
-	hora: horaStr, // Traer desde la pistola
-	fecha: fechaStr, // Traer desde la pistola
-	casilla: posStr, // Traer desde la pistola
-	rut: "-", // Traer desde la pistola
-	bulto: "-", // Traer desde la pistola
-	tipo: "Entregado",
-	}
+    const posStr = btn.textContent;
+
+    const datos = {
+        hora: horaStr, // Traer desde la pistola
+        fecha: fechaStr, // Traer desde la pistola
+        casilla: posStr, // Traer desde la pistola
+        rut: "-", // Traer desde la pistola
+        bulto: "-", // Traer desde la pistola
+        tipo: "Entregado",
+    }
 
     callAPI(datos, urlSave)
-    .then(result => {
-        actualizarTabla();
-        guardarEstado();
-    });
+        .then(result => {
+            actualizarTabla();
+            guardarEstado();
+        });
 }
 
 function printBarcode() {
     const ventanaImpr = window.open('', '_blank');
-    const contBarcode = document.getElementById('contBarcode'); 
-    
+    const contBarcode = document.getElementById('contBarcode');
+
     if (!contBarcode) {
         console.error("El elemento contBarcode no fue encontrado.");
         return;
     }
 
     const dateAct = new Date();
-    const horaStr = dateAct.getHours().toString().padStart(2, '0') + ':' + 
-                    dateAct.getMinutes().toString().padStart(2, '0') + ':' + 
-                    dateAct.getSeconds().toString().padStart(2, '0');
+    const horaStr = dateAct.getHours().toString().padStart(2, '0') + ':' +
+        dateAct.getMinutes().toString().padStart(2, '0') + ':' +
+        dateAct.getSeconds().toString().padStart(2, '0');
     const fechaStr = dateAct.toISOString().split('T')[0];
 
     ventanaImpr.document.write(`

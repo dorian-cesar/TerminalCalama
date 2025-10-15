@@ -5,8 +5,8 @@ const genQR = document.getElementById('generar');
 const QR = new QRCode(contenedorQR);
 QR.makeCode('wit');
 
-//urlBase='http://localhost'
-urlBase='https://andenes.terminal-calama.com'
+urlBase='http://localhost'
+// urlBase='https://andenes.terminal-calama.com'
 
 //const urlServer = 'http://localhost'
 const urlServer = 'https://andenes.terminal-calama.com'
