@@ -2,17 +2,11 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Administración de Baños</title>
+    <meta name="viewport" content="width=1366, initial-scale=1.0" />
+    <title>Estadísticas - Baños</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- QR Code -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-      defer
-    ></script>
 
     <!-- jQuery (para compatibilidad con tu código anterior) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -39,7 +33,13 @@
         --accent-info: #3b82f6;
       }
 
+      html,
       body {
+        margin: 0;
+        padding: 0;
+        width: 1366px;
+        height: 768px;
+        overflow: hidden;
         background-color: var(--gray-900);
         color: var(--gray-200);
         font-family: "Inter", system-ui, sans-serif;
@@ -73,23 +73,6 @@
         background-color: var(--gray-600);
       }
 
-      .btn-success {
-        background-color: var(--accent-success);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .btn-success:hover {
-        background-color: #16a34a;
-      }
-
-      .btn.disabled {
-        background-color: var(--gray-600) !important;
-        cursor: not-allowed;
-      }
-
       input[type="text"],
       input[type="date"],
       select {
@@ -98,116 +81,69 @@
         color: var(--gray-200);
         border-radius: 0.375rem;
         padding: 0.5rem;
-      }
-
-      input[type="text"]:focus,
-      input[type="date"]:focus,
-      select:focus {
-        outline: none;
-        border-color: var(--accent-info);
+        font-size: 0.875rem;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.875rem;
+        font-size: 0.8rem;
       }
 
       th,
       td {
         border: 1px solid var(--gray-600);
-        padding: 0.5rem;
+        padding: 0.4rem;
         text-align: center;
       }
 
       th {
         background-color: var(--gray-800);
         color: var(--gray-300);
+        position: sticky;
+        top: 0;
+        font-weight: 600;
       }
 
       td {
         background-color: var(--gray-900);
       }
 
-      /* Estilos para los botones modernos de Baño y Ducha */
-      .radio-group {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-
-      .radio-option {
-        flex: 1;
-        position: relative;
-      }
-
-      .radio-input {
-        position: absolute;
-        opacity: 0;
-      }
-
-      .radio-label {
-        display: block;
-        background-color: var(--gray-800);
-        border: 2px solid var(--gray-600);
-        border-radius: 0.5rem;
-        padding: 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .radio-input:checked + .radio-label {
-        border-color: var(--accent-info);
-        background-color: rgba(59, 130, 246, 0.1);
-      }
-
-      .radio-label-title {
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-        color: var(--gray-200);
-      }
-
-      .radio-label-price {
-        color: var(--accent-info);
-        font-size: 1.25rem;
-        font-weight: bold;
-      }
-
       /* Estilos para las estadísticas */
       .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1rem;
       }
 
       .stat-card {
         background-color: var(--gray-800);
         border: 1px solid var(--gray-600);
         border-radius: 0.75rem;
-        padding: 1.5rem;
+        padding: 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 80px;
       }
 
       .stat-info h3 {
         color: var(--gray-400);
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         font-weight: 500;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
       }
 
       .stat-value {
-        font-size: 2rem;
+        font-size: 1.25rem;
         font-weight: bold;
         color: var(--gray-200);
       }
 
       .stat-icon {
-        width: 48px;
-        height: 48px;
+        width: 36px;
+        height: 36px;
         border-radius: 0.5rem;
         display: flex;
         align-items: center;
@@ -235,7 +171,9 @@
         border: 1px solid var(--gray-600);
         border-radius: 0.5rem;
         background-color: var(--gray-800);
-        padding: 1rem;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.875rem;
       }
 
       #cerrar-tabla {
@@ -243,21 +181,20 @@
         color: var(--gray-400);
         background: none;
         border: none;
-        font-size: 1.2rem;
+        font-size: 1rem;
         cursor: pointer;
+        padding: 0.25rem;
       }
 
       #cerrar-tabla:hover {
         color: var(--gray-200);
       }
 
-      /* Header styles */
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+      .table-container {
+        height: 320px;
+        overflow-y: auto;
+        border: 1px solid var(--gray-600);
+        border-radius: 0.5rem;
       }
 
       .header-actions {
@@ -268,11 +205,12 @@
 
       /* Alert styles */
       .alert {
-        padding: 1rem;
+        padding: 0.75rem;
         border-radius: 0.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
         border: 1px solid var(--gray-600);
         background-color: var(--gray-800);
+        font-size: 0.875rem;
       }
 
       .alert-success {
@@ -297,40 +235,109 @@
       .loading {
         color: var(--gray-400);
         text-align: center;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+      }
+
+      /* Layout optimizado para 1366x768 */
+      .app-container {
+        width: 1366px;
+        height: 768px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        height: 70px;
+        flex-shrink: 0;
+        padding: 0.75rem 1rem;
+      }
+
+      .stats-section {
+        padding: 0.75rem 1rem 0;
+        background-color: var(--gray-900);
+      }
+
+      main {
+        flex: 1;
+        overflow: hidden;
+        padding: 0 1rem 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        height: calc(768px - 70px - 120px);
+      }
+
+      .verification-section,
+      .data-section {
+        background-color: var(--gray-800);
+        border: 1px solid var(--gray-700);
+        border-radius: 0.75rem;
         padding: 1rem;
       }
 
-      /* Link styles */
-      a {
-        color: var(--accent-info);
+      .verification-section {
+        flex: 0 0 auto;
       }
 
-      a:hover {
-        color: #2563eb;
+      .data-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: white;
+      }
+
+      .filters-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        align-items: center;
+      }
+
+      .filter-input {
+        flex: 1;
+        min-width: 180px;
+      }
+
+      .filter-select {
+        min-width: 120px;
+      }
+
+      .filter-date {
+        min-width: 140px;
+      }
+
+      .verification-result {
+        margin-top: 0.75rem;
       }
     </style>
   </head>
 
   <body>
-    <div class="min-h-screen flex flex-col">
-      <header class="bg-gray-800 border-b border-gray-700 p-4">
-        <div class="header-content">
+    <div class="app-container">
+      <header class="bg-gray-800 border-b border-gray-700">
+        <div class="flex justify-between items-center h-full">
           <div>
-            <h1 class="text-2xl font-bold text-white">
-              Administración de Baños
+            <h1 class="text-xl font-bold text-white">
+              Estadísticas y Registros
             </h1>
-            <a
-              href="http://localhost/parkingCalama/"
-              class="inline-block mt-2 text-blue-400 hover:text-blue-300"
-              >← Volver al Panel</a
-            >
           </div>
           <div class="header-actions">
-            <button class="btn btn-secondary" onclick="location.reload()">
+            <button
+              class="btn btn-secondary text-sm"
+              onclick="location.reload()"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -349,12 +356,34 @@
               </svg>
               Actualizar
             </button>
+            <button
+              class="btn btn-secondary text-sm"
+              onclick="window.location.href='index.html'"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <path d="M8 7v10"></path>
+                <path d="M12 7v10"></path>
+                <path d="M17 7v10"></path>
+              </svg>
+              Generar QR
+            </button>
           </div>
         </div>
       </header>
 
       <!-- SECCIÓN DE ESTADÍSTICAS -->
-      <section class="p-6 bg-gray-900">
+      <section class="stats-section">
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-info">
@@ -364,8 +393,8 @@
             <div class="stat-icon icon-green">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -389,8 +418,8 @@
             <div class="stat-icon icon-blue">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -412,8 +441,8 @@
             <div class="stat-icon icon-purple">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -440,8 +469,8 @@
             <div class="stat-icon icon-yellow">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -461,150 +490,57 @@
         </div>
       </section>
 
-      <main class="flex flex-1 flex-col md:flex-row gap-6 p-6 bg-gray-900">
-        <!-- IZQUIERDA -->
-        <section
-          class="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-6"
-        >
-          <form id="formulario" class="space-y-4">
+      <main>
+        <!-- VERIFICACIÓN Y FILTROS -->
+        <section class="verification-section">
+          <h2 class="section-title">Verificación y Filtros</h2>
+          <div class="filters-row">
             <input
               type="text"
-              id="keycont"
-              class="w-full text-center bg-gray-700 border border-gray-600 rounded-lg py-2 text-gray-200"
-              disabled
+              id="buscador-codigo"
+              placeholder="Buscar por código"
+              class="filter-input"
             />
-            <button id="generar" class="btn w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <path d="M8 7v10"></path>
-                <path d="M12 7v10"></path>
-                <path d="M17 7v10"></path>
-              </svg>
-              Generar QR
+            <button id="boton-verificar" class="btn text-sm">
+              Verificar Código
             </button>
-          </form>
+          </div>
 
           <div
-            id="contenedorQR"
-            class="mt-6 flex justify-center bg-gray-700 border border-gray-600 rounded-lg p-4"
-          ></div>
+            id="resultado-verificacion"
+            class="verification-result"
+            style="display: none"
+          >
+            <button id="cerrar-tabla">✖</button>
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Estado</th>
+                  <th>Fecha de uso</th>
+                  <th>Puerta</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-resultados"></tbody>
+            </table>
+          </div>
 
-          <button class="btn btn-success w-full mt-4" onclick="printQR()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="6 9 6 2 18 2 18 9"></polyline>
-              <path
-                d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
-              ></path>
-              <rect x="6" y="14" width="12" height="8"></rect>
-            </svg>
-            Imprimir QR
-          </button>
-
-          <div id="resultado" class="mt-4"></div>
+          <div class="filters-row">
+            <select id="filtro-tipo" class="filter-select">
+              <option value="">Todos</option>
+              <option value="Baño">Baño</option>
+              <option value="Ducha">Ducha</option>
+            </select>
+            <input type="date" id="filtro-fecha" class="filter-date" />
+            <button id="boton-filtrar" class="btn text-sm">Filtrar</button>
+          </div>
         </section>
 
-        <!-- DERECHA -->
-        <section
-          class="flex-[2] bg-gray-800 border border-gray-700 rounded-xl p-6"
-        >
-          <!-- BOTONES MODERNOS DE BAÑO Y DUCHA -->
-          <div class="mb-6">
-            <h2 class="text-lg font-semibold mb-4 text-white">
-              Seleccionar Servicio
-            </h2>
-            <div class="radio-group">
-              <div class="radio-option">
-                <input
-                  type="radio"
-                  id="radio1"
-                  name="tipo"
-                  value="Baño"
-                  class="radio-input"
-                  checked
-                />
-                <label for="radio1" class="radio-label">
-                  <div class="radio-label-title">Baño</div>
-                  <div class="radio-label-price" id="valorBaño">$500</div>
-                </label>
-              </div>
-              <div class="radio-option">
-                <input
-                  type="radio"
-                  id="radio2"
-                  name="tipo"
-                  value="Ducha"
-                  class="radio-input"
-                />
-                <label for="radio2" class="radio-label">
-                  <div class="radio-label-title">Ducha</div>
-                  <div class="radio-label-price" id="valorDucha">$1000</div>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-6 space-y-3">
-            <h2 class="text-lg font-semibold text-white">
-              Verificación y Filtros
-            </h2>
-            <div class="flex flex-wrap gap-2">
-              <input
-                type="text"
-                id="buscador-codigo"
-                placeholder="Buscar por código"
-                class="flex-1"
-              />
-              <button id="boton-verificar" class="btn">Verificar Código</button>
-            </div>
-
-            <div id="resultado-verificacion" style="display: none">
-              <button id="cerrar-tabla">✖</button>
-              <table class="w-full mt-3">
-                <thead>
-                  <tr>
-                    <th>Código</th>
-                    <th>Estado</th>
-                    <th>Fecha de uso</th>
-                    <th>Puerta</th>
-                  </tr>
-                </thead>
-                <tbody id="tabla-resultados"></tbody>
-              </table>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              <select id="filtro-tipo">
-                <option value="">Todos</option>
-                <option value="Baño">Baño</option>
-                <option value="Ducha">Ducha</option>
-              </select>
-              <input type="date" id="filtro-fecha" />
-              <button id="boton-filtrar" class="btn">Filtrar</button>
-            </div>
-          </div>
-
-          <div class="overflow-y-auto max-h-[400px]">
-            <table class="w-full text-sm">
+        <!-- TABLA DE DATOS -->
+        <section class="data-section">
+          <h2 class="section-title">Registros</h2>
+          <div class="table-container">
+            <table>
               <thead>
                 <tr>
                   <th>Id</th>

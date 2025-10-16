@@ -1,14 +1,16 @@
-<?php 
+<?php
 header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
 
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
 
 
 
-include(dirname(__DIR__)."/conf.php"); 
+include(dirname(__DIR__) . "/conf.php");
 
 
- $sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroom order by idrestroom desc limit 28";
+// $sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroom order by idrestroom desc limit 28";
+$sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroom order by idrestroom desc";
+
 $result = $conn->query($sql);
 
 // Verificar si hay resultados
@@ -31,7 +33,3 @@ if ($result->num_rows > 0) {
 
 // Cerrar la conexión a la base de datos
 $conn->close();
-
-
-
-?>
