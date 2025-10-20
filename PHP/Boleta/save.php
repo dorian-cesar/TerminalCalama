@@ -1,11 +1,10 @@
 <?php
-header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
-header("Access-Control-Allow-Methods: POST, OPTIONS"); // Permitir solicitudes POST y OPTIONS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
-    // El navegador está realizando una solicitud de pre-vuelo OPTIONS
-    header('Access-Control-Allow-Headers: Content-Type');
-    header('Access-Control-Max-Age: 86400'); // Cache preflight request for 1 day
+    header('Access-Control-Max-Age: 86400');
     header("HTTP/1.1 200 OK");
     exit;
 }
@@ -24,17 +23,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $fecha = $data["fecha"];
         $value = $data["valor"];
         $id_caja = isset($data["id_caja"]) ? $data["id_caja"] : null; 
+        $medio_pago = isset($data["medio_pago"]) ? $data["medio_pago"] : null;
 
-        // Validar que id_caja no sea nulo (es obligatorio)
+        // Validar campos requeridos
         if ($id_caja === null) {
             http_response_code(400);
             echo json_encode(["error" => "El campo id_caja es requerido"]);
             exit;
         }
+        if ($medio_pago === null) {
+            http_response_code(400);
+            echo json_encode(["error" => "El campo medio_pago es requerido"]);
+            exit;
+        }
 
-        // Actualizar la consulta para incluir id_caja
-        $stmt = $conn->prepare("UPDATE custodias SET tipo = ?, horasal = ?, fechasal = ?, valor = ?, id_caja = ? WHERE idcustodia = ?");
-        $stmt->bind_param("sssiii", $estado, $hora, $fecha, $value, $id_caja, $id);
+        // Actualizar la consulta para incluir medio_pago
+        $stmt = $conn->prepare("
+            UPDATE custodias 
+            SET tipo = ?, horasal = ?, fechasal = ?, valor = ?, id_caja = ?, medio_pago = ? 
+            WHERE idcustodia = ?
+        ");
+        $stmt->bind_param("sssissi", $estado, $hora, $fecha, $value, $id_caja, $medio_pago, $id);
 
         if ($stmt->execute()){
             header('Content-Type: application/json');
@@ -44,6 +53,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             echo json_encode(["error" => "Error al actualizar datos: " . $conn->error]);
         }
 
+        $stmt->close();
         $conn->close();
     } else {
         http_response_code(400);
