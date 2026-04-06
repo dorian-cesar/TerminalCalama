@@ -1,37 +1,62 @@
 <?php 
-header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Content-Type: application/json");
 
-header("Access-Control-Allow-Methods: GET, OPTIONS"); // Permitir solicitudes POST y OPTIONS
+include(dirname(__DIR__)."/conf.php");
 
+// Manejo preflight (CORS)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
+// Leer body JSON
+$input = json_decode(file_get_contents("php://input"), true);
 
-include(dirname(__DIR__)."/conf.php"); 
+// Validar id_caja
+if (!isset($input['id_caja']) || empty($input['id_caja'])) {
+    echo json_encode([
+        "error" => "Falta el parámetro id_caja"
+    ]);
+    exit;
+}
 
+$id_caja = $input['id_caja'];
 
- $sql = "SELECT idrestroom, Codigo, date, time, tipo FROM restroomCalama order by idrestroom desc limit 28";
-$result = $conn->query($sql);
+// Prepared statement
+$stmt = $conn->prepare("
+    SELECT 
+        idrestroom, 
+        Codigo, 
+        date, 
+        time, 
+        tipo 
+    FROM restroomCalama
+    WHERE id_caja = ?
+    ORDER BY idrestroom DESC
+    LIMIT 28
+");
 
-// Verificar si hay resultados
-if ($result->num_rows > 0) {
-    // Crear un array para almacenar los resultados
-    $datos = array();
+// Ajusta tipo si es necesario ("i" si es número)
+$stmt->bind_param("s", $id_caja);
 
-    // Recorrer los resultados y agregarlos al array
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Respuesta
+$datos = [];
+
+if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $datos[] = $row;
     }
-
-    // Enviar la respuesta como JSON
-    header('Content-Type: application/json');
-    echo json_encode($datos);
-} else {
-    // Si no hay resultados
-    echo "No se encontraron datos.";
 }
 
-// Cerrar la conexión a la base de datos
+// Siempre devolver JSON consistente
+echo json_encode($datos);
+
+// Cerrar conexiones
+$stmt->close();
 $conn->close();
-
-
-
 ?>
